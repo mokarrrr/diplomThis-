@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewData["Title"] = "MainPage";
+}
+@model diplom.Models.ViewModels.ProductViewModel;
+
+<link rel="stylesheet" href="~/css/mainwindow.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+
+<body>
+    <div class="Main">
+
+        <button id="backToTop" title="Go to top" style="display: none;">
+            <i class="fa fa-angle-up"></i>
+        </button>
+
+        <!-- Модальное окно -->
+        
+        <div id="modal" class="modal" style="overflow-y:hidden">
+            <!-- Модальный контент -->
+            <div class="modal-content">
+                @using (Html.BeginForm("MainPage","",FormMethod.Post))
+                {
+                <div id="loginContent">
+                    <span class="close">&times;</span>
+                    <h2>Авторизация</h2>
+                    @*<input type="text" id="phoneLogin" maxlength="10" placeholder="Номер телефона">*@
+                        @Html.TextBox("phoneLogin","")
+                    @*<input type="password" id="password" placeholder="Пароль">*@
+                    @Html.TextBox("password","")
+                    <button id="loginButton">Войти</button>
+                    <button id="switchToRegister">Регистрация</button>
+                </div>}
+                <div id="registerContent" style="display:none;">
+                    <span class="close">&times;</span>
+                    <h2>Регистрация</h2>
+                    <input type="text" placeholder="Email">
+                    <input type="password" placeholder="Пароль">
+                    <input type="password" placeholder="Повторите пароль">
+                    <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона">
+                    <input type="text" placeholder="Ваш город" required>
+                    <button id="registerButton">Зарегистрироваться</button>
+                </div>
+
+               
+
+            </div>
+        </div>
+        
+
+
+        <header class="_header">
+            <div class="logo">
+                <a href="#" class="company-name">Dairy Delights Emporium</a>
+            </div>
+            <div class="mogo">
+                <a href="/Home/HomePage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
+            </div>
+            <div class="header-buttons">
+                <button class="btn cart-button" style="border: 2px solid black;">
+                    <i class="fas fa-shopping-basket"></i>
+                </button>
+                <button class="btn fav-button" style="border: 2px solid black;">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <button class="btn user-button" style="border: 2px solid black;">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </header>
+        <div  >
+            <img class="img1" src="/img/istockphoto-1471815457-1024x1024(2)(1).png" style="height: 1100px;width: 132%;margin-left: -270px;margin-top: -260px;z-index:-2;"/>
+        </div>
+        <div class="main_body">
+            <form method="get">
+            <div class="container1" >
+                 <div class="search_bar">
+                        <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />                              
+                </div>
+            </div>
+            </form>
+            <div class="container2">
+                <p id="userNameDisplay"></p>
+                <select name="filter" id="filter">
+                    <option value="by_popularity">По популярности</option>
+                    <option value="by_alphabet">По алфавиту</option>
+                    <option value="cheaper">Дешевле</option>
+                    <option value="expensive">Дороже</option>
+                </select>
+                <label class="count_product">@Model.ProductCount товар</label>
+            </div>
+
+            <div class="container3">  
+                @if (Model.HasResults)
+                {
+                    @foreach (Product item in Model.Products)
+                    {
+                        <div class="col-sm-4">
+                            <div class="product-card">
+                                <div class="card-thumbnail">
+                                    <img class="img-responsive" src="@item.product_img" style="height:300px;width:400px">
+                                </div>
+                                <div class="card-content">
+                                    <div class="send">
+                                        <img class="basket" src="/img/basket.png" />
+                                        <i class="fa fa-send fa-2x"></i>
+                                    </div>
+                                    <h1 class="card-title">
+                                        @item.Name_product
+                                    </h1>
+                                    <h2 class="card-sub-title">
+                                        @item.product_article
+                                    </h2>
+                                    <p class="description">
+                                        @item.product_description_
+                                    </p>
+                                    <p class="price">Цена: @item.product_price руб. за @item.product_weight грамм</p>
+                                    <ul class="list-inline post-meta">
+                                        <li class="time-stamp">
+                                            <i class="fa fa-clock-o"></i> Массовая доля жира: @item.product_mass_per_fat%
+                                        </li>
+                                        <li class="time-stamp">
+                                            <i class="fa fa-clock-o"></i> Энергетическая ценность: @item.product_fatty кДж.
+                                        </li>
+                                    </ul>
+                                    <button class="info-button1">
+                                        <i class="fa fa-question"></i>
+                                    </button>
+                                    <button class="fav-button1">
+                                        <i class="fa fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="error">К сожалению, по вашему запросу ничего не найдено.</p>
+                }
+        </div>
+
+        <div class="container4">
+                <footer class="footer">
+                    <div class="footer-left col-md-4 col-sm-6">
+                        <p class="about">
+                            <span> О нашей компании</span> "Cheese Delight Inc. - это гурманский рай для любителей сыра. С особой страстью к мастерству и качеству, мы предлагаем эксклюзивный ассортимент сыров, от классических французских бри и камамберов до редких и экзотических вариаций со всего мира. Наша миссия — дарить неповторимый вкус и наслаждение каждому клиенту, подбирая идеальные сыры для их стола, будь то повседневный ужин или особый праздничный приём. В Cheese Delight вы найдете сыр, который удовлетворит ваш гурманский вкус и превратит каждое блюдо в произведение искусства."
+                        </p>
+                        <div class="icons">
+                            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-center col-md-4 col-sm-6">
+                        <div>
+                            <i class="fa fa-map-marker"></i>
+                            <p><span> Наш адресс</span> Смоляной переулок,2</p>
+                        </div>
+                        <div>
+                            <i class="fa fa-phone"></i>
+                            <p> +7 9881 761 084</p> |
+                            <p> Ежедневно с 8 до 20</p>
+                        </div>
+                        <div>
+                            <i class="fa fa-envelope"></i>
+                            <p><a href="#"> DairyDelightsEmporium@mail.ru</a></p>
+                        </div>
+                    </div>
+                    <div class="footer-right col-md-4 col-sm-6">
+                        <h2> Dairy Delights <span> Emporium</span></h2>
+                        <p class="menu">
+                            <a href="#"> Каталог</a> |
+                            <a href="#"> О нас</a> |
+                            <a href="#"> Блог</a> |
+                            <a href="#"> Контакты</a> |
+                            <a href="#"> Политика конфиденциальности</a> 
+                        </p>
+                        <p class="name"> Dairy Delights Emporium; 2004</p>
+                    </div>
+                </footer>
+        </div>
+        </div>
+    </div>
+
+
+
+   
+
+</body>
+

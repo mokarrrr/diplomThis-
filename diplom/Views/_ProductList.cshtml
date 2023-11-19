@@ -1,0 +1,42 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<diplom.Models.Product>
+
+    @foreach (var item in Model)
+{
+    <div class="col-sm-4">
+        <div class="product-card">
+            <div class="card-thumbnail">
+                <img class="img-responsive" src="@item.product_img" style="height:300px;width:400px">
+            </div>
+            <div class="card-content">
+                <div class="send">
+                    <img class="basket" src="/img/basket.png" />
+                    <i class="fa fa-send fa-2x"></i>
+                </div>
+                <h1 class="card-title">
+                    @item.Name_product
+                </h1>
+                <h2 class="card-sub-title">
+                    @item.product_article
+                </h2>
+                <p class="description">
+                    @item.product_description_
+                </p>
+                <p class="price">Цена: @item.product_price руб. за @item.product_weight грамм</p>
+                <ul class="list-inline post-meta">
+                    <li class="time-stamp">
+                        <i class="fa fa-clock-o"></i> Массовая доля жира: @item.product_mass_per_fat%
+                    </li>
+                    <li class="time-stamp">
+                        <i class="fa fa-clock-o"></i> Энергетическая ценность: @item.product_fatty кДж.
+                    </li>
+                </ul>
+                <button class="fav-button1">
+                    <i class="fa fa-heart"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+}
