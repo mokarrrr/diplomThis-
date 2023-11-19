@@ -26,9 +26,7 @@
                 <div id="loginContent">
                     <span class="close">&times;</span>
                     <h2>Авторизация</h2>
-                    @*<input type="text" id="phoneLogin" maxlength="10" placeholder="Номер телефона">*@
                         @Html.TextBox("phoneLogin","")
-                    @*<input type="password" id="password" placeholder="Пароль">*@
                     @Html.TextBox("password","")
                     <button id="loginButton">Войти</button>
                     <button id="switchToRegister">Регистрация</button>
@@ -125,10 +123,10 @@
                                             <i class="fa fa-clock-o"></i> Энергетическая ценность: @item.product_fatty кДж.
                                         </li>
                                     </ul>
-                                    <button class="info-button1">
+                                    <button class="info-button1" title="Подробности">
                                         <i class="fa fa-question"></i>
                                     </button>
-                                    <button class="fav-button1">
+                                    <button class="fav-button1" title="В избранное">
                                         <i class="fa fa-heart"></i>
                                     </button>
                                 </div>
