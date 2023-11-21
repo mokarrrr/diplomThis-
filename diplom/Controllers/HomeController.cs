@@ -35,7 +35,10 @@ namespace diplom.Controllers
         {
            return View("HomePage", "~/css/site.css"); 
         }
-
+        public IActionResult AboutUsPage()
+        {
+            return View();
+        }
         //public ActionResult MainPage(string searchQuery)
         //{
         //    IQueryable<Product> products = db.Product;
