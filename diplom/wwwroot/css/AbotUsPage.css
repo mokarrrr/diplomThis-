@@ -6,7 +6,7 @@ body {
 .containers {
     width: 550px;
     height: 100%;
-    margin-left: 10px;
+    margin-left: -300px;
 }
 
 .pic {
