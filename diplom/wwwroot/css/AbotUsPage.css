@@ -1,6 +1,6 @@
 ﻿
 body {
-    background: url('https://s-media-cache-ak0.pinimg.com/736x/f4/ac/6a/f4ac6aac3afb587f6cae04155656fca3.jpg');
+    background: linear-gradient(to bottom right,#ffcc01,#e27105);
 }
 
 .containers {
@@ -44,40 +44,14 @@ body {
         cursor: pointer;
     }
 
-.box1 {
-    box-shadow: 6px 6px 7px #888888;
-    width: 100px;
-    height: 100px;
-    position: relative;
-    overflow: hidden;
-    margin-top: -124px;
-    margin-left: 16px;
-    -ms-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
-
-    .box1:before {
-        content: '';
-        margin-top: -25px;
-        margin-left: -31px;
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        background: url('http://creek.themebucket.net/wp-content/uploads/2015/09/8.jpg') center center;
-        -ms-transform: rotate(-45deg);
-        -webkit-transform: rotate(-45deg);
-        transform: rotate(-45deg);
-    }
-
 
 .social1 {
     box-shadow: 6px 6px 7px #888888;
     width: 80px;
     height: 80px;
     background-color: #3b5998;
-    margin-top: 67px;
-    margin-left: 305px;
+    margin-top: 36px;
+    margin-left: 309px;
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
@@ -97,7 +71,7 @@ body {
     box-shadow: 6px 6px 7px #888888;
     width: 80px;
     height: 80px;
-    background-color: #C73B6F;
+    background-color: #2853de;
     margin-top: -142px;
     margin-left: 370px;
     -ms-transform: rotate(45deg);
@@ -108,7 +82,7 @@ body {
     .social2 > i {
         font-size: 60px;
         margin-top: 8px;
-        margin-left: 13px;
+        margin-left: 4px;
         -ms-transform: rotate(-45deg);
         -webkit-transform: rotate(-45deg);
         transform: rotate(-45deg);
@@ -119,18 +93,22 @@ body {
     box-shadow: 6px 6px 7px #888888;
     width: 80px;
     height: 80px;
-    background-color: #000000;
+    background: #f09433;
+    background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+    background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
     margin-top: -143px;
     margin-left: 435px;
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
+    transform: rotate(-45deg);
 }
 
     .social3 > i {
         font-size: 60px;
         margin-top: 9px;
-        margin-left: 9px;
+        margin-left: 15px;
         -ms-transform: rotate(-45deg);
         -webkit-transform: rotate(-45deg);
         transform: rotate(-45deg);
