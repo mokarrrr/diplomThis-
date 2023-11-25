@@ -28,7 +28,7 @@ namespace diplom
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=MainPage}/{id?}");
+                pattern: "{controller=Home}/{action=AboutUsPage}/{id?}");
 
             app.Run();
         }
