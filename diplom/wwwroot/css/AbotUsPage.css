@@ -54,12 +54,13 @@ body {
 
 
 .social1 {
+    grid-column: 1;
     box-shadow: 6px 6px 7px #888888;
     width: 80px;
     height: 80px;
     background-color: #3b5998;
     margin-top: 36px;
-    margin-left: 309px;
+    margin-left: 479px;
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
@@ -76,12 +77,13 @@ body {
     }
 
 .social2 {
+    grid-column: 1;
     box-shadow: 6px 6px 7px #888888;
     width: 80px;
     height: 80px;
     background-color: #2853de;
-    margin-top: -142px;
-    margin-left: 370px;
+    margin-top: -143px;
+    margin-left: 543px;
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
@@ -98,6 +100,7 @@ body {
     }
 
 .social3 {
+    grid-column: 1;
     box-shadow: 6px 6px 7px #888888;
     width: 80px;
     height: 80px;
@@ -106,8 +109,8 @@ body {
     background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
     background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );
-    margin-top: -143px;
-    margin-left: 435px;
+    margin-top: -204px;
+    margin-left: 605px;
     -ms-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     transform: rotate(-45deg);
@@ -471,7 +474,9 @@ header {
         font-size: 20px;
         padding-top: 10px;
     }
- 
-.contacts{
-    padding-top:40px;
+
+.contacts {
+    padding-top: 40px;
+    display: grid;
+    grid-template-columns: 2fr 1.5fr;
 }
