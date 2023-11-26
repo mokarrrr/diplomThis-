@@ -124,6 +124,7 @@ body {
     }
 
 .content {
+    margin-left:-20px;
     grid-column:2;
     height: 100%;
     width: 100%;
@@ -133,7 +134,7 @@ p {
     font-family: 'Open Sans Condensed', sans-serif;
 }
 
-h2 {
+.h2us {
     font-family: 'Dancing Script', cursive;
 }
 
@@ -470,3 +471,7 @@ header {
         font-size: 20px;
         padding-top: 10px;
     }
+ 
+.contacts{
+    padding-top:40px;
+}
