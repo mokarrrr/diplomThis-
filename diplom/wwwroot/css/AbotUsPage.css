@@ -139,6 +139,7 @@ p {
 
 .h2us {
     font-family: 'Dancing Script', cursive;
+    grid-column:2;
 }
 
 .contentHead {
@@ -503,11 +504,14 @@ header {
 br{
     margin-top:30px;
 }
+
 .map {
     display: grid;
     grid-template-columns: 2fr 1.5fr;
 }
-.thismap{
-    grid-column:2;
-    margin-top:50px;
+.thismap {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 50px;
+    padding-left: 30px
 }
