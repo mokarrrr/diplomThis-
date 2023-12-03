@@ -18,7 +18,7 @@
 
         <!-- Модальное окно -->
         
-        <div id="modal" class="modal" style="overflow-y:hidden">
+        <div id="modal" class="modal" style="overflow-y:hidden;">
             <!-- Модальный контент -->
             <div class="modal-content">
                 @using (Html.BeginForm("MainPage","",FormMethod.Post))
@@ -217,15 +217,6 @@
         </div>
     </div>
 
-
-    <script>
-        function scrollToElement(elementId) {
-            var element = document.getElementById(elementId);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    </script>
 
     <script>
         function scrollToElement(elementId) {
