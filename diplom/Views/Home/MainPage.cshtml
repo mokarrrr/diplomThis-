@@ -161,7 +161,7 @@
                                     </ul>
                                     <button class="info-button1" data-toggle="modal" data-target="#exampleModal"
                                             data-nametitle="@item.Name_product"
-                                            data-description="@item.product_description_"
+@*                                             data-description="@item.product_description_"
                                             data-price="@item.product_price"
                                             data-weight="@item.product_weight"
                                             data-mass_per_fat="@item.product_mass_per_fat"
@@ -177,7 +177,7 @@
                                             data-remain="@item.product_remain"
                                             data-article="@item.product_article"
                                             data-sostav="@item.product_sostav"
-                                            data-img="@item.product_img">
+                                            data-img="@item.product_img"*@> 
                                         <i class="fa fa-question"></i>
                                     </button>
                                     <button class="fav-button1" title="В избранное">
@@ -275,26 +275,6 @@
                 element.scrollIntoView({ behavior: 'smooth' });
             }
         }
-    </script>
-
-    <script>
-        // Обработка события click на кнопке
-        $('.info-button1').on('click', function () {
-            // Заполнение данных в модальное окно
-            var button = $(this);
-            var modal = $('#exampleModal');
-
-            modal.find('.tovarimg').html('<img src="' + button.data('img') + '" alt="Изображение товара">');
-            modal.find('.tovarinfo').html('<p>Описание: ' + button.data('description') + '</p>' +
-                '<p>Цена: ' + button.data('price') + ' руб. за ' + button.data('weight') + ' грамм</p>' +
-                '<p>Массовая доля жира: ' + button.data('mass_per_fat') + '%</p>' +
-                    // Добавьте остальные поля по аналогии
-                );
-
-            // Заполнение данных в форме (если нужно)
-            modal.find('#productName').val(button.data('nametitle'));
-            // Добавьте другие поля по аналогии
-        });
     </script>
 
 

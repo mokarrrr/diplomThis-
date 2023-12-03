@@ -124,8 +124,7 @@ namespace diplom.Controllers
         //    return user;
         //}
 
-
-
+       
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
