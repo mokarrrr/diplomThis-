@@ -13,10 +13,10 @@ $(function (maam) {
     });
 });
 /*переключение на регистрацию*/
-document.getElementById('switchToRegister').addEventListener('click', function () {
-    document.getElementById('loginContent').style.display = 'none'; // Скрыть контент страницы входа
-    document.getElementById('registerContent').style.display = 'block'; // Показать контент страницы регистрации
-});
+//document.getElementById('switchToRegister').addEventListener('click', function () {
+//    document.getElementById('loginContent').style.display = 'none'; // Скрыть контент страницы входа
+//    document.getElementById('registerContent').style.display = 'block'; // Показать контент страницы регистрации
+//});
 /*кнопка вверх*/
         $(document).ready(function () {
             $(window).scroll(function () {
@@ -51,37 +51,37 @@ document.getElementById('switchToRegister').addEventListener('click', function (
 
     
         //модальное окно
-        var modal = document.getElementById("modal");
-        var loginContent = document.getElementById("loginContent");
-        var registerContent = document.getElementById("registerContent");
-        var switchToRegister = document.getElementById("switchToRegister");
-        var closeButtons = document.getElementsByClassName("close");
+        //var modal = document.getElementById("modal");
+        //var loginContent = document.getElementById("loginContent");
+        //var registerContent = document.getElementById("registerContent");
+        //var switchToRegister = document.getElementById("switchToRegister");
+        //var closeButtons = document.getElementsByClassName("close");
 
-        function showModal() {
-            if (!localStorage.getItem('hasVisited')) {
-                modal.style.display = "block";
-                localStorage.setItem('hasVisited', 'true');
-            }
-        }
+        //function showModal() {
+        //    if (!localStorage.getItem('hasVisited')) {
+        //        modal.style.display = "block";
+        //        localStorage.setItem('hasVisited', 'true');
+        //    }
+        //}
 
-        switchToRegister.onclick = function () {
-            loginContent.style.display = "none";
-            registerContent.style.display = "block";
-            modalContent.style.transform = "translateY(-100px)"; 
-        }
-        for (var i = 0; i < closeButtons.length; i++) {
-            closeButtons[i].onclick = function () {
-                modal.style.display = "none";
-            }
-        }
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-        window.onload = function () {
-            showModal();
-        }
+        //switchToRegister.onclick = function () {
+        //    loginContent.style.display = "none";
+        //    registerContent.style.display = "block";
+        //    modalContent.style.transform = "translateY(-100px)"; 
+        //}
+        //for (var i = 0; i < closeButtons.length; i++) {
+        //    closeButtons[i].onclick = function () {
+        //        modal.style.display = "none";
+        //    }
+        //}
+        //window.onclick = function (event) {
+        //    if (event.target == modal) {
+        //        modal.style.display = "none";
+        //    }
+        //}
+        //window.onload = function () {
+        //    showModal();
+        //}
 
 
         //ограничение вводимых символов
@@ -115,25 +115,44 @@ document.getElementById('switchToRegister').addEventListener('click', function (
 //        }
 //    });
 //});
-var policyModal = document.getElementById("myModal1"); // Убедитесь, что идентификатор уникален
-var policyBtn = document.getElementById("modalOpen"); // Идентификатор для кнопки открытия
-var policyClose = policyModal.getElementsByClassName("close")[0]; // Предполагая, что у вас есть элемент с классом "close" внутри модального окна
+var modal = document.getElementById("modal");
+var loginContent = document.getElementById("loginContent");
+var registerContent = document.getElementById("registerContent");
+var switchToRegister = document.getElementById("switchToRegister");
+var closeButtons = document.getElementsByClassName("close");
 
-policyBtn.onclick = function (event) {
-    event.preventDefault();
-    policyModal.style.display = "block";
-    document.body.style.overflow = "hidden";
-}
-
-policyClose.onclick = function () {
-    policyModal.style.display = "none";
-    document.body.style.overflow = "";
-}
-
-window.onclick = function (event) {
-    if (event.target == policyModal) {
-        policyModal.style.display = "none";
-        document.body.style.overflow = "";
+function showModal() {
+    if (!Cookies.get('hasVisited') || Cookies.get('hasVisited') !== 'true') {
+        modal.style.display = "block";
     }
 }
-па
+
+function setVisitedCookie() {
+    Cookies.set('hasVisited', 'true', { expires: 365 }); // Куки на год
+}
+
+switchToRegister.onclick = function (event) {
+    event.preventDefault(); // Предотвращаем стандартное действие ссылки
+    loginContent.style.display = "none";
+    registerContent.style.display = "block";
+    modal.scrollTop = 0;
+}
+
+for (var i = 0; i < closeButtons.length; i++) {
+    closeButtons[i].onclick = function () {
+        modal.style.display = "none";
+        setVisitedCookie();
+    }
+}
+
+window.onload = function () {
+    showModal();
+}
+
+// Добавлено событие для закрытия модального окна при клике вне его
+window.addEventListener('click', function (event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+        setVisitedCookie();
+    }
+});
