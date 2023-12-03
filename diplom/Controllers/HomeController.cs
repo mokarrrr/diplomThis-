@@ -94,7 +94,7 @@ namespace diplom.Controllers
         //        // Успешная авторизация                
         //        HttpContext.Session.SetString("UserName", user.User_name);
         //        System.Diagnostics.Debug.WriteLine(user.User_name);
-                
+
         //        return View(user);
         //        return Json(new { success = true, message = "Авторизация успешна.", userName = user.User_name });
         //    }
@@ -123,6 +123,8 @@ namespace diplom.Controllers
         //    var user = db._User.FirstOrDefault(u => u.PhoneNumber == phoneLogin && u.user_password == hashedPassword);
         //    return user;
         //}
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
