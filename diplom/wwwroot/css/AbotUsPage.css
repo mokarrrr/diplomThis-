@@ -68,8 +68,8 @@ body {
 
     .social1 > i {
         font-size: 60px;
-        margin-top: 13px;
-        margin-left: 20px;
+        margin-top: 9px;
+        margin-left: 9px;
         -ms-transform: rotate(-45deg);
         -webkit-transform: rotate(-45deg);
         transform: rotate(-45deg);
@@ -92,7 +92,7 @@ body {
     .social2 > i {
         font-size: 60px;
         margin-top: 8px;
-        margin-left: 4px;
+        margin-left: 12px;
         -ms-transform: rotate(-45deg);
         -webkit-transform: rotate(-45deg);
         transform: rotate(-45deg);
@@ -491,7 +491,7 @@ header {
     font-weight: 500;
 }
 .contact-list {
-    font-family: 'Dancing Script', cursive;
+    font-weight:bold;
     grid-column: 2;
     margin-top: -410px;
     list-style-type: disc; /* Устанавливаем маркер списка в виде точек */
@@ -548,4 +548,16 @@ br{
         color: black;
         text-decoration: none;
         cursor: pointer;
+    }
+.delivery-payment-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-left: 50px;
+    font-weight:bold;
+    text-align: left; /* Выравнивание текста в списке слева */
+}
+
+    .delivery-payment-list li {
+        margin-bottom: 10px;
+        font-size: 24px; /* Увеличение размера шрифта пунктов списка */
     }
