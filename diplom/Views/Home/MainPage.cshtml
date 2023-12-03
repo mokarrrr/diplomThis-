@@ -206,8 +206,8 @@
                         <h2> Dairy Delights <span> Emporium</span></h2>
                         <p class="menu">
                             <a href="#"> Каталог</a> |
-                            <a href="#"> О нас</a> |
-                            <a href="#"> Контакты</a> |
+                            <a href="@Url.Action("AboutUsPage", "Home")" onclick="scrollToElement('mya')"> О нас</a> |
+                            <a href="@Url.Action("AboutUsPage", "Home")#contacts"> Контакты</a> |
                             <a href="#myModal1" id="modalOpen"> Политика конфиденциальности</a>
                         </p>
                         <p class="name"> Dairy Delights Emporium; 2004</p>
@@ -218,8 +218,24 @@
     </div>
 
 
+    <script>
+        function scrollToElement(elementId) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
 
-   
+    <script>
+        function scrollToElement(elementId) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+
 
 </body>
 
