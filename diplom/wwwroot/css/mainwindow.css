@@ -690,8 +690,24 @@ a:active {
     margin: 8% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 70%;
+    width: 65%;
     height: 700px;
     border-radius: 5px;
 }
-
+.form-groupimg {
+    grid-column: 1;
+    grid-row: 1
+}
+.formmy {
+    display: grid;
+    grid-template-columns: 1.4fr 2fr;
+    grid-template-rows: repeat(2,1fr);
+}
+.form-groupdesc {
+    grid-column: 2;
+    grid-row: 1
+}
+.form-groupname {
+    grid-column: 2;
+    grid-row: 1
+}
