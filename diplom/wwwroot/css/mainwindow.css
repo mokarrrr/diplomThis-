@@ -619,7 +619,6 @@ a:active {
     border: none;
     border-radius: 25px;
     cursor: pointer;
-    width: 100%;
 }
 
     .modal-content button:hover {
@@ -685,4 +684,13 @@ a:active {
     margin: 120px auto;
     width: 90%;
     padding: 30px;
+}
+.modal-content1 {
+    background-color: #fefefe;
+    margin: 8% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 70%;
+    height: 700px;
+    border-radius: 5px;
 }

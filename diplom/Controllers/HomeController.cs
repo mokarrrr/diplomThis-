@@ -67,14 +67,17 @@ namespace diplom.Controllers
             else
             {
                 hasResults = productsQuery.Any();
-            }           
+            }
+
             var productsList = productsQuery.ToList();
             ProductViewModel viewModel = new ProductViewModel
             {
                 Products = productsList,
                 HasResults = hasResults,
-                ProductCount = productsList.Count 
+                ProductCount = productsList.Count,
+                SelectedProductName = null // Инициализируем выбранное имя продукта значением по умолчанию
             };
+
             return View(viewModel);
         }
 
@@ -124,7 +127,8 @@ namespace diplom.Controllers
         //    return user;
         //}
 
-       
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
