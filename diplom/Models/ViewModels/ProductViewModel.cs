@@ -8,6 +8,6 @@ namespace diplom.Models.ViewModels
         public int ProductCount { get; set; }
         public bool HasResults { get; set; }
         public IEnumerable<_User> Users { get; set; }
-        public string SelectedProductName { get; set; }
+        //public string SelectedProductName { get; set; }
     }
 }

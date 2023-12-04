@@ -75,7 +75,9 @@ namespace diplom.Controllers
                 Products = productsList,
                 HasResults = hasResults,
                 ProductCount = productsList.Count,
-                SelectedProductName = null // Инициализируем выбранное имя продукта значением по умолчанию
+                //SelectedProductName = null 
+                
+                // Инициализируем выбранное имя продукта значением по умолчанию
             };
 
             return View(viewModel);

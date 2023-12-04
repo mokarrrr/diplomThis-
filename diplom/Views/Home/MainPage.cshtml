@@ -160,9 +160,8 @@
                                         </li>
                                     </ul>
                                     <button class="info-button1" data-toggle="modal" data-target="#exampleModal"
-                                            data-nametitle="@item.Name_product"
-                                            data-productname="@item.Name_product"
-@*                                             data-description="@item.product_description_"
+                                            data-nametitle="@item.Name_product"                                            
+                                            data-description="@item.product_description_"
                                             data-price="@item.product_price"
                                             data-weight="@item.product_weight"
                                             data-mass_per_fat="@item.product_mass_per_fat"
@@ -197,7 +196,7 @@
 
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow-y:hidden">
                 <div class="modal-dialog">
-                    <div class="modal-content1">
+                    <div class="modal-content2">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Информация о товаре</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -211,16 +210,23 @@
                             </div>
                             <hr>
                             <form>
-                                <!-- Здесь вставьте элементы формы для отображения данных товара -->
+                                <div class="form-group">
+                                    <img id="productImage" class="img-responsive" style="max-width:400px" />
+                                </div>
                                 <div class="form-group">
                                     <label id="productNameLabel" for="exampleFormControlInput1"></label>
                                 </div>
-                                <!-- Добавьте другие элементы формы по аналогии -->
+                                <div class="form-group">
+                                    <p id="description" class="form-control" readonly>
+                                </div>
+                            
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
+
 
 
 
@@ -281,12 +287,16 @@
         $(document).ready(function () {
             $('.info-button1').on('click', function () {
                 var productName = $(this).data('nametitle');
+                var description = $(this).data('description');
+                var img = $(this).data('description');
+                var productImageBase64 = $(this).data('img');
                 $('#productName').val(productName);
 
                 // Обновляем значение метки прямо внутри скрипта
                 $('#productNameLabel').text(productName);
-
-                // Другие взаимодействия с модальным окном при необходимости
+                $('#description').text(description);
+                $('#productImage').attr('src', '' + productImageBase64);
+                
             });
         });
     </script>
