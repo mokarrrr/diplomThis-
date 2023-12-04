@@ -687,11 +687,11 @@ a:active {
 }
 .modal-content2 {
     background-color: #fefefe;
-    margin: 8% auto;
+    margin: 7% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 65%;
-    height: 700px;
+    width: 59%;
+    height: 750px;
     border-radius: 5px;
 }
 .form-groupimg {
@@ -700,14 +700,19 @@ a:active {
 }
 .formmy {
     display: grid;
-    grid-template-columns: 1.4fr 2fr;
+    grid-template-columns: 1.7fr 2fr;
     grid-template-rows: repeat(2,1fr);
 }
 .form-groupdesc {
+    font-family: 'Dancing Script', cursive;
+    font-weight: bold;
     grid-column: 2;
     grid-row: 1
 }
 .form-groupname {
+    margin-top:30px;
+    font-family: 'Dancing Script', cursive;
+    font-weight:bold;
     grid-column: 2;
     grid-row: 1
 }
