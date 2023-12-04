@@ -716,3 +716,17 @@ a:active {
     grid-column: 2;
     grid-row: 1
 }
+
+.aboba {
+    display: flex;
+    font-family: 'Dancing Script', cursive;
+    font-weight: bold;
+    grid-column: 2;
+    grid-row: 1
+}
+.form-groupweight{
+    margin-left:2px;
+}
+.ihih{
+    display:block;
+}
