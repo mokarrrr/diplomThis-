@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 
     public DbSet<Admin> Admins { get; set; }
     public DbSet<catalog_product> catalog_Products { get; set; }
-    public DbSet<Package> Packages { get; set; }
+    public DbSet<Package> Package { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<Product_Raiting> Product_Raitings { get; set; }
     public DbSet<provider_product> provider_products { get; set; }

@@ -25,6 +25,9 @@ namespace diplom.Controllers
     {
         private MainContext db = new MainContext();
         private readonly ILogger<HomeController> _logger;
+
+        public int IdProduct1 { get; private set; }
+
         //List<Product> Products = MainContext.Instantce.Products.ToList();
         public HomeController(ILogger<HomeController> logger)
         {
@@ -53,15 +56,15 @@ namespace diplom.Controllers
         //    return View(PVM);
         //}
 
-        public ActionResult MainPage(string searchQuery)
+        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames)
         {
             IQueryable<Product> productsQuery = db.Product;
             bool hasResults = true;
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                productsQuery = productsQuery.Where(p => p.Name_product.Contains(searchQuery)
-                                                          || p.product_article.Contains(searchQuery));
+                productsQuery = productsQuery
+                    .Where(p => p.Name_product.Contains(searchQuery) || p.product_article.Contains(searchQuery));
                 hasResults = productsQuery.Any();
             }
             else
@@ -70,17 +73,35 @@ namespace diplom.Controllers
             }
 
             var productsList = productsQuery.ToList();
+
+            // Получаем уникальные идентификаторы упаковок из списка продуктов
+            var packageIds = productsList.Select(p => p.product_package_id).Distinct().ToList();
+
+            // Получаем словарь, сопоставляющий идентификатор упаковки с её именем
+            var Package_name = db.Package
+                .Where(p => packageIds.Contains(p.Package_id))
+                .ToDictionary(p => p.Package_id.ToString(), p => p.Package_name);
+
             ProductViewModel viewModel = new ProductViewModel
             {
                 Products = productsList,
                 HasResults = hasResults,
                 ProductCount = productsList.Count,
-                //SelectedProductName = null 
-                
-                // Инициализируем выбранное имя продукта значением по умолчанию
+                PackageNames = packageNames,
+                SelectedProductId = selectedProductId ?? 0
             };
 
             return View(viewModel);
+        }
+        [HttpGet]
+        public ActionResult GetPackageName(int packageId)
+        {
+            var packageName = db.Package
+                .Where(p => p.Package_id == packageId)
+                .Select(p => p.Package_name)
+                .FirstOrDefault();
+
+            return Content(packageName);
         }
 
         //[HttpPost]

@@ -171,3 +171,8 @@ $(function () {
             $("#hide2").attr('value', pricetovar);
         })
 });
+
+
+
+
+
