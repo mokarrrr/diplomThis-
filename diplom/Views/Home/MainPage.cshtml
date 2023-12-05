@@ -262,11 +262,27 @@
                                         <p style="font-family: 'Dancing Script', cursive;font-weight: bold;">Подробная информация</p>
                                     </center>
                                     <div class="form-groupart">
-                                        <p>Массовая доля жира: </p>
                                         <p id="productMassPerFat" class="form-control" readonly></p>
+                                        <p id="productMassPerFat" class="form-control" readonly></p>
+                                        <p id="productfat" class="form-control" readonly></p>
+                                    </div>
+@*                                     <div class="form-groupfat">
+                                        <p id="productMassPerFat" class="form-control" readonly></p>
+                                        <p id="productfat" class="form-control" readonly></p>
+                                    </div> *@
+@*                                     <div class="form-groupfat">
+                                        <p id="productfat" class="form-control" readonly></p>
+                                    </div> *@
+                                    <div class="form-groupfat" style="display:flex;gap:10px">
+                                        <p>Пищевая ценность: </p>
+                                        <p id="productProtein" class="form-control" readonly></p>
+                                        <p id="productFatty" class="form-control" readonly></p>
+                                        <p id="productCarb" class="form-control" readonly></p>
+                                        <p>на 100 гр.</p>
                                     </div>
                                     <div class="form-groupfat">
-                                        <p id="productfat" class="form-control" readonly></p>
+                                        <p id="productEnergyValue" class="form-control" readonly></p>
+                                        <p id="productStorageLife" class="form-control" readonly></p>
                                     </div>
                                 </div>
 
@@ -361,13 +377,13 @@
                 $('#productImage').attr('src', '' + productImageBase64);
                 $('#productPrice').text(productPrice + ' руб. за');
                 $('#productWeight').text(productWeight + ' гр.');
-                $('#productMassPerFat').text(productMassPerFat + '%');
+                $('#productMassPerFat').text('Массовая доля жира:' + productMassPerFat + '%');
                 $('#productfat').text('Жирность:'+productFat);
-                $('#productProtein').text(productProtein);
-                $('#productFatty').text(productFatty);
-                $('#productCarb').text(productCarb);
-                $('#productEnergyValue').text(productEnergyValue);
-                $('#productStorageLife').text(productStorageLife);
+                $('#productProtein').text('Белки:'+productProtein+'г.');
+                $('#productFatty').text('Жиры:'+productFatty + 'г.');
+                $('#productCarb').text('Углеводы:'+productCarb + 'г.');
+                $('#productEnergyValue').text('Энергетическая ценность:' + productEnergyValue+'ккал');
+                $('#productStorageLife').text('Срок хранения:' + productStorageLife + ' дней с момента фасовки');
                 $('#productPackageId').text(productPackageId);
                 $('#productStorageConditions').text(productStorageConditions);
                 $('#productSale').text(productSale);
