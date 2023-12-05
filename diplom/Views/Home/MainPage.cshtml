@@ -159,7 +159,7 @@
                                             <i class="fa fa-clock-o"></i> Энергетическая ценность: @item.product_fatty кДж.
                                         </li>
                                     </ul>
-                                    <button class="info-button1" data-toggle="modal" data-target="#exampleModal"
+                                    <button class="info-button1" data-toggle="modal" data-target="#exampleModal" title="Подробнее"
                                             data-nametitle="@item.Name_product"                                            
                                             data-description="@item.product_description_"
                                             data-price="@item.product_price"
@@ -198,24 +198,25 @@
                 <div class="modal-dialog">
                     <div class="modal-content2">
                         <div class="modal-header" style="font-family: 'Dancing Script', cursive;font-weight:bold;font-size:20px">
-                            <h5 class="modal-title" id="exampleModalLabel">
+                            <h5 class="modal-title" id="exampleModalLabel" style="margin-top:-5px">
                                 Информация о товаре
                             </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background-color: transparent;border: none;margin-top:-60px">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background-color: transparent;border: none;margin-top:-55px">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="row" style="margin-top:-15px">
+                            <div class="row" style="margin-top:-15px;">
                                 <div class="col-sm-3 tovarimg"></div>
                                 <div class="col-sm-9 tovarinfo"></div>
                             </div>
-                            <hr>
+                            <hr style="color: black;background: black;border: black;height: 1px;">
                             <form class="formmy">
                                 
                                 <div class="form-groupimg">
-                                    <img id="productImage" class="img-responsive" style="max-width:500px;" />
+                                    <img id="productImage" class="img-responsive" style="max-width:600px;" />
                                 </div>
+                                <div style="display:block;padding-left:20px;grid-column:2;grid-row:1">
                                 <div class="ihih">
                                 <div class="form-groupdesc">
                                     <center><label id="productNameLabel" for="exampleFormControlInput1"></label></center>
@@ -226,19 +227,39 @@
                                 </div>
                                 <div class="aboba">
                                 <div class="form-groupprice">
+                                    <p>Цена:</p>
                                     <p id="productPrice" class="form-control" readonly></p>
                                 </div>
                                 <div class="form-groupweight">
                                     <p id="productWeight" class="form-control" style="margin-left:10px" readonly></p>
                                 </div>
                                 </div>
+                                    <div class="form-groupsostav">
+                                        <p>Состав: </p>
+                                        <p id="productSostav" class="form-control" readonly></p>
+                                    </div>
+                                    <div class="form-groupart">
+                                        <p>Артикул: </p>
+                                        <p id="productArticle" class="form-control" readonly></p>
+                                    </div>
+                                    <div class="form-grouppost">
+                                        <p>Поставщик: </p>
+                                        @* <p id="productSostav" class="form-control" readonly></p> *@
+                                    </div>
+                                    <div class="gf" style="display:flex">
+                                    <button class="btn cart-button" style="border: 2px solid black;grid-row:1;grid-column:2;display:flex;align-items: center;width:200px">
+                                        <i class="fas fa-shopping-basket">В корзину</i>                                       
+                                    </button>
+                                    <button class="btn fav-button" style="border: 2px solid black;grid-row:1;grid-column:2;margin-left:20px">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    </div>
                                 </div>
-                                <button class="btn cart-button" style="border: 2px solid black;">
-                                    <i class="fas fa-shopping-basket"></i>
-                                </button>
-                                <button class="btn fav-button" style="border: 2px solid black;">
-                                    <i class="fas fa-heart"></i>
-                                </button>
+                                </div>
+                                <div class="gav">
+                                    <center> <p>Информация о продукте</p> </center>
+                                </div>
+
                             </form>
                         </div>
                     </div>

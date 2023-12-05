@@ -686,7 +686,9 @@ a:active {
     padding: 30px;
 }
 .modal-content2 {
-    background-color: #fefefe;
+    background: linear-gradient(to bottom right,#F9D86EAA,#ffffff);
+    background-color: #F9D86E;
+
     margin: 7% auto;
     padding: 20px;
     border: 1px solid #888;
@@ -700,7 +702,7 @@ a:active {
 }
 .formmy {
     display: grid;
-    grid-template-columns: 1.7fr 2fr;
+    grid-template-columns: 1.9fr 2.2fr;
     grid-template-rows: repeat(2,1fr);
 }
 .form-groupdesc {
@@ -729,4 +731,26 @@ a:active {
 }
 .ihih{
     display:block;
+}
+.form-groupsostav {
+    display: flex;
+    font-family: 'Dancing Script', cursive;
+    font-weight: bold;
+    grid-column: 2;
+    grid-row: 1
+}
+.form-groupart {
+    display: flex;
+    font-family: 'Dancing Script', cursive;
+    font-weight: bold;
+    grid-column: 2;
+    grid-row: 1
+}
+.gav{
+    grid-column-start:1;
+    grid-column-end:3;
+    grid-row:2;
+}
+.form-groupprice{
+    display:flex;
 }
