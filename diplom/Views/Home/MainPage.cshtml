@@ -247,7 +247,7 @@
                                         @* <p id="productSostav" class="form-control" readonly></p> *@
                                     </div>
                                     <div class="gf" style="display:flex">
-                                    <button class="btn cart-button" style="border: 2px solid black;grid-row:1;grid-column:2;display:flex;align-items: center;width:200px">
+                                    <button id="buttton" class="btn cart-button" style="border: 2px solid black;grid-row:1;grid-column:2;display:flex;align-items: center;width:200px">
                                         <i class="fas fa-shopping-basket">В корзину</i>                                       
                                     </button>
                                     <button class="btn fav-button" style="border: 2px solid black;grid-row:1;grid-column:2;margin-left:20px">
@@ -257,7 +257,11 @@
                                 </div>
                                 </div>
                                 <div class="gav">
-                                    <center> <p>Информация о продукте</p> </center>
+                                    <center> <p>Подробная информация</p> </center>
+                                    <div class="form-groupart">
+                                        <p>Массовая доля жира: </p>
+                                        <p id="productMassPerFat" class="form-control" readonly></p>
+                                    </div>
                                 </div>
 
                             </form>
@@ -351,7 +355,7 @@
                 $('#productImage').attr('src', '' + productImageBase64);
                 $('#productPrice').text(productPrice + ' руб. за');
                 $('#productWeight').text(productWeight + ' гр.');
-                $('#productMassPerFat').text(productMassPerFat);
+                $('#productMassPerFat').text(productMassPerFat + '%');
                 $('#productFat').text(productFat);
                 $('#productProtein').text(productProtein);
                 $('#productFatty').text(productFatty);
