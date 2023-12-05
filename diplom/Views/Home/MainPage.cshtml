@@ -215,7 +215,7 @@
                             <form class="formmy">
                                 
                                 <div class="form-groupimg">
-                                    <img id="productImage" class="img-responsive" style="max-width:600px;" />
+                                    <img id="productImage" class="img-responsive" style="width:600px;height:420px;" />
                                 </div>
                                 <div style="display:block;padding-left:20px;grid-column:2;grid-row:1">
                                 <div class="ihih">
@@ -223,30 +223,37 @@
                                     <center><label id="productNameLabel" for="exampleFormControlInput1"></label></center>
                                 </div>
                                 
-                                <div class="form-groupname" style="margin-top:-16px">
+                               @*  <div class="form-groupname" style="margin-top:-16px">
                                     <p id="description" class="form-control" readonly>
-                                </div>
+                                </div> *@
                                 <div class="aboba">
                                 <div class="form-groupprice">
-                                    <p>Цена:</p>
+                                    <center><label id="productNameLabel" for="exampleFormControlInput1"></label></center>
+                                    <p id="description" class="form-control" readonly>
+                                        <div style="display:flex;gap:20px">
                                     <p id="productPrice" class="form-control" readonly></p>
-                                </div>
-                                <div class="form-groupweight">
+                                    <p id="productWeight" class="form-control" readonly></p>
+                                     </div>
+                                     <p id="productSostav" class="form-control" readonly></p>
+                                      <p id="productArticle" class="form-control" readonly></p>
+                                                <p id="productSupplier"> </p>
+                                     </div>
+                               @*  <div class="form-groupweight">
                                     <p id="productWeight" class="form-control" style="margin-left:10px" readonly></p>
+                                </div> *@
                                 </div>
-                                </div>
-                                    <div class="form-groupsostav">
-                                        <p>Состав: </p>
+                                  @*   <div class="form-groupsostav">
+                                        
                                         <p id="productSostav" class="form-control" readonly></p>
-                                    </div>
-                                    <div class="form-groupart">
+                                    </div> *@
+                                    @* <div class="form-groupart">
                                         <p>Артикул: </p>
                                         <p id="productArticle" class="form-control" readonly></p>
-                                    </div>
-                                    <div class="form-grouppost">
+                                    </div> *@
+                                    @* <div class="form-grouppost">
                                             <p id="productSupplier"> </p>
-                                   <p>Поставщик:</p>
-                                    </div>
+                                   
+                                    </div> *@
                                     <div class="gf" style="display:flex">
                                     <button id="buttton" class="btn cart-button" style="border: 2px solid black;grid-row:1;grid-column:2;display:flex;align-items: center;width:200px">
                                         <i class="fas fa-shopping-basket">В корзину</i>                                       
@@ -375,7 +382,7 @@
                 $('#productNameLabel').text(productName);
                 $('#description').text(description);
                 $('#productImage').attr('src', '' + productImageBase64);
-                $('#productPrice').text(productPrice + ' руб. за');
+                $('#productPrice').text('Цена'+productPrice + ' руб. за');
                 $('#productWeight').text(productWeight + ' гр.');
                 $('#productMassPerFat').text('Массовая доля жира:' + productMassPerFat + '%');
                 $('#productfat').text('Жирность:'+productFat);
@@ -388,8 +395,8 @@
                 $('#productStorageConditions').text(productStorageConditions);
                 $('#productSale').text(productSale);
                 $('#productRemain').text(productRemain);
-                $('#productArticle').text(productArticle);
-                $('#productSostav').text(productSostav);
+                $('#productArticle').text('Артикул:' + productArticle);
+                $('#productSostav').text('Состав:'+productSostav);
             });
         });
     </script>

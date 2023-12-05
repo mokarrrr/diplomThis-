@@ -746,8 +746,13 @@ a:active {
     grid-column-end: 3;
     grid-row: 2;
 }
-.form-groupprice{
-    display:flex;
+.form-groupprice {
+    gap: 50px;
+    font-family: 'Dancing Script', cursive;
+    font-weight: bold;
+    grid-column: 2;
+    grid-row: 1;
+    gap:2px;
 }
 .form-grouppost {
     gap:50px;
