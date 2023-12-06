@@ -222,38 +222,25 @@
                                 <div class="form-groupdesc">
                                     <center><label id="productNameLabel" for="exampleFormControlInput1"></label></center>
                                 </div>
-                                
-                               @*  <div class="form-groupname" style="margin-top:-16px">
-                                    <p id="description" class="form-control" readonly>
-                                </div> *@
+
                                 <div class="aboba">
                                 <div class="form-groupprice">
                                     <center><label id="productNameLabel" for="exampleFormControlInput1"></label></center>
                                     <p id="description" class="form-control" readonly>
-                                        <div style="display:flex;gap:20px">
+                                        <div style="display:flex;gap:20px;margin-top:-25px">
                                     <p id="productPrice" class="form-control" readonly></p>
                                     <p id="productWeight" class="form-control" readonly></p>
                                      </div>
-                                     <p id="productSostav" class="form-control" readonly></p>
-                                      <p id="productArticle" class="form-control" readonly></p>
-                                                <p id="productSupplier"> </p>
+                                     <p id="productSostav" style="margin-top:-10px" class="form-control" readonly></p>
+                                      <p id="productArticle" class="form-control" readonly></p>                                      
+                                      <div>@*для поставщика и упаковки*@
+                                                    <p id="productSupplier"> </p>
+
+                                      </div>
                                      </div>
-                               @*  <div class="form-groupweight">
-                                    <p id="productWeight" class="form-control" style="margin-left:10px" readonly></p>
-                                </div> *@
+
                                 </div>
-                                  @*   <div class="form-groupsostav">
-                                        
-                                        <p id="productSostav" class="form-control" readonly></p>
-                                    </div> *@
-                                    @* <div class="form-groupart">
-                                        <p>Артикул: </p>
-                                        <p id="productArticle" class="form-control" readonly></p>
-                                    </div> *@
-                                    @* <div class="form-grouppost">
-                                            <p id="productSupplier"> </p>
-                                   
-                                    </div> *@
+
                                     <div class="gf" style="display:flex">
                                     <button id="buttton" class="btn cart-button" style="border: 2px solid black;grid-row:1;grid-column:2;display:flex;align-items: center;width:200px">
                                         <i class="fas fa-shopping-basket">В корзину</i>                                       
@@ -265,34 +252,32 @@
                                 </div>
                                 </div>
                                 <div class="gav">
+                                    <div style="display:flex">
+                                    <div>
                                     <center>
                                         <p style="font-family: 'Dancing Script', cursive;font-weight: bold;">Подробная информация</p>
                                     </center>
+                                    <div style="margin-top:30px">
                                     <div class="form-groupart">
-                                        <p id="productMassPerFat" class="form-control" readonly></p>
-                                        <p id="productMassPerFat" class="form-control" readonly></p>
+                                        <p id="productMassPerFat" class="form-control" readonly></p>                                       
                                         <p id="productfat" class="form-control" readonly></p>
                                     </div>
-@*                                     <div class="form-groupfat">
-                                        <p id="productMassPerFat" class="form-control" readonly></p>
-                                        <p id="productfat" class="form-control" readonly></p>
-                                    </div> *@
-@*                                     <div class="form-groupfat">
-                                        <p id="productfat" class="form-control" readonly></p>
-                                    </div> *@
-                                    <div class="form-groupfat" style="display:flex;gap:10px">
+                                    <div class="form-groupfat" style="display:flex;gap:10px;margin-top:-20px">
                                         <p>Пищевая ценность: </p>
                                         <p id="productProtein" class="form-control" readonly></p>
                                         <p id="productFatty" class="form-control" readonly></p>
                                         <p id="productCarb" class="form-control" readonly></p>
                                         <p>на 100 гр.</p>
                                     </div>
-                                    <div class="form-groupfat">
+                                    <div class="form-groupfat" style="margin-top:-20px">
                                         <p id="productEnergyValue" class="form-control" readonly></p>
                                         <p id="productStorageLife" class="form-control" readonly></p>
                                     </div>
+                                    </div>
                                 </div>
-
+                                        <hr style="color: black;background: black;border: black;height: 250px;width: 2px;margin-right: 500px;margin-top: 20px;">
+                                </div>
+                                </div>
                             </form>
                         </div>
                     </div>
