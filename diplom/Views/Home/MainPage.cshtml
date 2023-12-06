@@ -276,7 +276,10 @@
                                     </div>
                                 </div>
                                         <hr style="color: black;background: black;border: black;height: 250px;width: 2px;margin-right: 500px;margin-top: 20px;">
-                                </div>
+                                        <div>
+                                        <p id="productStorageConditions" class="form-control" readonly></p>
+                                        </div>
+                                </div>                               
                                 </div>
                             </form>
                         </div>
@@ -377,7 +380,7 @@
                 $('#productEnergyValue').text('Энергетическая ценность:' + productEnergyValue+'ккал');
                 $('#productStorageLife').text('Срок хранения:' + productStorageLife + ' дней с момента фасовки');
                 $('#productPackageId').text(productPackageId);
-                $('#productStorageConditions').text(productStorageConditions);
+                $('#productStorageConditions').text('Условия хранения:'+productStorageConditions);
                 $('#productSale').text(productSale);
                 $('#productRemain').text(productRemain);
                 $('#productArticle').text('Артикул:' + productArticle);
