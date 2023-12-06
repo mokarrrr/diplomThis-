@@ -56,7 +56,7 @@ namespace diplom.Controllers
         //    return View(PVM);
         //}
 
-        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames)
+        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames)
         {
             IQueryable<Product> productsQuery = db.Product;
             bool hasResults = true;
@@ -77,10 +77,16 @@ namespace diplom.Controllers
             // Получаем уникальные идентификаторы упаковок из списка продуктов
             var packageIds = productsList.Select(p => p.product_package_id).Distinct().ToList();
 
+            var providerIds = productsList.Select(p => p.Provider_id).Distinct().ToList();
+
             // Получаем словарь, сопоставляющий идентификатор упаковки с её именем
             var Package_name = db.Package
                 .Where(p => packageIds.Contains(p.Package_id))
                 .ToDictionary(p => p.Package_id.ToString(), p => p.Package_name);
+
+            var Provider_name = db._Provider
+                .Where(p => providerIds.Contains(p.IdProvider))
+                .ToDictionary(p => p.IdProvider.ToString(), p => p.provider_name);
 
             ProductViewModel viewModel = new ProductViewModel
             {
@@ -88,11 +94,13 @@ namespace diplom.Controllers
                 HasResults = hasResults,
                 ProductCount = productsList.Count,
                 PackageNames = packageNames,
+                ProviderNames = providerNames, // Исправлено здесь
                 SelectedProductId = selectedProductId ?? 0
             };
 
             return View(viewModel);
         }
+
         [HttpGet]
         public ActionResult GetPackageName(int packageId)
         {
@@ -103,7 +111,16 @@ namespace diplom.Controllers
 
             return Content(packageName);
         }
+        [HttpGet]
+        public ActionResult GetProviderName(int providerId)
+        {
+            var providerName = db._Provider
+                .Where(p => p.IdProvider == providerId)
+                .Select(p => p.provider_name)
+                .FirstOrDefault();
 
+            return Content(providerName);
+        }
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         //public ActionResult Login(string phoneLogin, string password)

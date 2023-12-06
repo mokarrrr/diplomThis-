@@ -12,6 +12,7 @@ namespace diplom.Models.ViewModels
         public string PackageNames { get; set; }
         public int SelectedProductId { get; set; }
         public string SelectedPackage { get; set; }
+        public string ProviderNames { get; set; }
 
     }
 }

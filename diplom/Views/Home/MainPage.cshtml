@@ -178,7 +178,8 @@
                                             data-article="@item.product_article"
                                             data-sostav="@item.product_sostav"
                                             data-img="@item.product_img"
-                                            data-package_name=""> 
+                                            data-provider_id="@item.Provider_id"
+                                        data-package_name=""> 
                                         <i class="fa fa-question"></i>
                                     </button>
                                     <button class="fav-button1" title="В избранное">
@@ -212,7 +213,7 @@
                                 <div class="col-sm-9 tovarinfo"></div>
                             </div>
                             <hr style="color: black;background: black;border: black;height: 1px;">
-                            <form class="formmy">
+                             <form class="formmy">
                                 
                                 <div class="form-groupimg">
                                     <img id="productImage" class="img-responsive" style="width:580px;height:420px;" />
@@ -233,8 +234,10 @@
                                      </div>
                                      <p id="productSostav" style="margin-top:-10px" class="form-control" readonly></p>
                                       <p id="productArticle" class="form-control" readonly></p>                                      
-                                      <div>@*для поставщика и упаковки*@
+                                      <div style="display:flex;gap:10px"> @* для поставщика и упаковки  *@
                                                     <p id="productSupplier"> </p>
+                                                    <p id="productpa"></p>
+                                                   
 
                                       </div>
                                      </div>
@@ -253,10 +256,10 @@
                                 </div>
                                 <div class="gav">
                                     <div style="display:flex">
-                                    <div>
-                                    <center>
-                                        <p style="font-family: 'Dancing Script', cursive;font-weight: bold;">Подробная информация</p>
-                                    </center>
+                                        <center>
+                                            <p style="font-family: 'Dancing Script', cursive;font-weight: bold;">Подробная информация</p>
+                                        </center>
+                                        <div>
                                     <div style="margin-top:30px">
                                     <div class="form-groupart">
                                         <p id="productMassPerFat" class="form-control" readonly></p>                                       
@@ -281,11 +284,13 @@
                                         </div>
                                 </div>                               
                                 </div>
-                            </form>
+                            </form> 
+
+
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
 
 
 
@@ -409,13 +414,13 @@
         $(document).ready(function () {
             $(".info-button1").on("click", function () {
                 var packageId = $(this).data("package_id");
-                var $productSupplier = $("#productSupplier");
+                var $productSup = $("#productSupplier");
 
                 // Вызов функции с использованием Promise
                 getPackageNameById(packageId)
                     .then(function (packageName) {
                         // Обновить текст в элементе <p>
-                        $productSupplier.text("Упаковка: " + packageName);
+                        $productSup.text("Упаковка: " + packageName);
                     })
                     .catch(function (error) {
                         console.error("Ошибка при получении имени пакета:", error);
@@ -423,5 +428,41 @@
             });
         });
     </script>
+
+    <script>
+        function getProviderNameById(providerId) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/GetProviderName", // Замените на ваш реальный URL
+                    data: { providerId: providerId },
+                    success: function (providerName) {
+                        resolve(providerName);
+                    },
+                    error: function (xhr, status, error) {
+                        reject(error);
+                    }
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            $(".info-button1").on("click", function () {
+                var providerId = $(this).data("provider_id");
+                var $productPa = $("#productpa");
+
+                // Вызов функции с использованием Promise
+                getProviderNameById(providerId)
+                    .then(function (providerName) {
+                        // Обновить текст в элементе <p>
+                        $productPa.text("Поставщик: " + providerName);
+                    })
+                    .catch(function (error) {
+                        console.error("Ошибка при получении имени поставщика:", error);
+                    });
+            });
+        });
+    </script>
+
 </body>
 
