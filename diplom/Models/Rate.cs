@@ -6,8 +6,10 @@ namespace diplom.Models
     {
         [Key]
         public int Rate_id { get; set; }
-        public int _Rate { get; set;}
+        public double _Rate { get; set;}
         public string Rate_comment { get; set;}
         public int client_id { get; set;}
+        public int Productid { get; set; }
+
     }
 }

@@ -196,7 +196,7 @@
                 }
         </div>
 
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="overflow-y:hidden">
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="">
                 <div class="modal-dialog">
                     <div class="modal-content2">
                         <div class="modal-header" style="font-family: 'Dancing Script', cursive;font-weight:bold;font-size:20px">
@@ -347,121 +347,6 @@
                 element.scrollIntoView({ behavior: 'smooth' });
             }
         }
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('.info-button1').on('click', function () {
-                var productName = $(this).data('nametitle');
-                var description = $(this).data('description');
-                var productImageBase64 = $(this).data('img');
-                var productPrice = $(this).data('price');
-                var productWeight = $(this).data('weight');
-                var productMassPerFat = $(this).data('mass_per_fat');
-                var productFat = $(this).data('fat');
-                var productProtein = $(this).data('protein');
-                var productFatty = $(this).data('fatty');
-                var productCarb = $(this).data('carb');
-                var productEnergyValue = $(this).data('energy_value');
-                var productStorageLife = $(this).data('storage_life');
-                var productPackageId = $(this).data('package_id');
-                var productStorageConditions = $(this).data('storage_conditions');
-                var productSale = $(this).data('sale');
-                var productRemain = $(this).data('remain');
-                var productArticle = $(this).data('article');
-                var productSostav = $(this).data('sostav');
-
-                // Обновляем значения в таблице
-                $('#productNameLabel').text(productName);
-                $('#description').text(description);
-                $('#productImage').attr('src', '' + productImageBase64);
-                $('#productPrice').text('Цена:'+productPrice + ' руб. за');
-                $('#productWeight').text(productWeight + ' гр.');
-                $('#productMassPerFat').text('Массовая доля жира:' + productMassPerFat + '%');
-                $('#productfat').text('Жирность:'+productFat);
-                $('#productProtein').text('Белки:'+productProtein+'г.');
-                $('#productFatty').text('Жиры:'+productFatty + 'г.');
-                $('#productCarb').text('Углеводы:'+productCarb + 'г.');
-                $('#productEnergyValue').text('Энергетическая ценность:' + productEnergyValue+'ккал');
-                $('#productStorageLife').text('Срок хранения:' + productStorageLife + ' дней с момента фасовки');
-                $('#productPackageId').text(productPackageId);
-                $('#productStorageConditions').text('Условия хранения:'+productStorageConditions);
-                $('#productSale').text(productSale);
-                $('#productRemain').text(productRemain);
-                $('#productArticle').text('Артикул:' + productArticle);
-                $('#productSostav').text('Состав:'+productSostav);
-            });
-        });
-    </script>
-
-    <script>
-        function getPackageNameById(packageId) {
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    type: "GET",
-                    url: "/Home/GetPackageName", // Замените на ваш реальный URL
-                    data: { packageId: packageId },
-                    success: function (packageName) {
-                        resolve(packageName);
-                    },
-                    error: function (xhr, status, error) {
-                        reject(error);
-                    }
-                });
-            });
-        }
-
-        $(document).ready(function () {
-            $(".info-button1").on("click", function () {
-                var packageId = $(this).data("package_id");
-                var $productSup = $("#productSupplier");
-
-                // Вызов функции с использованием Promise
-                getPackageNameById(packageId)
-                    .then(function (packageName) {
-                        // Обновить текст в элементе <p>
-                        $productSup.text("Упаковка: " + packageName);
-                    })
-                    .catch(function (error) {
-                        console.error("Ошибка при получении имени пакета:", error);
-                    });
-            });
-        });
-    </script>
-
-    <script>
-        function getProviderNameById(providerId) {
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    type: "GET",
-                    url: "/Home/GetProviderName", // Замените на ваш реальный URL
-                    data: { providerId: providerId },
-                    success: function (providerName) {
-                        resolve(providerName);
-                    },
-                    error: function (xhr, status, error) {
-                        reject(error);
-                    }
-                });
-            });
-        }
-
-        $(document).ready(function () {
-            $(".info-button1").on("click", function () {
-                var providerId = $(this).data("provider_id");
-                var $productPa = $("#productpa");
-
-                // Вызов функции с использованием Promise
-                getProviderNameById(providerId)
-                    .then(function (providerName) {
-                        // Обновить текст в элементе <p>
-                        $productPa.text("Поставщик: " + providerName);
-                    })
-                    .catch(function (error) {
-                        console.error("Ошибка при получении имени поставщика:", error);
-                    });
-            });
-        });
     </script>
 
 </body>
