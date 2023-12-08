@@ -238,32 +238,7 @@
                                       <div style="display:block;gap:10px"> @* для поставщика и упаковки  *@       
                                           <p id="productSupplier"> </p>
                                           <p id="productpa"></p>
-                                                    <p id="productrate">
-                                                            @{
-                                                                // Находим выбранный продукт
-                                                                var selectedProduct = Model.Products.FirstOrDefault(p => p.IdProduct == Model.SelectedProductId);
-
-                                                                if (selectedProduct != null)
-                                                                {
-                                                                    double averageRate = Model.ProductAverageRates.ContainsKey(selectedProduct.IdProduct)
-                                                                    ? Model.ProductAverageRates[selectedProduct.IdProduct]
-                                                                    : 0;
-
-                                                                    if (averageRate > 0)
-                                                                    {
-                                                                    <span>@selectedProduct.Name_product: @averageRate</span>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                    <span>No ratings available for @selectedProduct.Name_product</span>
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                <span>No product selected</span>
-                                                                }
-                                                            }
-                                                    </p>
+                                                    <p id="productrate"></p>
 
 
 
