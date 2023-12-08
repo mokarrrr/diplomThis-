@@ -160,7 +160,8 @@
                                         </li>
                                     </ul>
                                     <button class="info-button1" data-toggle="modal" data-target="#exampleModal" title="Подробнее"
-                                            data-nametitle="@item.Name_product"                                            
+                                            data-nametitle="@item.Name_product"
+                                            data-idd="@item.IdProduct"
                                             data-description="@item.product_description_"
                                             data-price="@item.product_price"
                                             data-weight="@item.product_weight"
@@ -234,12 +235,39 @@
                                      </div>
                                      <p id="productSostav" style="margin-top:-10px" class="form-control" readonly></p>
                                       <p id="productArticle" class="form-control" readonly></p>                                      
-                                      <div style="display:flex;gap:10px"> @* для поставщика и упаковки  *@
-                                                    <p id="productSupplier"> </p>
-                                                    <p id="productpa"></p>
-                                                   
+                                      <div style="display:block;gap:10px"> @* для поставщика и упаковки  *@       
+                                          <p id="productSupplier"> </p>
+                                          <p id="productpa"></p>
+                                                    <p id="productrate">
+                                                            @{
+                                                                // Находим выбранный продукт
+                                                                var selectedProduct = Model.Products.FirstOrDefault(p => p.IdProduct == Model.SelectedProductId);
 
-                                      </div>
+                                                                if (selectedProduct != null)
+                                                                {
+                                                                    double averageRate = Model.ProductAverageRates.ContainsKey(selectedProduct.IdProduct)
+                                                                    ? Model.ProductAverageRates[selectedProduct.IdProduct]
+                                                                    : 0;
+
+                                                                    if (averageRate > 0)
+                                                                    {
+                                                                    <span>@selectedProduct.Name_product: @averageRate</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                    <span>No ratings available for @selectedProduct.Name_product</span>
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                <span>No product selected</span>
+                                                                }
+                                                            }
+                                                    </p>
+
+
+
+                                                </div>
                                      </div>
 
                                 </div>
@@ -348,6 +376,66 @@
             }
         }
     </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.info-button1').on('click', function () {
+                // Получаем IdProduct из data-idd
+                var selectedProductId = $(this).data('idd');
+                console.log('Selected Product ID:', selectedProductId);
+
+                // Ваш дополнительный код обработки
+            });
+        });
+    </script>
+    <script>
+        function showProductRating(productId) {
+            $.ajax({
+                url: '@Url.Action("GetProductRating", "Home")',
+                data: { productId: productId },
+                type: 'GET',
+                success: function (result) {
+                    $('#productrate').html('<span>' + result + '</span>');
+                }
+            });
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".info-button1").on("click", function () {
+                var productId = $(this).data("idd");
+                var $productRate = $("#productrate");
+
+                // Вызов функции с использованием Promise
+                getProductRatingById(productId)
+                    .then(function (averageRate) {
+                        // Обновить текст в элементе <p>
+                        $productRate.text("Рейтинг продукта: " + averageRate);
+                    })
+                    .catch(function (error) {
+                        console.error("Ошибка при получении рейтинга продукта:", error);
+                    });
+            });
+        });
+
+        // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
+        function getProductRatingById(productId) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '/Home/GetProductRating', // Замените '/Home/GetProductRating' на корректный путь к вашему методу
+                    data: { productId: productId },
+                    type: 'GET',
+                    success: function (result) {
+                        resolve(result);
+                    },
+                    error: function (error) {
+                        reject(error);
+                    }
+                });
+            });
+        }
+    </script>
+
 
 </body>
 

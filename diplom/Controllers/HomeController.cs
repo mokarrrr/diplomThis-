@@ -58,7 +58,7 @@ namespace diplom.Controllers
 
         public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames)
         {
-            IQueryable<Product> productsQuery = db.Product;
+            IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
             bool hasResults = true;
 
             if (!string.IsNullOrEmpty(searchQuery))
@@ -74,19 +74,8 @@ namespace diplom.Controllers
 
             var productsList = productsQuery.ToList();
 
-            // Получаем уникальные идентификаторы упаковок из списка продуктов
-            var packageIds = productsList.Select(p => p.product_package_id).Distinct().ToList();
-
-            var providerIds = productsList.Select(p => p.Provider_id).Distinct().ToList();
-
-            // Получаем словарь, сопоставляющий идентификатор упаковки с её именем
-            var Package_name = db.Package
-                .Where(p => packageIds.Contains(p.Package_id))
-                .ToDictionary(p => p.Package_id.ToString(), p => p.Package_name);
-
-            var Provider_name = db._Provider
-                .Where(p => providerIds.Contains(p.IdProvider))
-                .ToDictionary(p => p.IdProvider.ToString(), p => p.provider_name);
+            Dictionary<int, double> productAverageRates = productsList
+                .ToDictionary(p => p.IdProduct, p => p.Rates.Any() ? p.Rates.Average(r => r._Rate) : 0);
 
             ProductViewModel viewModel = new ProductViewModel
             {
@@ -94,12 +83,24 @@ namespace diplom.Controllers
                 HasResults = hasResults,
                 ProductCount = productsList.Count,
                 PackageNames = packageNames,
-                ProviderNames = providerNames, // Исправлено здесь
-                SelectedProductId = selectedProductId ?? 0
+                ProviderNames = providerNames,
+                SelectedProductId = selectedProductId ?? 0,
+                ProductAverageRates = productAverageRates
             };
 
             return View(viewModel);
         }
+
+        public ActionResult GetProductRating(int productId)
+        {
+            // Получите рейтинг для выбранного продукта и верните его в виде строки
+            var ratesForProduct = db.Rate.Where(r => r.Productid == productId).ToList();
+            double averageRate = ratesForProduct.Any() ? ratesForProduct.Average(r => r._Rate) : 0;
+
+            return Content(averageRate.ToString());
+        }
+
+
 
         [HttpGet]
         public ActionResult GetPackageName(int packageId)

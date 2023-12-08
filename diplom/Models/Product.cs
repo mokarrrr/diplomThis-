@@ -26,6 +26,6 @@ namespace diplom.Models
         public string product_img { get; set; }
         public int Provider_id { get; set; }
 
-     
+        public ICollection<Rate> Rates { get; set; }
     }
 }
