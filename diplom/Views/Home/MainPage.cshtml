@@ -214,8 +214,7 @@
                                 <div class="col-sm-9 tovarinfo"></div>
                             </div>
                             <hr style="color: black;background: black;border: black;height: 1px;">
-                             <form class="formmy">
-                                
+                             <form class="formmy">                              
                                 <div class="form-groupimg">
                                     <img id="productImage" class="img-responsive" style="width:580px;height:420px;" />
                                 </div>
@@ -238,12 +237,9 @@
                                       <div style="display:block;gap:10px"> @* для поставщика и упаковки  *@       
                                           <p id="productSupplier"> </p>
                                           <p id="productpa"></p>
-                                                    <p id="productrate"></p>
-
-
-
-                                                </div>
+                                          <p id="productrate"></p>
                                      </div>
+                                      </div>
 
                                 </div>
 
@@ -257,12 +253,16 @@
                                     </div>
                                 </div>
                                 </div>
+                                <div id="myTabs">
+                                    <div class="tab" data-tab="tab-info">Подробная информация</div>
+                                    <div class="tab" data-tab="tab-reviews">Отзывы</div>
+                                </div>
+                                <div id="myTabsContent">
+                                    <div class="tab-content" id="tab-info-content">
                                 <div class="gav">
+                                    
                                     <div style="display:flex">
-                                        <center>
-                                            <p style="font-family: 'Dancing Script', cursive;font-weight: bold;">Подробная информация</p>
-                                        </center>
-                                        <div>
+                                        
                                     <div style="margin-top:30px">
                                     <div class="form-groupart">
                                         <p id="productMassPerFat" class="form-control" readonly></p>                                       
@@ -278,14 +278,21 @@
                                     <div class="form-groupfat" style="margin-top:-20px">
                                         <p id="productEnergyValue" class="form-control" readonly></p>
                                         <p id="productStorageLife" class="form-control" readonly></p>
-                                    </div>
-                                    </div>
-                                </div>
-                                        <hr style="color: black;background: black;border: black;height: 250px;width: 2px;margin-right: 10px;margin-top: 20px;">
-                                        <div>
                                         <p id="productStorageConditions" class="form-control" readonly></p>
-                                        </div>
-                                </div>                               
+                                    </div>
+                                    </div>
+                                                                      
+                                </div>
+                                </div>
+                                </div>
+                                    <div class="tab-content pagination" id="tab-reviews-content">
+                                        <!-- Ваши отзывы и элементы для пагинации здесь -->
+                                        <p>dfdfdsfds</p>
+
+                                        <!-- Пример элементов для пагинации -->
+
+                                    </div>
+
                                 </div>
                             </form> 
 
@@ -410,6 +417,32 @@
             });
         }
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('#myTabs .tab');
+            const tabContents = document.querySelectorAll('#myTabsContent .tab-content');
+
+            tabs.forEach(function (tab, index) {
+                tab.addEventListener('click', function () {
+                    tabs.forEach(function (t) {
+                        t.classList.remove('active');
+                    });
+
+                    tabContents.forEach(function (content) {
+                        content.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+                    tabContents[index].classList.add('active');
+                });
+            });
+
+            // Активировать первую вкладку
+            tabs[0].click();
+        });
+    </script>
+
 
 
 </body>
