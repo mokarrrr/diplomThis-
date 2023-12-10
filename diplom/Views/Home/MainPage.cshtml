@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="~/css/mainwindow.css" />
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.raty/latest/jquery.raty.min.js"></script>
+
 
 
 <body>
@@ -412,7 +412,6 @@
             // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
             function getProductRatingById(productId) {
                 return new Promise(function (resolve, reject) {
-                    // Замените '/Home/GetProductRating' на корректный путь к вашему методу
                     $.ajax({
                         url: '/Home/GetProductRating',
                         data: { productId: productId },
@@ -435,24 +434,27 @@
                 // Максимальный рейтинг
                 var maxRating = 5;
 
-                // Unicode символ для заполненной звезды
-                var filledStar = '&#9733;';
-                // Unicode символ для пустой звезды
-                var emptyStar = '&#9734;';
+                // Определение целой и десятичной частей рейтинга
+                var integerPart = Math.floor(averageRate);
+                var decimalPart = averageRate - integerPart;
 
                 // Генерируем звезды на основе среднего рейтинга
                 for (var i = 0; i < maxRating; i++) {
-                    if (i < Math.floor(averageRate)) {
-                        $ratingStars.append('<span class="star filled">' + filledStar + '</span>');
-                    } else if (i < averageRate) {
-                        $ratingStars.append('<span class="star filled">&#9733;&#189;</span>');
+                    if (i < integerPart) {
+                        // Добавляем заполненную звезду с линейным градиентом
+                        $ratingStars.append('<span class="star filled" style="background: linear-gradient(90deg, #FFD700 ' + (decimalPart * 100) + '%, transparent ' + (decimalPart * 100) + '%);">&#9733;</span>');
                     } else {
-                        $ratingStars.append('<span class="star">' + emptyStar + '</span>');
+                        // Добавляем пустую звезду
+                        $ratingStars.append('<span class="star">&#9734;</span>');
                     }
                 }
             }
         });
     </script>
+
+
+
+
 
 
     <script>
