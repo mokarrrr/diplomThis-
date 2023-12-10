@@ -97,6 +97,9 @@ namespace diplom.Controllers
             var ratesForProduct = db.Rate.Where(r => r.Productid == productId).ToList();
             double averageRate = ratesForProduct.Any() ? ratesForProduct.Average(r => r._Rate) : 0;
 
+            // Округлить до одного знака после запятой
+            averageRate = Math.Round(averageRate, 1);
+
             return Content(averageRate.ToString());
         }
 
