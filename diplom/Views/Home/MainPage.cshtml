@@ -238,7 +238,8 @@
                                       <div style="display:block;gap:10px"> @* для поставщика и упаковки  *@       
                                           <p id="productSupplier"> </p>
                                           <p id="productpa"></p>
-                                          <p id="productrate"></p>
+                                                    <p id="productrate"></p>
+                                                    <div id="rating-stars"></div>
        
 
 
@@ -305,8 +306,7 @@
                         </div>
                     </div>
                 </div>
-            </div> 
-
+            </div>
 
 
 
@@ -351,8 +351,19 @@
                 </footer>
         </div>
         </div>
-        
 
+        <svg width="0" height="0" style="display:none;">
+            <!-- Определение символа (звезды) -->
+            <symbol id="star" viewBox="0 0 24 24">
+                <path fill="#FFD700" d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6" />
+            </symbol>
+
+            <!-- Определение маски для отображения половины звезды -->
+            <mask id="half" maskContentUnits="objectBoundingBox">
+                <rect width="0.5" height="1" fill="white" />
+                <rect x="0.5" width="0.5" height="1" fill="black" />
+            </mask>
+        </svg>
     </div>
 
     <script>
@@ -375,59 +386,63 @@
             });
         });
     </script>
+
+
     <script>
-        function showProductRating(productId) {
-            $.ajax({
-                url: '@Url.Action("GetProductRating", "Home")',
-                data: { productId: productId },
-                type: 'GET',
-                success: function (result) {
-                    $('#productrate').html('<span>' + result + '</span>');
-                }
+        $(document).ready(function () {
+            $(".info-button1").on("click", function () {
+                var productId = $(this).data("idd");
+                var $productRate = $("#productrate");
+                var $ratingStars = $("#rating-stars");
+
+                // Вызов функции с использованием Promise
+                getProductRatingById(productId)
+                    .then(function (averageRate) {
+                        // Обновить текст и звезды
+                        updateProductRating($productRate, $ratingStars, averageRate);
+                    })
+                    .catch(function (error) {
+                        console.error("Ошибка при получении рейтинга продукта:", error);
+                    });
             });
-        }
-    </script>
 
-<script>
-    $(document).ready(function () {
-        $(".info-button1").on("click", function () {
-            var productId = $(this).data("idd");
-            var $productRate = $("#productrate");
-            var $ratingStars = $("#rating-stars");
-
-            // Вызов функции с использованием Promise
-            getProductRatingById(productId)
-                .then(function (averageRate) {
-                    // Обновить текст в элементе <div>
-                        $productRate.text("Рейтинг продукта: " + averageRate + '★');
-
-                    // Обновить звезды
-                    updateRatingStars($ratingStars, averageRate);
-                })
-                .catch(function (error) {
-                    console.error("Ошибка при получении рейтинга продукта:", error);
+            // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
+            function getProductRatingById(productId) {
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: '/Home/GetProductRating',
+                        data: { productId: productId },
+                        type: 'GET',
+                        success: function (result) {
+                            resolve(result);
+                        },
+                        error: function (error) {
+                            reject(error);
+                        }
+                    });
                 });
-        });
+            }
 
-        // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
-        function getProductRatingById(productId) {
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    url: '/Home/GetProductRating',
-                    data: { productId: productId },
-                    type: 'GET',
-                    success: function (result) {
-                        resolve(result);
-                    },
-                    error: function (error) {
-                        reject(error);
+            // Функция для обновления текста и звезд
+            function updateProductRating($productRate, $ratingStars, averageRate) {
+                // Обновить текст в элементе <p>
+                $productRate.text("Рейтинг продукта: " + averageRate + '★');
+
+                // Очистить звезды
+                $ratingStars.empty();
+
+                // Добавить полные и неполные звезды
+                for (var i = 0; i < 5; i++) {
+                    var starHtml = '<svg class="c-icon" width="32" height="32" viewBox="0 0 32 32">';
+                    if (averageRate > i) {
+                        starHtml += '<use xlink:href="#star" mask="url(#half)"/>';
                     }
-                });
-            });
-        }
-
-     });
-</script>
+                    starHtml += '</svg>';
+                    $ratingStars.append(starHtml);
+                }
+            }
+        });
+    </script>
 
 
     <script>
