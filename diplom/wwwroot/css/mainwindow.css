@@ -812,20 +812,3 @@ a:active {
         padding-bottom: 20px;
     }
 
-.star-rating__container {
-    /* Стили для контейнера */
-}
-
-.star-rating__wrapper {
-    /* Стили для обертки */
-}
-
-.star-rating__avg,
-.star-rating__bg,
-.star-rating__live {
-    display: flex;
-}
-
-.star-rating__item {
-    /* Стили для звезд */
-}

@@ -239,7 +239,7 @@
                                           <p id="productSupplier"> </p>
                                           <p id="productpa"></p>
                                           <p id="productrate"></p>
-                                                    <div id="rating-stars"></div>
+       
 
 
 
@@ -388,73 +388,46 @@
         }
     </script>
 
-    <script>
-        $(document).ready(function () {
-            $(".info-button1").on("click", function () {
-                var productId = $(this).data("idd");
-                var $productRate = $("#productrate");
-                var $ratingStars = $("#rating-stars");
+<script>
+    $(document).ready(function () {
+        $(".info-button1").on("click", function () {
+            var productId = $(this).data("idd");
+            var $productRate = $("#productrate");
+            var $ratingStars = $("#rating-stars");
 
-                // Вызов функции с использованием Promise
-                getProductRatingById(productId)
-                    .then(function (averageRate) {
-                        // Обновить текст в элементе <div>
-                        $productRate.text("Рейтинг продукта: " + averageRate);
+            // Вызов функции с использованием Promise
+            getProductRatingById(productId)
+                .then(function (averageRate) {
+                    // Обновить текст в элементе <div>
+                        $productRate.text("Рейтинг продукта: " + averageRate + '★');
 
-                        // Обновить звезды
-                        updateRatingStars($ratingStars, averageRate);
-                    })
-                    .catch(function (error) {
-                        console.error("Ошибка при получении рейтинга продукта:", error);
-                    });
-            });
-
-            // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
-            function getProductRatingById(productId) {
-                return new Promise(function (resolve, reject) {
-                    $.ajax({
-                        url: '/Home/GetProductRating',
-                        data: { productId: productId },
-                        type: 'GET',
-                        success: function (result) {
-                            resolve(result);
-                        },
-                        error: function (error) {
-                            reject(error);
-                        }
-                    });
+                    // Обновить звезды
+                    updateRatingStars($ratingStars, averageRate);
+                })
+                .catch(function (error) {
+                    console.error("Ошибка при получении рейтинга продукта:", error);
                 });
-            }
-
-            // Функция для обновления звезд в элементе #rating-stars
-            function updateRatingStars($ratingStars, averageRate) {
-                // Очищаем содержимое элемента
-                $ratingStars.empty();
-
-                // Максимальный рейтинг
-                var maxRating = 5;
-
-                // Определение целой и десятичной частей рейтинга
-                var integerPart = Math.floor(averageRate);
-                var decimalPart = averageRate - integerPart;
-
-                // Генерируем звезды на основе среднего рейтинга
-                for (var i = 0; i < maxRating; i++) {
-                    if (i < integerPart) {
-                        // Добавляем заполненную звезду с линейным градиентом
-                        $ratingStars.append('<span class="star filled" style="background: linear-gradient(90deg, #FFD700 ' + (decimalPart * 100) + '%, transparent ' + (decimalPart * 100) + '%);">&#9733;</span>');
-                    } else {
-                        // Добавляем пустую звезду
-                        $ratingStars.append('<span class="star">&#9734;</span>');
-                    }
-                }
-            }
         });
-    </script>
 
+        // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
+        function getProductRatingById(productId) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '/Home/GetProductRating',
+                    data: { productId: productId },
+                    type: 'GET',
+                    success: function (result) {
+                        resolve(result);
+                    },
+                    error: function (error) {
+                        reject(error);
+                    }
+                });
+            });
+        }
 
-
-
+     });
+</script>
 
 
     <script>
