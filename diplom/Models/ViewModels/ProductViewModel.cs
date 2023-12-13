@@ -15,5 +15,7 @@ namespace diplom.Models.ViewModels
         public string ProviderNames { get; set; }
 
         public Dictionary<int, double> ProductAverageRates { get; set; }
+
+        public IEnumerable<Rate> Rates { get; set; }
     }
 }

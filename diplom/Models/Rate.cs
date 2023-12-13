@@ -10,7 +10,7 @@ namespace diplom.Models
         public string? Rate_comment { get; set;}
         public int client_id { get; set;}
         public int Productid { get; set; }
-        //public Product Product { get; set; }
+
 
     }
 }

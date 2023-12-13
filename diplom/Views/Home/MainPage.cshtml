@@ -4,6 +4,7 @@
 }
 @model diplom.Models.ViewModels.ProductViewModel;
 
+
 <link rel="stylesheet" href="~/css/mainwindow.css" />
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -294,8 +295,19 @@
                                     <div class="tab-content pagination" id="tab-reviews-content">
                                         <!-- Ваши отзывы и элементы для пагинации здесь -->
                                         <p>dfdfdsfds</p>
+                                        
+                                        <div class="Rates">
 
-                                        <!-- Пример элементов для пагинации -->
+                                                <div style="display:flex;">
+                                                    <div>
+                                                        <img src="https://avotar.ru/avatar/anime-devushki/100/35.jpg">
+                                                    </div>
+                                                    <div>
+                                                        <p id="commentary"></p>
+                                                    </div>
+                                                </div>
+                                            
+                                        </div>
 
                                     </div>
 
@@ -435,7 +447,10 @@
                 for (var i = 0; i < 5; i++) {
                     var starHtml = '<svg class="c-icon" width="32" height="32" viewBox="0 0 32 32">';
                     if (averageRate > i) {
-                        starHtml += '<use xlink:href="#star" mask="url(#half)"/>';
+                        var fillPercentage = (averageRate - i) >= 1 ? 100 : ((averageRate - i) * 100);
+                        starHtml += '<use xlink:href="#star" style="fill: url(#gradient-' + i + ');"/>';
+                        // Добавить градиент для части звезды
+                        starHtml += '<defs><linearGradient id="gradient-' + i + '" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="' + fillPercentage + '%" style="stop-color: #FFD700; stop-opacity: 1" /><stop offset="' + fillPercentage + '%" style="stop-color: transparent; stop-opacity: 0" /></linearGradient></defs>';
                     }
                     starHtml += '</svg>';
                     $ratingStars.append(starHtml);
