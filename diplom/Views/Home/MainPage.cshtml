@@ -537,11 +537,12 @@
                 // Обновите атрибут data-total у кнопки корзины
                 $('#cartButton').attr('data-total', newTotal);
 
-                // Обновите текст суммы в корзине, округлив в меньшую сторону
-                $('#cartButton').text(Math.floor(newTotal) + ' руб.');
+                // Обновите текст суммы в корзине с символом корзины
+                $('#cartButton').html('<i class="fas fa-shopping-basket"></i> ' + Math.floor(newTotal) + ' руб.');
             });
         });
     </script>
+
 
 
 
