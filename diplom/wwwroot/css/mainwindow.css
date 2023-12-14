@@ -215,6 +215,18 @@ a:active {
     font-weight: 700;
     text-transform: capitalize;
 }
+.sale {
+    padding: 4px 8px;
+    position: absolute;
+    left: 10px;
+    background: #ff6633;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #fff;
+    margin-top:-50px;
+    z-index:1;
+}
 
 .product-card .card-content .card-sub-title {
     margin: 0;
@@ -241,9 +253,9 @@ a:active {
 }
 
 .product-card .card-content .post-meta {
-    margin: 20px 0 0;
+    margin: 20px -10px 20px;
     color: #999999;
-    margin-left:-20px;
+    margin-left: -20px;
 }
 
     .product-card .card-content .post-meta .time-stamp {
@@ -293,7 +305,8 @@ a:active {
     align-items: center;
     gap: 40px;
     border-radius: 25px;
-    padding: 10px;
+    padding-left: 15px;
+    padding-right:15px;
     cursor: pointer;
     transition: background-color 0.3s;
     background: linear-gradient(to bottom right,#ffcc01,#fdc401,#ffcc01);
