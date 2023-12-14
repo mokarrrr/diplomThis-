@@ -295,19 +295,20 @@
                                     <div class="tab-content pagination" id="tab-reviews-content">
                                         <!-- Ваши отзывы и элементы для пагинации здесь -->
                                         <p>dfdfdsfds</p>
-                                        
-                                        <div class="Rates">
 
-                                                <div style="display:flex;">
-                                                    <div>
-                                                        <img src="https://avotar.ru/avatar/anime-devushki/100/35.jpg">
-                                                    </div>
-                                                    <div>
-                                                        <p id="commentary"></p>
+                                        <div class="Rates">
+                                            <div style="display:flex;">
+                                                <div>
+                                                </div>
+                                                <div>
+                                                    <p id="commentary"></p>
+                                                    <div id="reviewsContainer">
+                                                       
                                                     </div>
                                                 </div>
-                                            
+                                            </div>
                                         </div>
+
 
                                     </div>
 
@@ -400,7 +401,7 @@
     </script>
 
 
-    <script>
+    <script> /* Никита это где заполняются звезды и вставляется средний рейтинг */
         $(document).ready(function () {
             $(".info-button1").on("click", function () {
                 var productId = $(this).data("idd");
@@ -485,6 +486,38 @@
         });
     </script>
 
+    <script>
+        function submitReview() {
+            var productId = $('#SelectedProductId').val();
+            var comment = $('#commentInput').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Review/AddReview',
+                data: { ProductId: productId, Comment: comment },
+                success: function () {
+                    loadReviews(productId);
+                }
+            });
+        }
+
+        function loadReviews(productId) {
+            $.ajax({
+                type: 'GET',
+                url: '/Review/Index',
+                data: { productId: productId },
+                success: function (data) {
+                    $('#reviewsContainer').html(data);
+                }
+            });
+        }
+
+        // Загрузить отзывы при загрузке страницы
+        $(document).ready(function () {
+            var productId = $('#SelectedProductId').val();
+            loadReviews(productId);
+        });
+    </script>
 
 
 </body>
