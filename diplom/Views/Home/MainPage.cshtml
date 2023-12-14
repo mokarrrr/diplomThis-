@@ -95,7 +95,7 @@
                 <a href="/Home/HomePage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
             </div>
             <div class="header-buttons">
-                <button class="btn cart-button" style="border: 2px solid black;">
+                <button id="cartButton" class="btn cart-button" style="border: 2px solid black;">
                     <i class="fas fa-shopping-basket"></i>
                 </button>
                 <button class="btn fav-button" style="border: 2px solid black;">
@@ -152,7 +152,11 @@
                                     <p class="description">
                                         @item.product_description_
                                     </p>
-                                    <p class="price">Цена: @item.product_price руб. за @item.product_weight грамм</p>
+                                    <div style="display:flex">
+                                        <p class="price">Цена: @item.product_price руб.</p>
+                                        <p class="price">за @item.product_weight грамм </p>
+                                    </div>
+                                    
                                     <ul class="list-inline post-meta">
                                         <li class="time-stamp">
                                             <i class="fa fa-clock-o"></i> Массовая доля жира: @item.product_mass_per_fat%
@@ -511,13 +515,35 @@
                 }
             });
         }
+    </script>
 
-        // Загрузить отзывы при загрузке страницы
+
+    <script>
         $(document).ready(function () {
-            var productId = $('#SelectedProductId').val();
-            loadReviews(productId);
+            // При нажатии на элемент с классом "send"
+            $('.send').on('click', function () {
+                // Получите цену товара
+                var price = $(this).closest('.card-content').find('.price').text().trim();
+
+                // Преобразуйте цену в числовое значение (предполагая, что цена представлена числом)
+                var priceValue = parseFloat(price.replace(/[^\d.]/g, ''));
+
+                // Получите текущую сумму в корзине
+                var currentTotal = parseFloat($('#cartButton').attr('data-total')) || 0;
+
+                // Прибавьте цену товара к текущей сумме
+                var newTotal = currentTotal + priceValue;
+
+                // Обновите атрибут data-total у кнопки корзины
+                $('#cartButton').attr('data-total', newTotal);
+
+                // Обновите текст суммы в корзине, округлив в меньшую сторону
+                $('#cartButton').text(Math.floor(newTotal) + ' руб.');
+            });
         });
     </script>
+
+
 
 
 </body>

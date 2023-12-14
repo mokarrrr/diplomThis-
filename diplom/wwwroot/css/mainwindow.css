@@ -287,8 +287,8 @@ a:active {
 }
 
 .btn {
-    height: fit-content;
-    width: 60px;
+    height: 60px;
+    width: fit-content;
     justify-content: center;
     align-items: center;
     gap: 40px;
