@@ -143,7 +143,11 @@
                                         <img class="basket" src="/img/basket.png" />
                                         <i class="fa fa-send fa-2x"></i>
                                     </div>
-                                    <div class="sale">-@item.product_sale%</div>
+                                    @if (item.product_sale > 0)
+                                    {
+                                        <!-- Покажите div, только если product_sale больше 0 -->
+                                        <div class="sale">-@item.product_sale%</div>
+                                    }
                                     <h1 class="card-title">
                                         @item.Name_product
                                     </h1>
@@ -154,8 +158,19 @@
                                         @item.product_description_
                                     </p>
                                     <div style="display:flex">
-                                        <p class="price">Цена: @item.product_price руб.</p>
+                                        @if (item.product_sale > 0)
+                                        {
+                                            <p class="price">
+                                                <s>@item.product_price руб.</s>
+                                                @(item.product_price - (item.product_price * item.product_sale / 100)) руб.
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p class="price" id="price_@item.IdProduct">Цена: @item.product_price руб.</p>
+                                        }
                                         <p class="price">за @item.product_weight грамм </p>
+                                        
                                     </div>
                                     
                                     <ul class="list-inline post-meta">
@@ -545,6 +560,71 @@
     </script>
 
 
+    <script>
+        document.getElementById('filter').addEventListener('change', function () {
+            // Получите выбранное значение фильтра
+            var selectedFilter = this.value;
+
+            // Получите все карточки продуктов
+            var productCards = document.querySelectorAll('.product-card');
+
+            // Преобразуйте NodeList в Array для удобной манипуляции
+            var productArray = Array.from(productCards);
+
+            // Отсортируйте карточки продуктов в зависимости от выбранного фильтра
+            switch (selectedFilter) {
+                case 'by_popularity':
+                    // Реализуйте логику сортировки для популярности
+                    break;
+                case 'by_alphabet':
+                    // Сортируйте карточки продуктов по алфавиту
+                    productArray.sort(function (a, b) {
+                        var titleA = a.querySelector('.card-title').innerText.toUpperCase();
+                        var titleB = b.querySelector('.card-title').innerText.toUpperCase();
+                        return titleA.localeCompare(titleB);
+                    });
+                    break;
+                case 'cheaper':
+                    // Сортируйте карточки продуктов по цене в порядке возрастания
+                    productArray.sort(function (a, b) {
+                        var priceA = getPrice(a);
+                        var priceB = getPrice(b);
+                        return priceA - priceB;
+                    });
+                    break;
+                case 'expensive':
+                    // Сортируйте карточки продуктов по цене в порядке убывания
+                    productArray.sort(function (a, b) {
+                        var priceA = getPrice(a);
+                        var priceB = getPrice(b);
+                        return priceB - priceA;
+                    });
+                    break;
+                default:
+                    break;
+            }
+
+            // Обновите контейнер отсортированными карточками продуктов
+            var container = document.querySelector('.container3');
+            container.innerHTML = '';
+            productArray.forEach(function (card) {
+                container.appendChild(card);
+            });
+        });
+
+        function getPrice(card) {
+            var saleElement = card.querySelector('.sale');
+            var priceElement = card.querySelector('.price');
+
+            if (saleElement && parseInt(saleElement.innerText.replace('-', '')) > 0) {
+                // Если есть скидка, учитываем цену со скидкой
+                return parseFloat(priceElement.innerText.split(' ')[2]);
+            } else {
+                // В противном случае учитываем обычную цену
+                return parseFloat(priceElement.innerText.split(' ')[1]);
+            }
+        }
+    </script>
 
 
 
