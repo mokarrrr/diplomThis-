@@ -408,7 +408,7 @@
         }
     </script>
 
-    <script>
+@*     <script>
         $(document).ready(function () {
             $('.info-button1').on('click', function () {
                 // Получаем IdProduct из data-idd
@@ -418,7 +418,7 @@
                 // Ваш дополнительный код обработки
             });
         });
-    </script>
+    </script> *@
 
 
     <script> /* Никита это где заполняются звезды и вставляется средний рейтинг */
@@ -480,7 +480,7 @@
         });
     </script>
 
-
+    @* табы *@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const tabs = document.querySelectorAll('#myTabs .tab');
@@ -506,34 +506,8 @@
         });
     </script>
 
-    <script>
-        function submitReview() {
-            var productId = $('#SelectedProductId').val();
-            var comment = $('#commentInput').val();
 
-            $.ajax({
-                type: 'POST',
-                url: '/Review/AddReview',
-                data: { ProductId: productId, Comment: comment },
-                success: function () {
-                    loadReviews(productId);
-                }
-            });
-        }
-
-        function loadReviews(productId) {
-            $.ajax({
-                type: 'GET',
-                url: '/Review/Index',
-                data: { productId: productId },
-                success: function (data) {
-                    $('#reviewsContainer').html(data);
-                }
-            });
-        }
-    </script>
-
-
+   @*  добавление в корзину *@
     <script>
         $(document).ready(function () {
             // При нажатии на элемент с классом "send"
@@ -563,7 +537,7 @@
         });
     </script>
 
-
+    @* фильтры *@
     <script>
         document.getElementById('filter').addEventListener('change', function () {
             // Получите выбранное значение фильтра
