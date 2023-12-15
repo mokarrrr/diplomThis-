@@ -539,22 +539,26 @@
             // При нажатии на элемент с классом "send"
             $('.send').on('click', function () {
                 // Получите цену товара
-                var price = $(this).closest('.card-content').find('.price').text().trim();
+                var priceElement = $(this).closest('.card-content').find('.price');
+                var saleElement = $(this).closest('.card-content').find('.sale');
 
-                // Преобразуйте цену в числовое значение (предполагая, что цена представлена числом)
-                var priceValue = parseFloat(price.replace(/[^\d.]/g, ''));
+                // Получите цену без скидки
+                var originalPrice = parseFloat(priceElement.text().replace(/[^\d.]/g, ''));
+
+                // Получите сумму с учетом скидки
+                var priceWithSale = saleElement.length > 0 ? originalPrice - (originalPrice * parseFloat(saleElement.text().replace(/[^\d.]/g, '')) / 100) : originalPrice;
 
                 // Получите текущую сумму в корзине
                 var currentTotal = parseFloat($('#cartButton').attr('data-total')) || 0;
 
-                // Прибавьте цену товара к текущей сумме
-                var newTotal = currentTotal + priceValue;
+                // Прибавьте цену товара с учетом скидки к текущей сумме
+                var newTotal = currentTotal + priceWithSale;
 
                 // Обновите атрибут data-total у кнопки корзины
                 $('#cartButton').attr('data-total', newTotal);
 
                 // Обновите текст суммы в корзине с символом корзины
-                $('#cartButton').html('<i class="fas fa-shopping-basket"></i> ' + Math.floor(newTotal) + ' руб.');
+                $('#cartButton').html('<i class="fas fa-shopping-basket"></i> ' + newTotal + ' руб.');
             });
         });
     </script>
