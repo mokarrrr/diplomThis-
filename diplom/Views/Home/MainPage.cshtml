@@ -162,14 +162,14 @@
                                         {
                                             <p class="price">
                                                 <s>@item.product_price руб.</s>
-                                                @(item.product_price - (item.product_price * item.product_sale / 100)) руб.
+                                                @(Math.Round(Convert.ToDecimal(item.product_price - (item.product_price * item.product_sale / 100)))) руб.
                                             </p>
                                         }
                                         else
                                         {
-                                            <p class="price" id="price_@item.IdProduct">Цена: @item.product_price руб.</p>
+                                            <p class="price" id="price_@item.IdProduct">Цена: @(Math.Round(Convert.ToDecimal(item.product_price))) руб.</p>
                                         }
-                                        <p class="price">за @item.product_weight грамм </p>
+                                        <p class="price1">за @item.product_weight грамм </p>
                                         
                                     </div>
                                     
@@ -517,13 +517,13 @@
                 var saleElement = $(this).closest('.card-content').find('.sale');
 
                 // Получите цену без скидки
-                var originalPrice = parseFloat(priceElement.text().replace(/[^\d.]/g, ''));
+                var originalPrice = parseInt(priceElement.text().replace(/[^\d.]/g, ''));
 
                 // Получите сумму с учетом скидки
-                var priceWithSale = saleElement.length > 0 ? originalPrice - (originalPrice * parseFloat(saleElement.text().replace(/[^\d.]/g, '')) / 100) : originalPrice;
+                var priceWithSale = saleElement.length > 0 ? originalPrice - Math.floor(originalPrice * parseFloat(saleElement.text().replace(/[^\d.]/g, '')) / 100) : originalPrice;
 
                 // Получите текущую сумму в корзине
-                var currentTotal = parseFloat($('#cartButton').attr('data-total')) || 0;
+                var currentTotal = parseInt($('#cartButton').attr('data-total')) || 0;
 
                 // Прибавьте цену товара с учетом скидки к текущей сумме
                 var newTotal = currentTotal + priceWithSale;
