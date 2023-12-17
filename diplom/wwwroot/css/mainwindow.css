@@ -227,6 +227,26 @@ a:active {
     margin-top:-50px;
     z-index:1;
 }
+.sale1 {
+    grid-column: 1;
+    grid-row: 1;
+    position: absolute;
+    left: 10px;
+    background: #ff6633;
+    border-radius: 4px;
+    font-weight: 400;
+    margin-left: 380px;
+    font-size: 16px;
+    color: #fff;
+    height: 30px;
+    width: 60px;
+    margin-top: 380px;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .product-card .card-content .card-sub-title {
     margin: 0;
@@ -289,6 +309,9 @@ a:active {
 }
 .price{
     font-size:15pt;
+}
+.price1 {
+    font-size: 15pt;
 }
 /*//////////////////////////*/
 .header-buttons {

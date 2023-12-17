@@ -174,48 +174,63 @@ $(function () {
 
 
     
-        $(document).ready(function () {
-            $('.info-button1').on('click', function () {
-                var productName = $(this).data('nametitle');
-                var description = $(this).data('description');
-                var productImageBase64 = $(this).data('img');
-                var productPrice = $(this).data('price');
-                var productWeight = $(this).data('weight');
-                var productMassPerFat = $(this).data('mass_per_fat');
-                var productFat = $(this).data('fat');
-                var productProtein = $(this).data('protein');
-                var productFatty = $(this).data('fatty');
-                var productCarb = $(this).data('carb');
-                var productEnergyValue = $(this).data('energy_value');
-                var productStorageLife = $(this).data('storage_life');
-                var productPackageId = $(this).data('package_id');
-                var productStorageConditions = $(this).data('storage_conditions');
-                var productSale = $(this).data('sale');
-                var productRemain = $(this).data('remain');
-                var productArticle = $(this).data('article');
-                var productSostav = $(this).data('sostav');
+$(document).ready(function () {
+    $('.info-button1').on('click', function () {
+        var productName = $(this).data('nametitle');
+        var description = $(this).data('description');
+        var productImageBase64 = $(this).data('img');
+        var productPrice = $(this).data('price');
+        var productWeight = $(this).data('weight');
+        var productMassPerFat = $(this).data('mass_per_fat');
+        var productFat = $(this).data('fat');
+        var productProtein = $(this).data('protein');
+        var productFatty = $(this).data('fatty');
+        var productCarb = $(this).data('carb');
+        var productEnergyValue = $(this).data('energy_value');
+        var productStorageLife = $(this).data('storage_life');
+        var productPackageId = $(this).data('package_id');
+        var productStorageConditions = $(this).data('storage_conditions');
+        var productSale = $(this).data('sale');
+        var productRemain = $(this).data('remain');
+        var productArticle = $(this).data('article');
+        var productSostav = $(this).data('sostav');
 
-                // Обновляем значения в таблице
-                $('#productNameLabel').text(productName);
-                $('#description').text(description);
-                $('#productImage').attr('src', '' + productImageBase64);
-                $('#productPrice').text('Цена:'+productPrice + ' руб. за');
-                $('#productWeight').text(productWeight + ' гр.');
-                $('#productMassPerFat').text('Массовая доля жира:' + productMassPerFat + '%');
-                $('#productfat').text('Жирность:'+productFat);
-                $('#productProtein').text('Белки:'+productProtein+'г.');
-                $('#productFatty').text('Жиры:'+productFatty + 'г.');
-                $('#productCarb').text('Углеводы:'+productCarb + 'г.');
-                $('#productEnergyValue').text('Энергетическая ценность:' + productEnergyValue+'ккал');
-                $('#productStorageLife').text('Срок хранения:' + productStorageLife + ' дней с момента фасовки');
-                $('#productPackageId').text(productPackageId);
-                $('#productStorageConditions').text('Условия хранения:'+productStorageConditions);
-                $('#productSale').text(productSale);
-                $('#productRemain').text(productRemain);
-                $('#productArticle').text('Артикул:' + productArticle);
-                $('#productSostav').text('Состав:'+productSostav);
-            });
-        });
+        // Проверяем наличие скидки
+        if (productSale) {
+            // Рассчитываем цену с учетом скидки и округляем до целого числа
+            var discountedPrice = Math.round((1 - productSale / 100) * productPrice);
+
+            // Обновляем значения в таблице
+            $('#productPrice').html('<del>' + productPrice + ' руб.</del> ' + discountedPrice + ' руб. за');
+
+            // Обновляем значение скидки в div и отображаем его, если скидка больше 0
+            $('.sale1').text('-'+productSale + '%');
+            $('.sale1').toggle(productSale > 0);
+        } else {
+            // Если скидки нет, просто обновляем цену и скрываем div
+            $('#productPrice').text(productPrice + ' руб. за');
+            $('.sale1').hide();
+        }
+
+        $('#productNameLabel').text(productName);
+        $('#description').text(description);
+        $('#productImage').attr('src', '' + productImageBase64);
+        $('#productWeight').text(productWeight + ' гр.');
+        $('#productMassPerFat').text('Массовая доля жира:' + productMassPerFat + '%');
+        $('#productfat').text('Жирность:' + productFat);
+        $('#productProtein').text('Белки:' + productProtein + 'г.');
+        $('#productFatty').text('Жиры:' + productFatty + 'г.');
+        $('#productCarb').text('Углеводы:' + productCarb + 'г.');
+        $('#productEnergyValue').text('Энергетическая ценность:' + productEnergyValue + 'ккал');
+        $('#productStorageLife').text('Срок хранения:' + productStorageLife + ' дней с момента фасовки');
+        $('#productPackageId').text(productPackageId);
+        $('#productStorageConditions').text('Условия хранения:' + productStorageConditions);
+        $('#productSale').text(productSale);
+        $('#productRemain').text(productRemain);
+        $('#productArticle').text('Артикул:' + productArticle);
+        $('#productSostav').text('Состав:' + productSostav);
+    });
+});
 
         function getPackageNameById(packageId) {
             return new Promise(function (resolve, reject) {
