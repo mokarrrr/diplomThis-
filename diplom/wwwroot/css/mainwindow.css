@@ -84,6 +84,22 @@ header {
     grid-row-end: auto;
     color: white;
 }
+.typess {
+    color: black;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    border: black;
+    grid-auto-rows: auto;
+    font-family: 'Dancing Script', cursive;
+    font-weight: bold;
+}
+.gfgf {
+    grid-column: 2;
+    grid-row: 1;
+    z-index: 1;
+    color: black;
+}
+
 .container2 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -390,7 +406,7 @@ a:active {
     font-weight: bold;
     font-size: 16px;
     padding: 50px;
-    margin-top: 100px;
+    margin-top: 170px;
     margin-left:-50px;
 }
 
