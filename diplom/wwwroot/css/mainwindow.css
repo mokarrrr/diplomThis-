@@ -90,6 +90,7 @@ header {
     grid-column-start: 2;
     grid-column-end: 6;
     grid-row: 1;
+    margin-top: -40px;
 }
 .count_product {
     margin-top:63px;
