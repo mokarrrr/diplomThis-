@@ -104,6 +104,9 @@ header {
     border-radius: 14px;
     background-color: #bbbbbb
 }
+.gt{
+    width:20px;
+}
 .container2 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
