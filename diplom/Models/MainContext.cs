@@ -18,13 +18,13 @@ using Microsoft.EntityFrameworkCore;
         }
 
     public DbSet<Admin> Admins { get; set; }
-    public DbSet<catalog_product> catalog_Products { get; set; }
+    public DbSet<catalog_product> catalog_Product { get; set; }
     public DbSet<Package> Package { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<Rate> Rate { get; set; }
     public DbSet<user_basket> user_baskets { get; set; }
     public DbSet<user_like> user_likes { get; set; }
-    public DbSet<_catalog> _catalogs { get; set; }
+    public DbSet<_catalog> _catalog { get; set; }
     public DbSet<_order> _orders { get; set; }
     public DbSet<_Provider> _Provider{ get; set; }
     public DbSet<_status> _statuses { get; set; }
