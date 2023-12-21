@@ -63,27 +63,11 @@ namespace diplom.Controllers
 
             bool hasResults = true;
 
-            if (!string.IsNullOrEmpty(searchQuery))
-            {
-                productsQuery = productsQuery
-                    .Where(p => p.Name_product.Contains(searchQuery) || p.product_article.Contains(searchQuery));
-                hasResults = productsQuery.Any();
-            }
-            else
-            {
-                hasResults = productsQuery.Any();
-            }
+            // Вызываем метод фильтрации
+            productsQuery = ApplyFilters(productsQuery, searchQuery, categoryId);
 
-            if (categoryId.HasValue)
-            {
-                var productIdsInCategory = db.catalog_Product
-                    .Where(pc => pc.Id_catalog == categoryId.Value)
-                    .Select(pc => pc.id_product_catalog)
-                    .ToList();
-
-                productsQuery = productsQuery
-                    .Where(p => productIdsInCategory.Contains(p.IdProduct));
-            }
+            // Проверяем наличие результатов
+            hasResults = productsQuery.Any();
 
             var productsList = productsQuery.ToList();
 
@@ -102,6 +86,28 @@ namespace diplom.Controllers
             };
 
             return View(viewModel);
+        }
+
+        private IQueryable<Product> ApplyFilters(IQueryable<Product> productsQuery, string searchQuery, int? categoryId)
+        {
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                productsQuery = productsQuery
+                    .Where(p => p.Name_product.Contains(searchQuery) || p.product_article.Contains(searchQuery));
+            }
+
+            if (categoryId.HasValue)
+            {
+                var productIdsInCategory = db.catalog_Product
+                    .Where(pc => pc.Id_catalog == categoryId.Value)
+                    .Select(pc => pc.id_product_catalog)
+                    .ToList();
+
+                productsQuery = productsQuery
+                    .Where(p => productIdsInCategory.Contains(p.IdProduct));
+            }
+
+            return productsQuery;
         }
 
 
