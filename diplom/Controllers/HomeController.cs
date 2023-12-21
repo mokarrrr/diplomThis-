@@ -57,11 +57,21 @@ namespace diplom.Controllers
         //    return View(PVM);
         //}
 
-        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames)
+        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames, int? categoryId)
         {
             IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
             bool hasResults = true;
 
+            if (categoryId.HasValue)
+            {
+                var productIdsInCategory = db.catalog_Product
+                    .Where(pc => pc.Id_catalog == categoryId.Value)
+                    .Select(pc => pc.id_product_catalog)
+                    .ToList();
+
+                productsQuery = productsQuery
+                    .Where(p => productIdsInCategory.Contains(p.IdProduct));
+            }
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 productsQuery = productsQuery

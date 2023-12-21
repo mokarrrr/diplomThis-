@@ -170,7 +170,7 @@
             <div class="container2">
                 <p id="userNameDisplay"></p>
                 <select name="filter" id="filter">
-                    <option value="by_popularity"></option>
+                    <option value="by_popularity">Сортировка</option>
                     <option value="by_alphabet">По алфавиту</option>
                     <option value="cheaper">Дешевле</option>
                     <option value="expensive">Дороже</option>
@@ -178,7 +178,7 @@
                 <label class="count_product">@Model.ProductCount товар</label>
             </div>
 
-            <div class="container3">  
+            <div class="container3" id="container3">
                 @if (Model.HasResults)
                 {
                     @foreach (Product item in Model.Products)
@@ -655,7 +655,34 @@
     </script>
 
 
+    <script>
+        $(document).ready(function () {
+            $('#softCheeseCheckbox').change(function () {
+                // Получаем значение чекбокса
+                var isChecked = $(this).prop('checked');
 
+                // Устанавливаем categoryId в 1, если чекбокс отмечен, иначе в null
+                var categoryId = isChecked ? 1 : null;
+
+                // Отправляем запрос на сервер с новым categoryId
+                $.ajax({
+                    url: '/Home/MainPage',
+                    type: 'GET',
+                    data: {
+                        categoryId: categoryId,
+                        // Другие параметры запроса, если нужны
+                    },
+                    success: function (data) {
+                        // Обновляем содержимое страницы, например, заменяем список продуктов
+                        $('#container3').html(data);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 
