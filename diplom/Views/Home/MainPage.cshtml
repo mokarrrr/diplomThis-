@@ -684,5 +684,28 @@
         });
     </script>
 
+    <script>
+        $(document).ready(function () {
+            $('#softCheeseCheckbox').change(function () {
+                var isChecked = $(this).prop('checked');
+                var categoryId = isChecked ? 1 : null;
+
+                $.ajax({
+                    url: '/Home/MainPage',
+                    type: 'GET',
+                    data: {
+                        categoryId: categoryId,
+                        // Другие параметры запроса, если нужны
+                    },
+                    success: function (data) {
+                        $('#container3').html(data);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
