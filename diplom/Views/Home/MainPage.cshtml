@@ -684,17 +684,17 @@
         });
     </script>
 
-    <script>
+@*     <script>
         $(document).ready(function () {
             $('#softCheeseCheckbox').change(function () {
                 var isChecked = $(this).prop('checked');
-                var categoryId = isChecked ? 1 : null;
 
                 $.ajax({
                     url: '/Home/MainPage',
                     type: 'GET',
                     data: {
-                        categoryId: categoryId,
+                        searchQuery: $('#searchQuery').val(),
+                        categoryId: isChecked ? 1 : null
                         // Другие параметры запроса, если нужны
                     },
                     success: function (data) {
@@ -706,6 +706,6 @@
                 });
             });
         });
-    </script>
+    </script> *@
 </body>
 
