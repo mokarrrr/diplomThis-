@@ -57,59 +57,52 @@ namespace diplom.Controllers
         //    return View(PVM);
         //}
 
+        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames, int? categoryId)
+        {
+            IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
 
-            public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames, int? categoryId)
+            bool hasResults = true;
+
+            if (!string.IsNullOrEmpty(searchQuery))
             {
-                IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
-
-                bool hasResults = true;
-
-                // Вызываем метод фильтрации
-                productsQuery = ApplyFilters(productsQuery, searchQuery, categoryId);
-
-                // Ваш остальной код
-
-                var productsList = productsQuery.ToList();
-
-                Dictionary<int, double> productAverageRates = productsList
-                    .ToDictionary(p => p.IdProduct, p => p.Rates.Any() ? p.Rates.Average(r => r._Rate) : 0);
-
-                ProductViewModel viewModel = new ProductViewModel
-                {
-                    Products = productsList,
-                    HasResults = productsList.Any(),
-                    ProductCount = productsList.Count,
-                    PackageNames = packageNames,
-                    ProviderNames = providerNames,
-                    SelectedProductId = selectedProductId ?? 0,
-                    ProductAverageRates = productAverageRates
-                };
-
-                return View(viewModel);
+                productsQuery = productsQuery
+                    .Where(p => p.Name_product.Contains(searchQuery) || p.product_article.Contains(searchQuery));
+                hasResults = productsQuery.Any();
+            }
+            else
+            {
+                hasResults = productsQuery.Any();
             }
 
-            private IQueryable<Product> ApplyFilters(IQueryable<Product> productsQuery, string searchQuery, int? categoryId)
+            if (categoryId.HasValue)
             {
-                if (!string.IsNullOrEmpty(searchQuery))
-                {
-                    productsQuery = productsQuery
-                        .Where(p => p.Name_product.Contains(searchQuery) || p.product_article.Contains(searchQuery));
-                }
+                var productIdsInCategory = db.catalog_Product
+                    .Where(pc => pc.Id_catalog == categoryId.Value)
+                    .Select(pc => pc.id_product_catalog)
+                    .ToList();
 
-                if (categoryId.HasValue)
-                {
-                    var productIdsInCategory = db.catalog_Product
-                        .Where(pc => pc.Id_catalog == categoryId.Value)
-                        .Select(pc => pc.id_product_catalog)
-                        .ToList();
-
-                    productsQuery = productsQuery
-                        .Where(p => productIdsInCategory.Contains(p.IdProduct));
-                }
-
-                return productsQuery;
+                productsQuery = productsQuery
+                    .Where(p => productIdsInCategory.Contains(p.IdProduct));
             }
-        
+
+            var productsList = productsQuery.ToList();
+
+            Dictionary<int, double> productAverageRates = productsList
+                .ToDictionary(p => p.IdProduct, p => p.Rates.Any() ? p.Rates.Average(r => r._Rate) : 0);
+
+            ProductViewModel viewModel = new ProductViewModel
+            {
+                Products = productsList,
+                HasResults = hasResults,
+                ProductCount = productsList.Count,
+                PackageNames = packageNames,
+                ProviderNames = providerNames,
+                SelectedProductId = selectedProductId ?? 0,
+                ProductAverageRates = productAverageRates
+            };
+
+            return View(viewModel);
+        }
 
 
         public ActionResult GetProductRating(int productId) /* Никита это расчет среднего рейтинга */
