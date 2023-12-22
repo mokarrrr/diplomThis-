@@ -57,17 +57,28 @@ namespace diplom.Controllers
         //    return View(PVM);
         //}
 
-        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames, int? categoryId)
+        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames, int? categoryId, int? secondCategoryId, int? thirdCategoryId, int? fourthCategoryId, int? fifthCategoryId)
         {
             IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
-
             bool hasResults = true;
 
-            // Вызываем метод фильтрации
-            productsQuery = ApplyFilters(productsQuery, searchQuery, categoryId);
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                productsQuery = productsQuery
+                    .Where(p => p.Name_product.Contains(searchQuery) || p.product_article.Contains(searchQuery));
+                hasResults = productsQuery.Any();
+            }
+            else
+            {
+                hasResults = productsQuery.Any();
+            }
 
-            // Проверяем наличие результатов
-            hasResults = productsQuery.Any();
+            // Фильтруем продукты по каждой категории, если соответствующий categoryId не равен null
+            FilterProductsByCategory(ref productsQuery, categoryId);
+            FilterProductsByCategory(ref productsQuery, secondCategoryId);
+            FilterProductsByCategory(ref productsQuery, thirdCategoryId);
+            FilterProductsByCategory(ref productsQuery, fourthCategoryId);
+            FilterProductsByCategory(ref productsQuery, fifthCategoryId);
 
             var productsList = productsQuery.ToList();
 
@@ -88,14 +99,8 @@ namespace diplom.Controllers
             return View(viewModel);
         }
 
-        private IQueryable<Product> ApplyFilters(IQueryable<Product> productsQuery, string searchQuery, int? categoryId)
+        private void FilterProductsByCategory(ref IQueryable<Product> productsQuery, int? categoryId)
         {
-            if (!string.IsNullOrEmpty(searchQuery))
-            {
-                productsQuery = productsQuery
-                    .Where(p => p.Name_product.Contains(searchQuery) || p.product_article.Contains(searchQuery));
-            }
-
             if (categoryId.HasValue)
             {
                 var productIdsInCategory = db.catalog_Product
@@ -106,9 +111,29 @@ namespace diplom.Controllers
                 productsQuery = productsQuery
                     .Where(p => productIdsInCategory.Contains(p.IdProduct));
             }
-
-            return productsQuery;
         }
+
+        //private IQueryable<Product> ApplyFilters(IQueryable<Product> productsQuery, string searchQuery, int? categoryId)
+        //{
+        //    if (!string.IsNullOrEmpty(searchQuery))
+        //    {
+        //        productsQuery = productsQuery
+        //            .Where(p => p.Name_product.Contains(searchQuery) || p.product_article.Contains(searchQuery));
+        //    }
+
+        //    if (categoryId.HasValue)
+        //    {
+        //        var productIdsInCategory = db.catalog_Product
+        //            .Where(pc => pc.Id_catalog == categoryId.Value)
+        //            .Select(pc => pc.id_product_catalog)
+        //            .ToList();
+
+        //        productsQuery = productsQuery
+        //            .Where(p => productIdsInCategory.Contains(p.IdProduct));
+        //    }
+
+        //    return productsQuery;
+        //}
 
 
         public ActionResult GetProductRating(int productId) /* Никита это расчет среднего рейтинга */

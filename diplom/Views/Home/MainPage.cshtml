@@ -130,7 +130,7 @@
 Этот сыр не бывает больших размеров, иначе сырное тесто слишком спрессуется под давлением собственной тяжести. Часто производится с добавлением особых видов плесени, которые придают этим сырам пряный, аммиачный запах и образуют естественную съедобную корочку. Иногда готовятся с применением овечьего или козьего молока. Срок созревания от нескольких дней до месяца."></i>
                         </div>
                             <div class="gfdgfgdf">
-                                <input type="checkbox" class="gt" />
+                                <input type="checkbox" id="secondCheckbox" class="gt" />
                         <p>
                             Полутвердые сыры
                         </p>
@@ -138,14 +138,14 @@
 Созревают под влиянием молочнокислых бактерий придающим специфические вкус и запах. Иногда подвергаются прессованию, но обычно это самопрессующиеся сыры с средним сроком созревания от 2 недель до 2 месяцев."></i>
                             </div>
                             <div class="gfdgfgdf">
-                                <input type="checkbox" class="gt" />
+                                <input type="checkbox" id="thirdCheckbox" class="gt" />
                         <p>
                             Твердые сыры
                         </p>
                                 <i class="fa fa-question wqwqwq" title="Твердые сыры-это сыры с твердой и плотной консистенцией. Созревают исключительно под влиянием молочнокислых или молочнокислых и пропионовокислых бактерий. Среди твердых сыров принято выделять подкласс – «тёрочные» сыры, трудные в нарезке, и потому использующиеся как дополнение к блюдам в натёртом виде. Например, Пармезан в салате  Цезарь. Твердые сыры бывают покрыты плотной, восковой или натуральной коркой. Обычно эти сыры подвергаются прессованию для удаления сыворотки и долгому созреванию (от 2 месяцев до нескольких лет). Отличие твердых сортов от полутвердых — двойная прессовка и срок созревания."></i>
                             </div>
                             <div class="gfdgfgdf">
-                                <input type="checkbox" class="gt" />
+                                <input type="checkbox" id="fourthCheckbox" class="gt" />
                         <p>
                             Плесневые сыры
                         </p>
@@ -154,7 +154,7 @@
                                 
                             </div>
                             <div class="gfdgfgdf">
-                                <input type="checkbox" class="gt" />
+                                <input type="checkbox" id="fifthCheckbox" class="gt" />
                         <p>
                             Сыры с добавками
                         </p>
@@ -684,28 +684,79 @@
         });
     </script>
 
-     <script>
+    <script>
         $(document).ready(function () {
+            // Обработчик для первого чекбокса
             $('#softCheeseCheckbox').change(function () {
-                var isChecked = $(this).prop('checked');
+                updateProducts();
+            });
 
+            // Обработчик для второго чекбокса
+            $('#secondCheckbox').change(function () {
+                updateProducts();
+            });
+
+            // Обработчик для третьего чекбокса
+            $('#thirdCheckbox').change(function () {
+                updateProducts();
+            });
+
+            // Обработчик для четвертого чекбокса
+            $('#fourthCheckbox').change(function () {
+                updateProducts();
+            });
+
+            // Обработчик для пятого чекбокса
+            $('#fifthCheckbox').change(function () {
+                updateProducts();
+            });
+
+            function updateProducts() {
+                // Получаем значения всех чекбоксов
+                var isChecked = $('#softCheeseCheckbox').prop('checked');
+                var isSecondChecked = $('#secondCheckbox').prop('checked');
+                var isThirdChecked = $('#thirdCheckbox').prop('checked');
+                var isFourthChecked = $('#fourthCheckbox').prop('checked');
+                var isFifthChecked = $('#fifthCheckbox').prop('checked');
+
+                // Устанавливаем categoryId в 1, если первый чекбокс отмечен, иначе в null
+                var categoryId = isChecked ? 1 : null;
+
+                // Устанавливаем secondCategoryId в 2, если второй чекбокс отмечен, иначе в null
+                var secondCategoryId = isSecondChecked ? 2 : null;
+
+                // Устанавливаем thirdCategoryId в 3, если третий чекбокс отмечен, иначе в null
+                var thirdCategoryId = isThirdChecked ? 3 : null;
+
+                // Устанавливаем fourthCategoryId в 4, если четвертый чекбокс отмечен, иначе в null
+                var fourthCategoryId = isFourthChecked ? 4 : null;
+
+                // Устанавливаем fifthCategoryId в 5, если пятый чекбокс отмечен, иначе в null
+                var fifthCategoryId = isFifthChecked ? 5 : null;
+
+                // Отправляем запрос на сервер с обновленными значениями категорий
                 $.ajax({
-                    url: '/Home/ApplyFilters',
+                    url: '/Home/MainPage',
                     type: 'GET',
                     data: {
-                        searchQuery: $('#searchQuery').val(),
-                        categoryId: isChecked ? 1 : null
+                        categoryId: categoryId,
+                        secondCategoryId: secondCategoryId,
+                        thirdCategoryId: thirdCategoryId,
+                        fourthCategoryId: fourthCategoryId,
+                        fifthCategoryId: fifthCategoryId,
                         // Другие параметры запроса, если нужны
                     },
                     success: function (data) {
+                        // Обновляем содержимое страницы, например, заменяем список продуктов
                         $('#container3').html(data);
                     },
                     error: function (error) {
                         console.log(error);
                     }
                 });
-            });
+            }
         });
-    </script> 
+    </script>
+
 </body>
 
