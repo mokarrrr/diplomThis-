@@ -298,7 +298,7 @@ $(document).ready(function () {
             });
         });
 
-       /* скролл*/
+
     function scrollToElement(elementId) {
             var element = document.getElementById(elementId);
     if (element) {
@@ -306,10 +306,12 @@ $(document).ready(function () {
             }
         }
 
+
     $(document).ready(function () {
         $(".info-button1").on("click", function () {
             var productId = $(this).data("idd");
             var $productRate = $("#productrate");
+            var $productRate2 = $("#productrate2"); // Выбираем новый элемент <p>
             var $ratingStars = $("#rating-stars");
 
             // Вызов функции с использованием Promise
@@ -317,6 +319,9 @@ $(document).ready(function () {
                 .then(function (averageRate) {
                     // Обновить текст и звезды
                     updateProductRating($productRate, $ratingStars, averageRate);
+
+                    // Копировать значение в новый элемент <p>
+                    $productRate2.text("Рейтинг продукта: " + averageRate + '★');
                 })
                 .catch(function (error) {
                     console.error("Ошибка при получении рейтинга продукта:", error);
@@ -342,9 +347,7 @@ $(document).ready(function () {
 
     // Функция для обновления текста и звезд
     function updateProductRating($productRate, $ratingStars, averageRate) {
-        // Обновить текст в элементе <p>
         $productRate.text("Рейтинг продукта: " + averageRate + '★');
-
                 // Очистить звезды
                 // $ratingStars.empty();
 
@@ -362,6 +365,7 @@ $(document).ready(function () {
         // }
     }
         });
+
 
 
 /*    @* табы * @*/
