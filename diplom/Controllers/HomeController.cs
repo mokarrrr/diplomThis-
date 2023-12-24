@@ -19,7 +19,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
-hg
+
 namespace diplom.Controllers
 {
     public class HomeController : Controller
