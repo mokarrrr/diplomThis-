@@ -138,11 +138,11 @@ namespace diplom.Controllers
 
         public ActionResult GetProductRating(int productId) /* Никита это расчет среднего рейтинга */
         {
-            // Получите рейтинг для выбранного продукта и верните его в виде строки
+            // Получаю рейтинг для выбранного продукта и верните его в виде строки
             var ratesForProduct = db.Rate.Where(r => r.Productid == productId).ToList();
             double averageRate = ratesForProduct.Any() ? ratesForProduct.Average(r => r._Rate) : 0;
 
-            // Округлить до одного знака после запятой
+            
             averageRate = Math.Round(averageRate, 1);
 
             return Content(averageRate.ToString());
