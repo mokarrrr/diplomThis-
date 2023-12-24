@@ -915,10 +915,22 @@ a:active {
     #myTabsContent .tab-content.active {
         background: white;
         border-radius: 12px;
-        display: block;
+        display: flex;
         margin-top: 75px;
         margin-left: -580px;
         padding-left: 10px;
         padding-bottom: 20px;
     }
 
+.ratesss {
+    background-color: lightgray;
+    border-radius: 15px;
+    height: 150px;
+    width: 200px;
+}
+.ratesss2 {
+    background-color: lightgray;
+    border-radius: 15px;
+    height: 150px;
+    width: 200px;
+}

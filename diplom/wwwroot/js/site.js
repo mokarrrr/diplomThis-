@@ -370,28 +370,35 @@ $(document).ready(function () {
 
 /*    @* табы * @*/
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const tabs = document.querySelectorAll('#myTabs .tab');
-        const tabContents = document.querySelectorAll('#myTabsContent .tab-content');
+document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll('#myTabs .tab');
+    const tabContents = document.querySelectorAll('#myTabsContent .tab-content');
 
-        tabs.forEach(function (tab, index) {
-            tab.addEventListener('click', function () {
-                tabs.forEach(function (t) {
-                    t.classList.remove('active');
-                });
-
-                tabContents.forEach(function (content) {
-                    content.classList.remove('active');
-                });
-
-                this.classList.add('active');
-                tabContents[index].classList.add('active');
+    tabs.forEach(function (tab, index) {
+        tab.addEventListener('click', function () {
+            tabs.forEach(function (t) {
+                t.classList.remove('active');
             });
-        });
 
-        // Активировать первую вкладку
-        tabs[0].click();
+            tabContents.forEach(function (content) {
+                content.classList.remove('active');
+            });
+
+            this.classList.add('active');
+            tabContents[index].classList.add('active');
+
+            // Добавленный код для скрытия tab-reviews-content
+            if (tabContents[index].id === 'tab-info-content') {
+                document.getElementById('tab-reviews-content').style.display = 'none';
+            } else {
+                document.getElementById('tab-reviews-content').style.display = 'flex';
+            }
+        });
     });
+
+    // Активировать первую вкладку
+    tabs[0].click();
+});
  
 
 
