@@ -136,7 +136,7 @@ namespace diplom.Controllers
         //}
 
 
-        public ActionResult GetProductRating(int productId) /* Никита это расчет среднего рейтинга */
+        public ActionResult GetProductRating(int productId) 
         {
             // Получаю рейтинг для выбранного продукта и верните его в виде строки
             var ratesForProduct = db.Rate.Where(r => r.Productid == productId).ToList();
