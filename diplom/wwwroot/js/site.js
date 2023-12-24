@@ -321,7 +321,7 @@ $(document).ready(function () {
                     updateProductRating($productRate, $ratingStars, averageRate);
 
                     // Копировать значение в новый элемент <p>
-                    $productRate2.text("Рейтинг продукта: " + averageRate + '★');
+                    $productRate2.text(averageRate + '★');
                 })
                 .catch(function (error) {
                     console.error("Ошибка при получении рейтинга продукта:", error);
