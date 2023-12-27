@@ -307,26 +307,27 @@ $(document).ready(function () {
         }
 
 
-    $(document).ready(function () {
-        $(".info-button1").on("click", function () {
-            var productId = $(this).data("idd");
-            var $productRate = $("#productrate");
-            var $productRate2 = $("#productrate2"); // Выбираем новый элемент <p>
-            var $ratingStars = $("#rating-stars");
+$(document).ready(function () {
+    $(".info-button1").on("click", function () {
+        var productId = $(this).data("idd");
+        var $productRate = $("#productrate");
+        var $productRate2 = $("#productrate2");
+        var $ratingStars = $("#rating-stars");
 
-            // Вызов функции с использованием Promise
-            getProductRatingById(productId)
-                .then(function (averageRate) {
-                    // Обновить текст и звезды
-                    updateProductRating($productRate, $ratingStars, averageRate);
+        getProductRatingById(productId)
+            .then(function (averageRate) {
+                updateProductRating($productRate, $ratingStars, averageRate);
 
-                    // Копировать значение в новый элемент <p>
-                    $productRate2.text(averageRate + '★');
-                })
-                .catch(function (error) {
-                    console.error("Ошибка при получении рейтинга продукта:", error);
-                });
-        });
+                // Добавьте класс для изменения цвета текста, включая звезду
+                $productRate2.html('<span class="star-rating">' + averageRate + '<span class="star">★</span></span>');
+
+                // Переопределите цвет только для звезды
+                $productRate2.find('.star').css('color', '#FFD700');
+            })
+            .catch(function (error) {
+                console.error("Ошибка при получении рейтинга продукта:", error);
+            });
+    });
 
     // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
     function getProductRatingById(productId) {
