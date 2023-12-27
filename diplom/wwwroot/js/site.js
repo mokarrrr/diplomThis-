@@ -321,8 +321,10 @@ $(document).ready(function () {
                 // Добавьте класс для изменения цвета текста, включая звезду
                 $productRate2.html('<span class="star-rating">' + averageRate + '<span class="star">★</span></span>');
 
-                // Переопределите цвет только для звезды
-                $productRate2.find('.star').css('color', '#FFD700');
+                // Переопределите цвет только для звезды и добавьте стили
+                $productRate2.find('.star')
+                    .css('color', '#FFD700')
+                    
             })
             .catch(function (error) {
                 console.error("Ошибка при получении рейтинга продукта:", error);

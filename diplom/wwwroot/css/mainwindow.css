@@ -930,7 +930,8 @@ a:active {
     height: 150px;
     width: 200px;
     margin-top: 20px;
-    grid-template-rows: 2fr 1fr; /* Первая строка занимает 2/3 высоты, вторая 1/3 */
+    grid-template-rows: 1fr 1fr; /* Первая строка занимает 2/3 высоты, вторая 1/3 */
+    border: 3px solid black;
 }
 .ratesss2 {
     background-color: lightgray;
@@ -938,11 +939,18 @@ a:active {
     height: 150px;
     width: 600px;
     margin-top: 20px;
+    border: 3px solid black;
 }
 .star-rating {
-    color: #333; /* Цвет текста, включая звезду */
+    color: black; /* Цвет текста, включая звезду */
+    font-size: -webkit-xxx-large;
+    font-weight:bold;
 }
 
 .star {
-    color: #FFD700; /* Цвет только для звезды */
+    font-size: 0.8em; /* Уменьшение размера звезды */
+    margin-left: 0.2em;
+    
+    vertical-align: text-top; /* Поднимаем звезду относительно текста */
+    margin-top: -0.1em; /* Приподнимаем звезду немного выше */
 }
