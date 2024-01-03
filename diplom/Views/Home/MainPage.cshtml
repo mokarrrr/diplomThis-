@@ -378,27 +378,31 @@
                                             <div class="taiting-starsss">
                                                 <p style="margin-top: 9px;margin-left:20px">Класс</p>
                                                 <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;&#9733;&#9733;&#9733;</p>
+                                                <p id="five" style="grid-column:3;margin-top:10px">апапав</p>
                                              </div>
                                             <div class="taiting-starsss">
                                                 <p style="margin-top: 9px;margin-left:20px">Хорошо</p>
                                                 <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;&#9733;&#9733;</p>
                                                 <p style="color: white;font-size: 25px;grid-column:2;margin-top: -65px;margin-left: 84px;">&#9734;</p>
+                                                <p id="four" style="grid-column:3;margin-top:-50px">gfdfgdfgfd</p>
                                             </div>
                                             <div class="taiting-starsss" style="margin-top: -30px;">
                                                 <p style="margin-top: 9px;margin-left:20px;">Приемлемо</p>
                                                 <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;&#9733;</p>
                                                 <p style="color: white;font-size: 25px;grid-column:2;margin-top: -65px;margin-left: 63px;">&#9734;&#9734;</p>
+                                                <p id="three" style="grid-column:3;margin-top:-50px">gfdfgdfgfd</p>
                                             </div>
                                             <div class="taiting-starsss" style="margin-top: -30px;">
                                                 <center><p style="margin-top: 9px;margin-left:20px;">Плохо</p></center>
                                                 <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;</p>
                                                 <p style="color: white;font-size: 25px;grid-column:2;margin-top: -64px;margin-left: 40px;">&#9734;&#9734;&#9734;</p>
+                                                <p id="two" style="grid-column:3;margin-top:-50px">gfdfgdfgfd</p>
                                             </div>
                                             <div class="taiting-starsss" style="margin-top: -30px;">
                                                 <p style="margin-top: 9px;margin-left:20px">Ужасно</p>
                                                 <p style="color: #FFD700;font-size: 25px;"> &#9733</p>
                                                 <p style="color: white;font-size: 25px;grid-column:2;margin-top: -65px; margin-left: 20px;">&#9734;&#9734;&#9734;&#9734;</p>
-                                                <p style="grid-column:3;margin-top:-50px">gfdfgdfgfd</p>
+                                                <p id="one" style="grid-column:3;margin-top:-50px">gfdfgdfgfd</p>
                                             </div>
                                            
                                        </div>
@@ -566,7 +570,29 @@
             }
         });
     </script>
-    
+
+    <script>
+        // Добавляем обработчик события клика к кнопке
+        $('.info-button1').on('click', function () {
+            // Получаем ID продукта из атрибута data-idd
+            var productId = $(this).data('idd');
+
+            // Выполняем AJAX-запрос для получения количества оценок
+            $.ajax({
+                url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
+                type: 'GET',
+                data: { productId: productId },
+                success: function (data) {
+                    // Обновляем содержимое элемента <p> с id "five"
+                    var count = data[5] || 0;
+                    $('#five').text('Количество оценок 5: ' + count);
+                },
+                error: function (error) {
+                    console.error('Ошибка при получении количества оценок:', error);
+                }
+            });
+        });
+    </script>
 
 </body>
 

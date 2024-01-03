@@ -136,19 +136,42 @@ namespace diplom.Controllers
         //}
 
 
-        public ActionResult GetProductRating(int productId) 
+        public ActionResult GetProductRating(int productId)
         {
             // Получаю рейтинг для выбранного продукта и верните его в виде строки
             var ratesForProduct = db.Rate.Where(r => r.Productid == productId).ToList();
             double averageRate = ratesForProduct.Any() ? ratesForProduct.Average(r => r._Rate) : 0;
 
-            
+
             averageRate = Math.Round(averageRate, 1);
 
             return Content(averageRate.ToString());
         }
 
+        public Dictionary<int, int> CountRatings(int productId)
+        {
+            // Получение оценок для выбранного продукта
+            var ratesForProduct = db.Rate.Where(r => r.Productid == productId).ToList();
 
+            // Создание словаря для хранения количества каждой оценки
+            Dictionary<int, int> ratingCounts = new Dictionary<int, int>();
+
+            // Подсчет количества каждой оценки
+            foreach (var rate in ratesForProduct)
+            {
+                int convertedRate = (int)rate._Rate; // Преобразование в int
+                if (ratingCounts.ContainsKey(convertedRate))
+                {
+                    ratingCounts[convertedRate]++;
+                }
+                else
+                {
+                    ratingCounts[convertedRate] = 1;
+                }
+            }
+
+            return ratingCounts;
+        }
 
         [HttpGet]
         public ActionResult GetPackageName(int packageId)
