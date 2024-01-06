@@ -375,10 +375,15 @@
                                             </center>
                                         </div>
                                        <div class="ratesss2">
-                                            <div class="taiting-starsss">
+                                            <div class="taiting-starsss">  
                                                 <p style="margin-top: 9px;margin-left:20px">Класс</p>
                                                 <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;&#9733;&#9733;&#9733;</p>
-                                                <p id="five" style="grid-column:3;margin-top:10px">апапав</p>
+                                                <div style="display:flex">
+                                                <p id="five" style="grid-column:3;margin-top:10px;z-index:1;margin-left:10px">апапав</p>
+                                                <div class="progress-container" style="grid-column:3">
+                                                    <div class="progress-bar" id="progress-bar"></div>
+                                                </div>
+                                                </div>
                                              </div>
                                             <div class="taiting-starsss">
                                                 <p style="margin-top: 9px;margin-left:20px">Хорошо</p>
@@ -585,7 +590,42 @@
                 success: function (data) {
                     // Обновляем содержимое элементов <p> с id "five", "four", "three", "two", "one"
                     var count5 = data[5] || 0;
-                    $('#five').text('Количество оценок 5: ' + count5);
+                    $('#five').text(count5);
+
+                    var count4 = data[4] || 0;
+                    $('#four').text(count4);
+
+                    var count3 = data[3] || 0;
+                    $('#three').text(count3);
+
+                    var count2 = data[2] || 0;
+                    $('#two').text(count2);
+
+                    var count1 = data[1] || 0;
+                    $('#one').text(count1);
+                },
+                error: function (error) {
+                    console.error('Ошибка при получении количества оценок:', error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        // Добавляем обработчик события клика к кнопке
+        $('.info-button1').on('click', function () {
+            // Получаем ID продукта из атрибута data-idd
+            var productId = $(this).data('idd');
+
+            // Выполняем AJAX-запрос для получения количества оценок
+            $.ajax({
+                url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
+                type: 'GET',
+                data: { productId: productId },
+                success: function (data) {
+                    // Обновляем содержимое элементов <p> с id "five", "four", "three", "two", "one"
+                    var count5 = data[5] || 0;
+                    $('#five').text(count5);
 
                     var count4 = data[4] || 0;
                     $('#four').text('Количество оценок 4: ' + count4);
@@ -598,6 +638,15 @@
 
                     var count1 = data[1] || 0;
                     $('#one').text('Количество оценок 1: ' + count1);
+
+                    // Подсчитываем общее количество оценок
+                    var totalRatings = count5 + count4 + count3 + count2 + count1;
+
+                    // Рассчитываем процентную долю оценки 5
+                    var percentage5 = totalRatings > 0 ? (count5 / totalRatings) * 100 : 0;
+
+                    // Обновляем ширину линии заполнения
+                    $('#progress-bar').css('width', percentage5 + '%');
                 },
                 error: function (error) {
                     console.error('Ошибка при получении количества оценок:', error);
