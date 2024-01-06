@@ -583,9 +583,21 @@
                 type: 'GET',
                 data: { productId: productId },
                 success: function (data) {
-                    // Обновляем содержимое элемента <p> с id "five"
-                    var count = data[5] || 0;
-                    $('#five').text('Количество оценок 5: ' + count);
+                    // Обновляем содержимое элементов <p> с id "five", "four", "three", "two", "one"
+                    var count5 = data[5] || 0;
+                    $('#five').text('Количество оценок 5: ' + count5);
+
+                    var count4 = data[4] || 0;
+                    $('#four').text('Количество оценок 4: ' + count4);
+
+                    var count3 = data[3] || 0;
+                    $('#three').text('Количество оценок 3: ' + count3);
+
+                    var count2 = data[2] || 0;
+                    $('#two').text('Количество оценок 2: ' + count2);
+
+                    var count1 = data[1] || 0;
+                    $('#one').text('Количество оценок 1: ' + count1);
                 },
                 error: function (error) {
                     console.error('Ошибка при получении количества оценок:', error);
