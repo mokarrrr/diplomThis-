@@ -400,19 +400,34 @@
                                                 <p style="margin-top: 9px;margin-left:20px;">Приемлемо</p>
                                                 <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;&#9733;</p>
                                                 <p style="color: white;font-size: 25px;grid-column:2;margin-top: -65px;margin-left: 63px;">&#9734;&#9734;</p>
-                                                <p id="three" style="grid-column:3;margin-top:-50px">gfdfgdfgfd</p>
+                                                <div style="display:flex">
+                                                    <p id="three" style="grid-column:3;margin-top:-53px;z-index:1;margin-left: 10px;">gfdfgdfgfd</p>
+                                                    <div class="progress-container" style="grid-column:3;margin-top: -55px;margin-left: -20px;">
+                                                        <div class="progress-bar" id="progress-bar2"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="taiting-starsss" style="margin-top: -30px;">
                                                 <center><p style="margin-top: 9px;margin-left:20px;">Плохо</p></center>
                                                 <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;</p>
                                                 <p style="color: white;font-size: 25px;grid-column:2;margin-top: -64px;margin-left: 40px;">&#9734;&#9734;&#9734;</p>
-                                                <p id="two" style="grid-column:3;margin-top:-50px">gfdfgdfgfd</p>
+                                                <div style="display:flex">
+                                                    <p id="two" style="grid-column:3;margin-top:-53px;z-index:1;margin-left: 10px;">gfdfgdfgfd</p>
+                                                    <div class="progress-container" style="grid-column:3;margin-top: -55px;margin-left: -20px;">
+                                                        <div class="progress-bar" id="progress-bar3"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="taiting-starsss" style="margin-top: -30px;">
                                                 <p style="margin-top: 9px;margin-left:20px">Ужасно</p>
                                                 <p style="color: #FFD700;font-size: 25px;"> &#9733</p>
                                                 <p style="color: white;font-size: 25px;grid-column:2;margin-top: -65px; margin-left: 20px;">&#9734;&#9734;&#9734;&#9734;</p>
-                                                <p id="one" style="grid-column:3;margin-top:-50px">gfdfgdfgfd</p>
+                                                <div style="display:flex">
+                                                    <p id="one" style="grid-column:3;margin-top:-53px;z-index:1;margin-left: 10px;">gfdfgdfgfd</p>
+                                                    <div class="progress-container" style="grid-column:3;margin-top: -55px;margin-left: -20px;">
+                                                        <div class="progress-bar" id="progress-bar4"></div>
+                                                    </div>
+                                                </div>
                                             </div>
                                            
                                        </div>
@@ -644,14 +659,19 @@
                     // Подсчитываем общее количество оценок
                     var totalRatings = count5 + count4 + count3 + count2 + count1;
 
-                    // Рассчитываем процентные доли для каждой оценки
+                    // Рассчитываем процентные доли для оценок 5, 4, 3, 2 и 1
                     var percentage5 = totalRatings > 0 ? (count5 / totalRatings) * 100 : 0;
                     var percentage4 = totalRatings > 0 ? (count4 / totalRatings) * 100 : 0;
                     var percentage3 = totalRatings > 0 ? (count3 / totalRatings) * 100 : 0;
+                    var percentage2 = totalRatings > 0 ? (count2 / totalRatings) * 100 : 0;
+                    var percentage1 = totalRatings > 0 ? (count1 / totalRatings) * 100 : 0;
 
                     // Обновляем ширину линий заполнения
                     $('#progress-bar').css('width', percentage5 + '%');
-                    $('#progress-bar1').css('width', percentage4 + percentage3 + '%');
+                    $('#progress-bar1').css('width', percentage4 + '%');
+                    $('#progress-bar2').css('width', percentage3 + '%');
+                    $('#progress-bar3').css('width', percentage2 + '%');
+                    $('#progress-bar4').css('width', percentage1 + '%');
                 },
                 error: function (error) {
                     console.error('Ошибка при получении количества оценок:', error);
