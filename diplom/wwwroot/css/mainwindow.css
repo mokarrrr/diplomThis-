@@ -804,7 +804,7 @@ a:active {
     padding: 20px;
     border: 1px solid #888;
     width: 62%;
-    height: 1050px;
+    height: 1300px;
     border-radius: 5px;
 }
 #exampleModal::-webkit-scrollbar {
@@ -880,8 +880,8 @@ a:active {
 #myTabs {
     display: flex;
     margin-bottom: 10px;
-    gap:15px;
-    margin-top:20px;
+    gap: 15px;
+    margin-top: -185px;
 }
 
 .tab {
@@ -916,10 +916,9 @@ a:active {
         background: white;
         border-radius: 12px;
         display: flex;
-        margin-top: 75px;
+        margin-top: -127px;
         margin-left: -580px;
-        padding-left: 10px;
-        padding-bottom: 20px;
+        height: 740px;
     }
 
 .ratesss {
@@ -980,4 +979,8 @@ a:active {
     width: 0%;
     background-color: yellow;
     border-radius: 15px;
+}
+.rewey {
+    margin-top: 250px;
+    margin-left: -1100px;
 }
