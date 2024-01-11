@@ -31,7 +31,7 @@
                         <h2>Авторизация</h2>
                         @Html.TextBox("phoneLogin", "", new { placeholder = "Введите номер телефона" })
                         @Html.TextBox("password", "", new { placeholder = "Введите пароль" })
-                        <p style="color:red;z-index:1;display:none">⚠️ Проверьте правильность заполенения полей</p>
+                        <p id="errorMessage" style="color:red;z-index:1;display:none">⚠️ Проверьте правильность заполенения полей</p>
                         <button type="button" id="loginButton">Войти</button>
                         <button id="switchToRegister">Регистрация</button>
                     </div>
@@ -686,34 +686,61 @@
 
     <script>
         $(document).ready(function () {
+            // Закрытие модального окна при клике на крестик
+            $('#modal .close').click(function () {
+                $('#modal').hide();
+            });
+
+            // Закрытие модального окна при клике вне его области
+            $(window).click(function (event) {
+                if (event.target == $('#modal')[0]) {
+                    $('#modal').hide();
+                }
+            });
+
+            // Проверяем значение в Local Storage при загрузке страницы
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+            if (authenticationSuccess === "1") {
+                // Если пользователь успешно авторизован, скрываем модальное окно
+                $('#modal').hide();
+            }
+
             $('#loginButton').click(function () {
-                // Получаем значения из полей ввода
                 var phoneLogin = $('#phoneLogin').val();
                 var password = $('#password').val();
 
-                // Создаем объект данных для передачи на сервер
                 var formData = {
                     phoneLogin: phoneLogin,
                     password: password
                 };
 
-                // Получаем значение из поля ввода (может потребоваться изменить селектор)
-                var userName = $('#phoneLogin').val();
-
-                // Передаем значение в функцию установки куки
-                setCookie("UserName", userName);
-
-                // Отправляем AJAX-запрос на сервер
                 $.ajax({
                     type: 'POST',
-                    url: '/Home/Login', // Укажите правильный URL-адрес вашего метода на сервере
+                    url: '/Home/Login',
                     data: formData,
                     dataType: 'json',
                     success: function (data) {
                         if (data.success) {
-                            window.location.href = '/Home/MainPage'; // Перенаправляем на главную страницу после успешной авторизации
+                            // Успешная авторизация
+
+                            // Скрываем модальное окно
+                            $('#modal').hide();
+
+                            // Скрываем сообщение об ошибке (если видимо)
+                            $('#errorMessage').hide();
+
+                            // Устанавливаем значение в Local Storage
+                            localStorage.setItem("AuthenticationSuccess", "1");
+
+                            // Устанавливаем значение в куку
+                            document.cookie = "AuthenticationSuccess=1; expires=" + new Date(Date.now() + 30 * 60 * 1000).toUTCString() + "; path=/";
+
+                            // Перенаправляем на главную страницу
+                            // window.location.href = '/Home/MainPage';
                         } else {
-                            alert(data.message);
+                            // Показываем сообщение об ошибке
+                            $('#errorMessage').show();
                         }
                     },
                     error: function () {
@@ -722,24 +749,6 @@
                 });
             });
         });
-
-        // Функция установки куки
-        function setCookie(name, value) {
-            var options = {
-                expires: new Date(Date.now() + 30 * 60 * 1000), // Устанавливаем желаемое время жизни куки
-                path: '/'
-            };
-
-            document.cookie = name + "=" + value + ";" + options.expires + ";path=" + options.path;
-        }
-
-        // Функция получения значения куки по имени
-        function getCookie(name) {
-            var value = "; " + document.cookie;
-            var parts = value.split("; " + name + "=");
-            if (parts.length == 2) return parts.pop().split(";").shift();
-            return null;
-        }
     </script>
 
 </body>
