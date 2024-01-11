@@ -193,36 +193,32 @@ namespace diplom.Controllers
 
             return Content(providerName);
         }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Login(string phoneLogin, string password)
-        //{
-        //    // Хеширование пароля перед его сравнением с хешированным паролем в базе данных
-        //    //string hashedPassword = HashPassword(password);
-        //    string hashedPassword = password;
+        public ActionResult Login(string phoneLogin, string password)
+        {
+            // Проверка учетных данных пользователя
+            var user = FindUser(phoneLogin, password);
+
+            if (user != null)
+            {
+                // Если учетные данные верны, устанавливаем куку
+                CookieOptions options = new CookieOptions
+                {
+                    Expires = DateTime.Now.AddMinutes(30), // Установите желаемое время жизни куки
+                    HttpOnly = true
+                };
+
+                Response.Cookies.Append("UserName", user.User_name, options);
+
+                return Json(new { success = true, message = "Авторизация успешна.", userName = user.User_name });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Неверный номер телефона или пароль." });
+            }
+        }
 
 
-        //    var user = FindUser(phoneLogin, hashedPassword);
 
-        //    if (user != null)
-        //    {
-        //        // Успешная авторизация                
-        //        HttpContext.Session.SetString("UserName", user.User_name);
-        //        System.Diagnostics.Debug.WriteLine(user.User_name);
-
-        //        return View(user);
-        //        return Json(new { success = true, message = "Авторизация успешна.", userName = user.User_name });
-        //    }
-        //    else
-        //    {
-        //        // Авторизация не удалась
-        //        System.Diagnostics.Debug.WriteLine("что-то не так");
-        //        return View(user);
-        //        return Json(new { success = false, message = "Неверный номер телефона или пароль." });
-        //    }
-        //}
-
-        //// Метод для хеширования пароля
         //private string HashPassword(string password)
         //{
         //    using (var sha256 = SHA256.Create())
@@ -232,12 +228,21 @@ namespace diplom.Controllers
         //    }
         //}
 
-        //// Пример метода для поиска пользователя в базе данных
-        //private _User FindUser(string phoneLogin, string hashedPassword)
-        //{
-        //    var user = db._User.FirstOrDefault(u => u.PhoneNumber == phoneLogin && u.user_password == hashedPassword);
-        //    return user;
-        //}
+        // Пример метода для поиска пользователя в базе данных
+        private _User FindUser(string phoneLogin, string password)
+        {
+            try
+            {
+                var user = db._User.FirstOrDefault(u => u.PhoneNumber == phoneLogin && u.user_password == password);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                // Вывести информацию об ошибке в консоль или логи
+                Console.WriteLine($"Ошибка при поиске пользователя: {ex.Message}");
+                throw; // Пробросить исключение для обработки в вызывающем коде
+            }
+        }
 
 
 

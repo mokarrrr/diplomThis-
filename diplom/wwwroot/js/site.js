@@ -115,6 +115,8 @@ $(function (maam) {
 //        }
 //    });
 //});
+
+
 var modal = document.getElementById("modal");
 var loginContent = document.getElementById("loginContent");
 var registerContent = document.getElementById("registerContent");
