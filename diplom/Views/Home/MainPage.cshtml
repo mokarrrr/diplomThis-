@@ -29,7 +29,10 @@
                     <div id="loginContent">
                         <span class="close">&times;</span>
                         <h2>Авторизация</h2>
+                        <div style="display:flex;gap:10px" >
+                            <p style="padding-top: 5px;">+7</p>
                         @Html.TextBox("phoneLogin", "", new { placeholder = "Введите номер телефона" })
+                        </div>
                         @Html.TextBox("password", "", new { placeholder = "Введите пароль" })
                         <p id="errorMessage" style="color:red;z-index:1;display:none">⚠️ Проверьте правильность заполенения полей</p>
                         <button type="button" id="loginButton">Войти</button>
@@ -39,11 +42,17 @@
                 <div id="registerContent" style="display:none;">
                     <span class="close">&times;</span>
                     <h2>Регистрация</h2>
-                    <input type="text" placeholder="Email">
-                    <input type="password" placeholder="Пароль">
-                    <input type="password" placeholder="Повторите пароль">
-                    <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона">
-                    <input type="text" placeholder="Ваш город" required>
+                    @* <input type="text" placeholder="Email"> *@
+                    @Html.TextBox("Email", "", new { placeholder = "Email" })
+                    @* <input type="password" placeholder="Пароль"> *@
+                    @Html.TextBox("passwordregister", "", new { placeholder = "Пароль" })
+                    @* <input type="password" placeholder="Повторите пароль"> *@
+                    @Html.TextBox("passwordregistersecond", "", new { placeholder = "Повторите пароль" })
+                    <div style="display:flex;gap:10px">
+                        <p style="padding-top: 5px;">+7</p>
+                    @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
+                        @Html.TextBox("phoneRegister", "", new { placeholder = "Номер телефона" })
+                    </div>
                     <button id="registerButton">Зарегистрироваться</button>
                 </div>
             </div>
@@ -686,25 +695,49 @@
 
     <script>
         $(document).ready(function () {
+            // Устанавливаем значение в Local Storage при загрузке страницы
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+            if (authenticationSuccess === null) {
+                // Если значение не установлено, устанавливаем в "0"
+                localStorage.setItem("AuthenticationSuccess", "0");
+            } else if (authenticationSuccess === "1") {
+                // Если пользователь успешно авторизован, скрываем модальное окно и выходим
+                $('#modal').hide();
+                enableSendButton();
+                return;
+            }
+
+            // Проверяем, есть ли кука "FirstVisit"
+            var firstVisitCookie = getCookie("FirstVisit");
+
+            if (!firstVisitCookie) {
+                // Если кука не установлена, отображаем модальное окно
+                $('#modal').show();
+
+                // Устанавливаем куку "FirstVisit"
+                document.cookie = "FirstVisit=true; expires=" + new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString() + "; path=/";
+            }
+
             // Закрытие модального окна при клике на крестик
             $('#modal .close').click(function () {
                 $('#modal').hide();
+
+                // Устанавливаем значение "AuthenticationSuccess" в "0" при закрытии окна
+                localStorage.setItem("AuthenticationSuccess", "0");
             });
 
             // Закрытие модального окна при клике вне его области
             $(window).click(function (event) {
                 if (event.target == $('#modal')[0]) {
                     $('#modal').hide();
+
+                    // Устанавливаем значение "AuthenticationSuccess" в "0" при закрытии окна
+                    localStorage.setItem("AuthenticationSuccess", "0");
                 }
             });
 
-            // Проверяем значение в Local Storage при загрузке страницы
-            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
-
-            if (authenticationSuccess === "1") {
-                // Если пользователь успешно авторизован, скрываем модальное окно
-                $('#modal').hide();
-            }
+            // ... (остальной код скрипта)
 
             $('#loginButton').click(function () {
                 var phoneLogin = $('#phoneLogin').val();
@@ -733,11 +766,7 @@
                             // Устанавливаем значение в Local Storage
                             localStorage.setItem("AuthenticationSuccess", "1");
 
-                            // Устанавливаем значение в куку
-                            document.cookie = "AuthenticationSuccess=1; expires=" + new Date(Date.now() + 30 * 60 * 1000).toUTCString() + "; path=/";
 
-                            // Перенаправляем на главную страницу
-                            // window.location.href = '/Home/MainPage';
                         } else {
                             // Показываем сообщение об ошибке
                             $('#errorMessage').show();
@@ -748,6 +777,13 @@
                     }
                 });
             });
+
+            function getCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length == 2) return parts.pop().split(";").shift();
+                return null;
+            }
         });
     </script>
 

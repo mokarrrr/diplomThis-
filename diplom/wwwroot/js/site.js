@@ -123,15 +123,15 @@ var registerContent = document.getElementById("registerContent");
 var switchToRegister = document.getElementById("switchToRegister");
 var closeButtons = document.getElementsByClassName("close");
 
-function showModal() {
-    if (!Cookies.get('hasVisited') || Cookies.get('hasVisited') !== 'true') {
-        modal.style.display = "block";
-    }
-}
+//function showModal() {
+//    if (!Cookies.get('hasVisited') || Cookies.get('hasVisited') !== 'true') {
+//        modal.style.display = "block";
+//    }
+//}
 
-function setVisitedCookie() {
-    Cookies.set('hasVisited', 'true', { expires: 365 }); // Куки на год
-}
+//function setVisitedCookie() {
+//    Cookies.set('hasVisited', 'true', { expires: 365 }); // Куки на год
+//}
 
 switchToRegister.onclick = function (event) {
     event.preventDefault(); // Предотвращаем стандартное действие ссылки
@@ -147,9 +147,9 @@ for (var i = 0; i < closeButtons.length; i++) {
     }
 }
 
-window.onload = function () {
-    showModal();
-}
+//window.onload = function () {
+//    showModal();
+//}
 
 // Добавлено событие для закрытия модального окна при клике вне его
 window.addEventListener('click', function (event) {
@@ -409,32 +409,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*@* добавление в корзину * @*/
   
-        $(document).ready(function () {
-            // При нажатии на элемент с классом "send"
-            $('.send').on('click', function () {
-                // Получите цену товара
-                var priceElement = $(this).closest('.card-content').find('.price');
-                var saleElement = $(this).closest('.card-content').find('.sale');
+$(document).ready(function () {
+    // При нажатии на элемент с классом "send"
+    $('.send').on('click', function () {
+        // Проверяем значение AuthenticationSuccess в Local Storage
+        var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
 
-                // Получите цену без скидки
-                var originalPrice = parseInt(priceElement.text().replace(/[^\d.]/g, ''));
+        // Если пользователь не авторизован (AuthenticationSuccess=0), открываем модальное окно
+        if (authenticationSuccess === null || authenticationSuccess === "0") {
+            $('#modal').show();
+            return;
+        }
 
-                // Получите сумму с учетом скидки
-                var priceWithSale = saleElement.length > 0 ? originalPrice - Math.floor(originalPrice * parseFloat(saleElement.text().replace(/[^\d.]/g, '')) / 100) : originalPrice;
+        // Получите цену товара
+        var priceElement = $(this).closest('.card-content').find('.price');
+        var saleElement = $(this).closest('.card-content').find('.sale');
 
-                // Получите текущую сумму в корзине
-                var currentTotal = parseInt($('#cartButton').attr('data-total')) || 0;
+        // Получите цену без скидки
+        var originalPrice = parseInt(priceElement.text().replace(/[^\d.]/g, ''));
 
-                // Прибавьте цену товара с учетом скидки к текущей сумме
-                var newTotal = currentTotal + priceWithSale;
+        // Получите сумму с учетом скидки
+        var priceWithSale = saleElement.length > 0 ? originalPrice - Math.floor(originalPrice * parseFloat(saleElement.text().replace(/[^\d.]/g, '')) / 100) : originalPrice;
 
-                // Обновите атрибут data-total у кнопки корзины
-                $('#cartButton').attr('data-total', newTotal);
+        // Получите текущую сумму в корзине
+        var currentTotal = parseInt($('#cartButton').attr('data-total')) || 0;
 
-                // Обновите текст суммы в корзине с символом корзины
-                $('#cartButton').html('<i class="fas fa-shopping-basket"></i> ' + newTotal + ' руб.');
-            });
-        });
+        // Прибавьте цену товара с учетом скидки к текущей сумме
+        var newTotal = currentTotal + priceWithSale;
+
+        // Обновите атрибут data-total у кнопки корзины
+        $('#cartButton').attr('data-total', newTotal);
+
+        // Обновите текст суммы в корзине с символом корзины
+        $('#cartButton').html('<i class="fas fa-shopping-basket"></i> ' + newTotal + ' руб.');
+    });
+});
  
 
    /* @* фильтры * @*/
@@ -506,31 +515,31 @@ function getPrice(card) {
 
 
     
-        $(document).ready(function () {
-            $('#softCheeseCheckbox').change(function () {
-                // Получаем значение чекбокса
-                var isChecked = $(this).prop('checked');
+        //$(document).ready(function () {
+        //    $('#softCheeseCheckbox').change(function () {
+        //        // Получаем значение чекбокса
+        //        var isChecked = $(this).prop('checked');
 
-                // Устанавливаем categoryId в 1, если чекбокс отмечен, иначе в null
-                var categoryId = isChecked ? 1 : null;
+        //        // Устанавливаем categoryId в 1, если чекбокс отмечен, иначе в null
+        //        var categoryId = isChecked ? 1 : null;
 
-                // Отправляем запрос на сервер с новым categoryId
-                $.ajax({
-                    url: '/Home/MainPage',
-                    type: 'GET',
-                    data: {
-                        categoryId: categoryId,
-                        // Другие параметры запроса, если нужны
-                    },
-                    success: function (data) {
-                        // Обновляем содержимое страницы, например, заменяем список продуктов
-                        $('#container3').html(data);
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
-            });
-        });
+        //        // Отправляем запрос на сервер с новым categoryId
+        //        $.ajax({
+        //            url: '/Home/MainPage',
+        //            type: 'GET',
+        //            data: {
+        //                categoryId: categoryId,
+        //                // Другие параметры запроса, если нужны
+        //            },
+        //            success: function (data) {
+        //                // Обновляем содержимое страницы, например, заменяем список продуктов
+        //                $('#container3').html(data);
+        //            },
+        //            error: function (error) {
+        //                console.log(error);
+        //            }
+        //        });
+        //    });
+        //});
    
 
