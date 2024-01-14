@@ -39,11 +39,15 @@
                         <button id="switchToRegister">Регистрация</button>
                     </div>
                 }
+                @using (Html.BeginForm("MainPage", "Home", FormMethod.Post, new { id = "loginForm2" }))
+{
                 <div id="registerContent" style="display:none;">
                     <span class="close">&times;</span>
                     <h2>Регистрация</h2>
                     @* <input type="text" placeholder="Email"> *@
                     @Html.TextBox("Email", "", new { placeholder = "Email" })
+                    @Html.TextBox("Name", "", new { placeholder = "Ваше имя" })
+                    @Html.TextBox("lastName", "", new { placeholder = "Ваша фамилия" })
                     @* <input type="password" placeholder="Пароль"> *@
                     @Html.TextBox("passwordregister", "", new { placeholder = "Пароль" })
                     @* <input type="password" placeholder="Повторите пароль"> *@
@@ -53,8 +57,9 @@
                     @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
                         @Html.TextBox("phoneRegister", "", new { placeholder = "Номер телефона" })
                     </div>
-                    <button id="registerButton">Зарегистрироваться</button>
+                    <button id="registerButton" type="button" >Зарегистрироваться</button>
                 </div>
+                }
             </div>
         </div>
 
@@ -787,5 +792,54 @@
         });
     </script>
 
+    <script>
+        $(document).ready(function () {
+            $('#registerButton').click(function () {
+                var email = $('#Email').val();
+                var name = $('#Name').val();
+                var lastName = $('#lastName').val();
+                var password = $('#passwordregister').val();
+                var passwordConfirmation = $('#passwordregistersecond').val();
+                var phone = $('#phoneRegister').val();
+
+                // Проверка пароля и его подтверждения
+                if (password !== passwordConfirmation) {
+                    alert('Пароли не совпадают');
+                    return;
+                }
+
+                // Отправка данных на сервер
+                var formData = {
+                    Email: email,
+                    Name: name,
+                    LastName: lastName,
+                    passwordregister: password,
+                    passwordregistersecond: passwordConfirmation,
+                    phoneRegister: phone
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/Register', // Укажите путь к вашему методу регистрации
+                    data: formData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.success) {
+                            alert('Регистрация успешна');
+                            // Дополнительные действия после успешной регистрации...
+
+                            // Опционально: выполнить авторизацию и перенаправить пользователя
+
+                        } else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Произошла ошибка при выполнении запроса.');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 

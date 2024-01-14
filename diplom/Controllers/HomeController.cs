@@ -203,11 +203,15 @@ namespace diplom.Controllers
                 // Если учетные данные верны, устанавливаем куку
                 CookieOptions options = new CookieOptions
                 {
-                    Expires = DateTime.Now.AddMinutes(30), // Установите желаемое время жизни куки
+                    Expires = DateTime.Now.AddHours(100), // Установите желаемое время жизни куки
                     HttpOnly = true
                 };
 
+                // Добавляем куку для имени пользователя
                 Response.Cookies.Append("UserName", user.User_name, options);
+
+                // Добавляем куку для адреса электронной почты
+                Response.Cookies.Append("UserEmail", user.Email, options);
 
                 return Json(new { success = true, message = "Авторизация успешна.", userName = user.User_name });
             }
@@ -218,17 +222,6 @@ namespace diplom.Controllers
         }
 
 
-
-        //private string HashPassword(string password)
-        //{
-        //    using (var sha256 = SHA256.Create())
-        //    {
-        //        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-        //        return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-        //    }
-        //}
-
-        // Пример метода для поиска пользователя в базе данных
         private _User FindUser(string phoneLogin, string password)
         {
             try
@@ -245,6 +238,72 @@ namespace diplom.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult Register(string Email, string Name, string lastName, string passwordregister, string passwordregistersecond, string phoneRegister)
+        {
+            // Проверка пароля и его подтверждения
+            if (passwordregister != passwordregistersecond)
+            {
+                ModelState.AddModelError("", "Пароли не совпадают");
+                return Json(new { success = false, message = "Пароли не совпадают" });
+            }
+
+            // Проверка существования пользователя с таким номером телефона
+            if (UserExistsByPhoneNumber(phoneRegister))
+            {
+                ModelState.AddModelError("", "Пользователь с таким номером телефона уже зарегистрирован");
+                return Json(new { success = false, message = "Пользователь с таким номером телефона уже зарегистрирован" });
+            }
+
+            // Проверка существования пользователя с такой почтой
+            if (UserExistsByEmail(Email))
+            {
+                ModelState.AddModelError("", "Пользователь с такой почтой уже зарегистрирован");
+                return Json(new { success = false, message = "Пользователь с такой почтой уже зарегистрирован" });
+            }
+
+            // Создание нового пользователя
+            var newUser = new _User
+            {
+                PhoneNumber = phoneRegister,
+                Email = Email,
+                User_name = Name,
+                Surname = lastName,
+                user_password = HashPassword(passwordregister), // Хеширование пароля
+
+                // Дополнительные поля, если есть
+            };
+
+            // Добавление пользователя в базу данных
+            db._User.Add(newUser);
+            db.SaveChanges();
+
+            // Вы можете также выполнить авторизацию нового пользователя здесь, если это необходимо
+
+            return Json(new { success = true, message = "Регистрация успешна" });
+        }
+
+        // Метод для проверки существования пользователя по номеру телефона
+        private bool UserExistsByPhoneNumber(string phoneNumber)
+        {
+            return db._User.Any(u => u.PhoneNumber == phoneNumber);
+        }
+
+        // Метод для проверки существования пользователя по адресу электронной почты
+        private bool UserExistsByEmail(string email)
+        {
+            return db._User.Any(u => u.Email == email);
+        }
+
+        // Метод для хеширования пароля
+        private string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            }
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
