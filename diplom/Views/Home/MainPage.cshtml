@@ -31,9 +31,16 @@
                         <h2>Авторизация</h2>
                         <div style="display:flex;gap:10px" >
                             <p style="padding-top: 5px;">+7</p>
-                        @Html.TextBox("phoneLogin", "", new { placeholder = "Введите номер телефона" })
+                        @Html.TextBox("phoneLogin", "", new { placeholder = "Введите номер телефона",@class = "phoneregister2" })
+                          
                         </div>
-                        @Html.TextBox("password", "", new { placeholder = "Введите пароль" })
+                        <div style="display:flex">
+                        @* @Html.TextBox("password", "", new { placeholder = "Введите пароль" }) *@
+                            <input id="password" type="password" placeholder="Повторите пароль" >
+                        <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
+                            &#128065;
+                        </button>
+                        </div>
                         <p id="errorMessage" style="color:red;z-index:1;display:none">⚠️ Проверьте правильность заполенения полей</p>
                         <button type="button" id="loginButton">Войти</button>
                         <button id="switchToRegister">Регистрация</button>
@@ -48,16 +55,26 @@
                     @Html.TextBox("Email", "", new { placeholder = "Email" })
                     @Html.TextBox("Name", "", new { placeholder = "Ваше имя" })
                     @Html.TextBox("lastName", "", new { placeholder = "Ваша фамилия" })
-                    @* <input type="password" placeholder="Пароль"> *@
-                    @Html.TextBox("passwordregister", "", new { placeholder = "Пароль" })
-                    @* <input type="password" placeholder="Повторите пароль"> *@
-                    @Html.TextBox("passwordregistersecond", "", new { placeholder = "Повторите пароль" })
+                        <div style="display:flex">
+                        <input id="passwordregister" type="password" placeholder="Пароль">
+                            <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
+                                &#128065;
+                            </button>
+                        </div>
+                    @* @Html.TextBox("passwordregister", "", new { placeholder = "Пароль" }) *@
+                    <div style="display:flex">
+                        <input id="passwordregistersecond" type="password" placeholder="Повторите пароль" style="width:710px;margin-top:3px">
+                            <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -10px;">
+                                &#128065;
+                            </button>
+                        </div>
+                    @* @Html.TextBox("passwordregistersecond", "", new { placeholder = "Повторите пароль" }) *@
                     <div style="display:flex;gap:10px">
                         <p style="padding-top: 5px;">+7</p>
                     @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
-                        @Html.TextBox("phoneRegister", "", new { placeholder = "Номер телефона" })
+                        @Html.TextBox("phoneRegister", "", new { placeholder = "Номер телефона",@class ="phoneRegister1"})
                     </div>
-                    <button id="registerButton" type="button" >Зарегистрироваться</button>
+                        <center> <button id="registerButton" type="button">Зарегистрироваться</button> </center>
                 </div>
                 }
             </div>
@@ -838,6 +855,48 @@
                         alert('Произошла ошибка при выполнении запроса.');
                     }
                 });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#showPasswordButton').click(function () {
+                var passwordField = $('#passwordregistersecond');
+
+                // Изменяем тип поля ввода в зависимости от его текущего типа
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                } else {
+                    passwordField.attr('type', 'password');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#showPasswordButton').click(function () {
+                var passwordField = $('#passwordregister');
+
+                // Изменяем тип поля ввода в зависимости от его текущего типа
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                } else {
+                    passwordField.attr('type', 'password');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#showPasswordButton').click(function () {
+                var passwordField = $('#password');
+
+                // Изменяем тип поля ввода в зависимости от его текущего типа
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                } else {
+                    passwordField.attr('type', 'password');
+                }
             });
         });
     </script>

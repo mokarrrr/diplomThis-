@@ -195,10 +195,10 @@ namespace diplom.Controllers
         }
         public ActionResult Login(string phoneLogin, string password)
         {
-            // Проверка учетных данных пользователя
-            var user = FindUser(phoneLogin, password);
+            // Поиск пользователя по номеру телефона
+            var user = FindUserByPhone(phoneLogin);
 
-            if (user != null)
+            if (user != null && VerifyPassword(password, user.user_password))
             {
                 // Если учетные данные верны, устанавливаем куку
                 CookieOptions options = new CookieOptions
@@ -207,11 +207,7 @@ namespace diplom.Controllers
                     HttpOnly = true
                 };
 
-                // Добавляем куку для имени пользователя
-                Response.Cookies.Append("UserName", user.User_name, options);
-
-                // Добавляем куку для адреса электронной почты
-                Response.Cookies.Append("UserEmail", user.Email, options);
+                Response.Cookies.Append("UserId", user.IdUser.ToString(), options);
 
                 return Json(new { success = true, message = "Авторизация успешна.", userName = user.User_name });
             }
@@ -221,6 +217,24 @@ namespace diplom.Controllers
             }
         }
 
+        private _User FindUserByPhone(string phoneLogin)
+        {
+            // Ваш код для поиска пользователя по номеру телефона в базе данных
+            // Пример:
+            return db._User.FirstOrDefault(u => u.PhoneNumber == phoneLogin);
+        }
+
+        private bool VerifyPassword(string enteredPassword, string hashedPassword)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(enteredPassword));
+                var enteredPasswordHash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+
+                // Сравниваем хеши введенного пароля и хешированного пароля из базы данных
+                return string.Equals(enteredPasswordHash, hashedPassword, StringComparison.OrdinalIgnoreCase);
+            }
+        }
 
         private _User FindUser(string phoneLogin, string password)
         {
