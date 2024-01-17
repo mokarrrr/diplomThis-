@@ -292,7 +292,6 @@ namespace diplom.Controllers
             db._User.Add(newUser);
             db.SaveChanges();
 
-            // Вы можете также выполнить авторизацию нового пользователя здесь, если это необходимо
 
             return Json(new { success = true, message = "Регистрация успешна" });
         }
