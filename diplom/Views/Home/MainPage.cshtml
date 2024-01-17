@@ -47,7 +47,7 @@
                     </div>
                 }
                 @using (Html.BeginForm("MainPage", "Home", FormMethod.Post, new { id = "loginForm2" }))
-{
+                    {
                 <div id="registerContent" style="display:none;">
                     <span class="close">&times;</span>
                     <h2>Регистрация</h2>
@@ -77,6 +77,13 @@
                         <center> <button id="registerButton" type="button">Зарегистрироваться</button> </center>
                 </div>
                 }
+            </div>
+        </div>
+
+        <div id="modaluser" class="modal" style="overflow-y:hidden">
+            <!-- Модальный контент -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
             </div>
         </div>
 
@@ -132,7 +139,7 @@
                 <button class="btn fav-button" style="border: 2px solid black;">
                     <i class="fas fa-heart"></i>
                 </button>
-                <button class="btn user-button" style="border: 2px solid black;">
+                <button class="btn user-button" style="border: 2px solid black;" id="openAuthModalButton">
                     <i class="fas fa-user"></i>
                 </button>
             </div>
@@ -842,17 +849,37 @@
                     dataType: 'json',
                     success: function (data) {
                         if (data.success) {
-                            alert('Регистрация успешна');
-                            // Дополнительные действия после успешной регистрации...
+                            // Авторизация пользователя после успешной регистрации
+                            var loginData = {
+                                phoneLogin: phone,
+                                password: password
+                            };
 
-                            // Опционально: выполнить авторизацию и перенаправить пользователя
-
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/Login', // Укажите путь к вашему методу авторизации
+                                data: loginData,
+                                dataType: 'json',
+                                success: function (loginResult) {
+                                    if (loginResult.success) {
+                                        alert('Регистрация и авторизация успешны');
+                                        localStorage.setItem("AuthenticationSuccess", "1");
+                                        // Скрыть модальное окно
+                                        $('#modal').hide();
+                                    } else {
+                                        alert('Ошибка при авторизации после регистрации');
+                                    }
+                                },
+                                error: function () {
+                                    alert('Произошла ошибка при выполнении запроса авторизации.');
+                                }
+                            });
                         } else {
                             alert(data.message);
                         }
                     },
                     error: function () {
-                        alert('Произошла ошибка при выполнении запроса.');
+                        alert('Произошла ошибка при выполнении запроса регистрации.');
                     }
                 });
             });
@@ -896,6 +923,46 @@
                     passwordField.attr('type', 'text');
                 } else {
                     passwordField.attr('type', 'password');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Добавьте обработчик события для кнопки с классом "btn user-button"
+            $('.btn.user-button').click(function () {
+                // Проверяем значение в Local Storage перед открытием модального окна
+                if (localStorage.getItem("AuthenticationSuccess") === "0") {
+                    $('#modal').show();
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Обработчик нажатия кнопки открытия модального окна
+            $('#openAuthModalButton').click(function () {
+                // Проверяем значение в Local Storage
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === "1") {
+                    // Если пользователь успешно авторизован, показываем модальное окно
+                    $('#modaluser').show();
+                } else {
+                    // В противном случае можно показать сообщение или выполнить другие действия
+                    alert('Вы не авторизованы.');
+                }
+            });
+
+            // Обработчик закрытия модального окна
+            $('#modaluser .close').click(function () {
+                $('#modaluser').hide();
+            });
+
+            // Обработчик клика вне модального окна для его закрытия
+            $(window).click(function (event) {
+                if (event.target == $('#modaluser')[0]) {
+                    $('#modaluser').hide();
                 }
             });
         });
