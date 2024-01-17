@@ -82,7 +82,7 @@
 
         <div id="modaluser" class="modal" style="overflow-y:hidden">
             <!-- Модальный контент -->
-            <div class="modal-content">
+            <div class="modal-content2" style="height:700px; border: 3px solid black;border-radius: 25px;">
                 <span class="close">&times;</span>
             </div>
         </div>
@@ -862,7 +862,7 @@
                                 dataType: 'json',
                                 success: function (loginResult) {
                                     if (loginResult.success) {
-                                        alert('Регистрация и авторизация успешны');
+                                        alert('Регистрация');
                                         localStorage.setItem("AuthenticationSuccess", "1");
                                         // Скрыть модальное окно
                                         $('#modal').hide();
