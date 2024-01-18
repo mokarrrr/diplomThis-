@@ -810,7 +810,7 @@ a:active {
 
     background: linear-gradient(to bottom right,#F9D86EAA,#ffffff);
     background-color: #F9D86E;
-    margin: 7% auto;
+    margin: 8% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 62%;
@@ -823,6 +823,14 @@ a:active {
 .form-groupimg {
     grid-column: 1;
     grid-row: 1
+}
+.userimg {
+    background-color: lightgray;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
 }
 .formmy {
     display: grid;

@@ -83,7 +83,22 @@
         <div id="modaluser" class="modal" style="overflow-y:hidden">
             <!-- Модальный контент -->
             <div class="modal-content2" style="height:700px; border: 3px solid black;border-radius: 25px;">
-                <span class="close">&times;</span>
+                <span class="close" style="margin-top:-5px">&times;</span>
+                <center>
+                <h5 class="modal-title" id="exampleModalLabel" style="margin-top:-5px">
+                    Личный кабинет
+                </h5>
+                </center>
+                <hr style="color: black;background: black;border: black;height: 1px;">
+                <div style="display:flex">
+                    <div style="display:grid;grid-template-columns: 1.9fr 2.2fr;width:100%">
+                        <center style="padding:7%">
+                            <div class="userimg" style="height: 150px; width: 150px;"></div>
+                        </center>
+                        <p style="color:black;grid-column:2">gfgfgdf</p>
+                        @Html.TextBox("Email", "", new { placeholder = "Email",@style ="color:black;grid-column:2" })
+                    </div>
+                </div>
             </div>
         </div>
 
