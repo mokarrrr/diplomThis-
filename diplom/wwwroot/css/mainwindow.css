@@ -409,6 +409,7 @@ a:active {
     background: linear-gradient(to bottom right,#ffcc01,#fdc401,#ffcc01);
 }
 
+
     .btn i {
         font-size:30px;
         color: #333; 
@@ -816,6 +817,28 @@ a:active {
     width: 62%;
     height: 1300px;
     border-radius: 5px;
+}
+.modal-content3 {
+    background: linear-gradient(to bottom right,#F9D86EAA,#ffffff);
+    background-color: #F9D86E;
+    margin: 8% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 52%;
+    height: 1300px;
+    border-radius: 5px;
+}
+.userinf {
+    height:40px;
+    width:200px;
+    margin-left:auto;
+    margin-right:auto;
+}
+.numberrr {
+    height: 40px;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 #exampleModal::-webkit-scrollbar {
     width: 0;

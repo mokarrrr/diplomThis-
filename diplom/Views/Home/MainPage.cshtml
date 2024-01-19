@@ -80,23 +80,31 @@
             </div>
         </div>
 
-        <div id="modaluser" class="modal" style="overflow-y:hidden">
+        <div id="modaluserr" class="modal" style="overflow-y:hidden">
             <!-- Модальный контент -->
             <div class="modal-content2" style="height:700px; border: 3px solid black;border-radius: 25px;">
                 <span class="close" style="margin-top:-5px">&times;</span>
                 <center>
-                <h5 class="modal-title" id="exampleModalLabel" style="margin-top:-5px">
+                <h5 class="modal-title" style="margin-top:-5px">
                     Личный кабинет
                 </h5>
                 </center>
                 <hr style="color: black;background: black;border: black;height: 1px;">
-                <div style="display:flex">
-                    <div style="display:grid;grid-template-columns: 1.9fr 2.2fr;width:100%">
-                        <center style="padding:7%">
-                            <div class="userimg" style="height: 150px; width: 150px;"></div>
-                        </center>
-                        <p style="color:black;grid-column:2">gfgfgdf</p>
-                        @Html.TextBox("Email", "", new { placeholder = "Email",@style ="color:black;grid-column:2" })
+                <div>
+                    <center style="padding:1%">
+                        <div class="userimg" style="height: 150px; width: 150px;"></div>
+                    </center>
+                    <div style="width:100%;gap:30px;display:inline-grid">
+                        @Html.TextBox("Emailuser", "", new { placeholder = "Email",@class ="userinf" })
+                        @Html.TextBox("Nameuser", "", new { placeholder = "Ваше имя",@class ="userinf" })
+                        @Html.TextBox("lastNameuser", "", new { placeholder = "Ваша фамилия",@class ="userinf" })
+                        @* <input id="passwordregister" class="userinf" type="password" placeholder="Пароль">
+                        <input id="passwordregistersecond" class="userinf" type="password" placeholder="Повторите пароль" style="width:710px;margin-top:3px"> *@
+                        <div style="display:flex;gap:10px;margin-left:auto;margin-right:auto" class="userinf">
+                            <p style="padding-top: 5px;margin-left:-30px">+7</p>
+                            @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
+                            @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
+                        </div>
                     </div>
                 </div>
             </div>
@@ -955,29 +963,25 @@
     </script>
     <script>
         $(document).ready(function () {
-            // Обработчик нажатия кнопки открытия модального окна
-            $('#openAuthModalButton').click(function () {
-                // Проверяем значение в Local Storage
-                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+            // Проверяем значение в Local Storage при загрузке страницы
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
 
-                if (authenticationSuccess === "1") {
-                    // Если пользователь успешно авторизован, показываем модальное окно
-                    $('#modaluser').show();
-                } else {
-                    // В противном случае можно показать сообщение или выполнить другие действия
-                    alert('Вы не авторизованы.');
-                }
+            if (authenticationSuccess === "1") {
+                // Если AuthenticationSuccess равно 1, открываем модальное окно
+                $('#openAuthModalButton').click(function () {
+                    $('#modaluserr').show();
+                });
+            }
+
+            // Закрытие модального окна при клике на крестик
+            $('#modaluserr .close').click(function () {
+                $('#modaluserr').hide();
             });
 
-            // Обработчик закрытия модального окна
-            $('#modaluser .close').click(function () {
-                $('#modaluser').hide();
-            });
-
-            // Обработчик клика вне модального окна для его закрытия
+            // Закрытие модального окна при клике вне его области
             $(window).click(function (event) {
-                if (event.target == $('#modaluser')[0]) {
-                    $('#modaluser').hide();
+                if (event.target == $('#modaluserr')[0]) {
+                    $('#modaluserr').hide();
                 }
             });
         });
