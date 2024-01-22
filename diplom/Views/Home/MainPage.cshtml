@@ -90,6 +90,23 @@
                 </h5>
                 </center>
                 <hr style="color: black;background: black;border: black;height: 1px;">
+                <div style="display:flex;width:100%;height:100%;gap:250px">
+                    <div>
+                        <div id="myTabsuser" style="gap:20px">
+                            <div style="display:flex;gap:10px">
+                                <i class="fas fa-home"></i>
+                                <div data-tab="tab-information">Личная информация</div>
+                            </div> 
+                            <div style="display:flex;gap:10px">
+                                <i class="fas fa-lock"></i>
+                                <div data-tab="tab-password">Безопасность</div>
+                            </div>
+                            <div style="display:flex;gap:10px">
+                                <i class="fas fa-history"></i>
+                                <div data-tab="tab-history">Историяя покупок</div>
+                            </div>
+                        </div>
+                    </div>
                 <div>
                     <center style="padding:1%">
                         <div class="userimg" style="height: 150px; width: 150px;"></div>
@@ -106,6 +123,7 @@
                             @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         </div>

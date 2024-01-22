@@ -203,7 +203,7 @@ namespace diplom.Controllers
                 // Если учетные данные верны, устанавливаем куку
                 CookieOptions options = new CookieOptions
                 {
-                    Expires = DateTime.Now.AddHours(100), // Установите желаемое время жизни куки
+                    Expires = DateTime.Now.AddHours(400), // Установите желаемое время жизни куки
                     HttpOnly = true
                 };
 

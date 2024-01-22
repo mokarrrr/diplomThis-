@@ -814,7 +814,7 @@ a:active {
     margin: 8% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 62%;
+    width: 42%;
     height: 1300px;
     border-radius: 5px;
 }
@@ -925,8 +925,15 @@ a:active {
     /*margin-top: -185px;*/
 }
 
+#myTabsuser {
+    display: grid;
+    gap: 20px;
+    margin-left: 40px;
+    margin-top: 20px;
+    font-size:15pt;
+}
 .tab {
-    height:20px;
+    height: 20px;
     padding: 10px 20px;
     cursor: pointer;
     border: 1px solid black;
