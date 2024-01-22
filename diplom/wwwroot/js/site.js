@@ -394,8 +394,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Добавленный код для скрытия tab-reviews-content
             if (tabContents[index].id === 'tab-info-content') {
                 document.getElementById('tab-reviews-content').style.display = 'none';
+                document.getElementById('myTabs').style.marginTop = '10px';
             } else {
                 document.getElementById('tab-reviews-content').style.display = 'flex';
+                document.getElementById('myTabs').style.marginTop = '-185px';
             }
         });
     });
