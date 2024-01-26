@@ -941,6 +941,17 @@ a:active {
     margin-right: -1px;
     background-color: #f8f9fa;
 }
+#logoutButton {
+    z-index: 1;
+    height: 50px;
+    width: 50px;
+    font-size: 30px;
+    float: right;
+    margin-right: -140px;
+    background-color: transparent;
+    border: 1px solid black;
+    border-radius: 15px
+}
 
     .tab:hover {
         background-color: #e9ecef;

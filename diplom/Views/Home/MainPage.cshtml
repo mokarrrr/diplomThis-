@@ -108,10 +108,12 @@
                         </div>
                     </div>
                 <div>
-                    <center style="padding:1%">
+                        <button id="logoutButton" class="fas fa-sign-out-alt"></button>
+                    <center style="padding:1%;margin-top:50px">
                         <div class="userimg" style="height: 150px; width: 150px;"></div>
                     </center>
                     <div style="width:100%;gap:30px;display:inline-grid">
+                            
                         @Html.TextBox("Emailuser", "", new { placeholder = "Email",@class ="userinf" })
                         @Html.TextBox("Nameuser", "", new { placeholder = "Ваше имя",@class ="userinf" })
                         @Html.TextBox("lastNameuser", "", new { placeholder = "Ваша фамилия",@class ="userinf" })
@@ -180,7 +182,7 @@
                 <button class="btn fav-button" style="border: 2px solid black;">
                     <i class="fas fa-heart"></i>
                 </button>
-                <button class="btn user-button" style="border: 2px solid black;" id="openAuthModalButton">
+                <button class="btn user-button" style="border: 2px solid black;" type="button" id="openAuthModalButton">
                     <i class="fas fa-user"></i>
                 </button>
             </div>
@@ -832,7 +834,7 @@
 
                             // Устанавливаем значение в Local Storage
                             localStorage.setItem("AuthenticationSuccess", "1");
-
+                            location.reload();
 
                         } else {
                             // Показываем сообщение об ошибке
@@ -904,6 +906,7 @@
                                         localStorage.setItem("AuthenticationSuccess", "1");
                                         // Скрыть модальное окно
                                         $('#modal').hide();
+                                        location.reload();
                                     } else {
                                         alert('Ошибка при авторизации после регистрации');
                                     }
@@ -984,7 +987,30 @@
             if (authenticationSuccess === "1") {
                 // Если AuthenticationSuccess равно 1, открываем модальное окно
                 $('#openAuthModalButton').click(function () {
-                    $('#modaluserr').show();
+                    // Получение данных о пользователе
+                    $.ajax({
+                        url: '/Home/UserProfile', // Замените на путь к вашему методу UserProfile
+                        type: 'GET',
+                        success: function (data) {
+                            if (data.success) {
+                                // Заполнение полей формы данными о пользователе
+                                $('#Emailuser').val(data.email);
+                                $('#Nameuser').val(data.name);
+                                $('#lastNameuser').val(data.surname);
+                                $('#phoneRegisteruser').val(data.phoneNumber);
+
+                                // Отображение модального окна
+                                $('#modaluserr').show();
+                            } else {
+                                // Обработка ошибки, если не удалось получить данные о пользователе
+                                console.error('Ошибка при получении данных о пользователе.');
+                            }
+                        },
+                        error: function () {
+                            // Обработка ошибки AJAX-запроса
+                            console.error('Ошибка при выполнении AJAX-запроса.');
+                        }
+                    });
                 });
             }
 
@@ -1001,5 +1027,36 @@
             });
         });
     </script>
+
+@*     <script>
+        document.getElementById('logoutButton').addEventListener('click', function () {
+            // Установка значения AuthenticationSuccess в 0 в локальном хранилище
+            localStorage.setItem('AuthenticationSuccess', '0');
+
+
+        });
+    </script> *@
+   
+    <script>
+        $(document).ready(function () {
+            $('#logoutButton').click(function () {
+                $.ajax({
+                    url: '/Home/Logout', // Замените на реальный URL вашего контроллера
+                    type: 'POST', // или 'GET', в зависимости от вашего контроллера
+                    success: function (response) {
+                        // Успешное выполнение запроса
+                        console.log(response);
+                        localStorage.setItem('AuthenticationSuccess', '0');
+                         window.location.reload(); // Пример обновления страницы
+                    },
+                    error: function (error) {
+                        // Ошибка выполнения запроса
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+
 </body>
 

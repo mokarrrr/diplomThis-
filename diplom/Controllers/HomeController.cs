@@ -27,6 +27,7 @@ namespace diplom.Controllers
         private MainContext db = new MainContext();
         private readonly ILogger<HomeController> _logger;
 
+
         public int IdProduct1 { get; private set; }
 
         //List<Product> Products = MainContext.Instantce.Products.ToList();
@@ -217,6 +218,58 @@ namespace diplom.Controllers
             }
         }
 
+        public ActionResult UserProfile()
+        {
+            // Получение значения из куки
+            string userIdCookie = Request.Cookies["UserId"];
+
+            if (!string.IsNullOrEmpty(userIdCookie))
+            {
+                // Преобразование значения куки в int (предполагается, что UserId - это целочисленное значение)
+                if (int.TryParse(userIdCookie, out int userId))
+                {
+                    // Поиск пользователя в БД по UserId
+                    var user = FindUserById(userId);
+
+                    if (user != null)
+                    {
+                        // Возвращаем информацию о пользователе
+                        return Json(new { success = true,
+                            email = user.Email,
+                            phoneNumber = user.PhoneNumber,
+                            name = user.User_name,
+                            surname = user.Surname
+                        });
+                    }
+                }
+            }
+
+            // Если что-то пошло не так или пользователь не найден, возвращаем сообщение об ошибке
+            return Json(new { success = false, message = "Не удалось получить информацию о пользователе." });
+        }
+
+        private _User FindUserById(int userId)
+        {
+            // Подключение к вашему контексту базы данных
+
+                try
+                {
+                    // Поиск пользователя по Id
+                    var user = db._User.FirstOrDefault(u => u.IdUser == userId);
+
+                    // Вернуть найденного пользователя или null, если пользователь не найден
+                    return user;
+                }
+                catch (Exception ex)
+                {
+                    // Обработка ошибок, если необходимо
+                    // Логирование ошибок, вывод в консоль, и т.д.
+                    Console.WriteLine($"Ошибка при поиске пользователя: {ex.Message}");
+                    return null;
+                }
+            
+        }
+
         private _User FindUserByPhone(string phoneLogin)
         {
             // Ваш код для поиска пользователя по номеру телефона в базе данных
@@ -317,6 +370,14 @@ namespace diplom.Controllers
                 return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
             }
         }
+
+        public IActionResult Logout()
+        {
+            // Удаление куки 'UserId'
+            Response.Cookies.Delete("UserId");
+            return Ok(); // Пример возвращения успешного ответа
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
