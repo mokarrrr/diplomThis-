@@ -814,7 +814,17 @@ a:active {
     margin: 8% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 42%;
+    width: 62%;
+    height: 1300px;
+    border-radius: 5px;
+}
+.modal-content4{
+    background: linear-gradient(to bottom right,#F9D86EAA,#ffffff);
+    background-color: #F9D86E;
+    margin: 8% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width:42%;
     height: 1300px;
     border-radius: 5px;
 }

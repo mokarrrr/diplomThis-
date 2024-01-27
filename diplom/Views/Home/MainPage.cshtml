@@ -57,14 +57,14 @@
                     @Html.TextBox("lastName", "", new { placeholder = "Ваша фамилия" })
                         <div style="display:flex">
                         <input id="passwordregister" type="password" placeholder="Пароль">
-                            <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
+                            <button id="showPasswordButton2" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
                                 &#128065;
                             </button>
                         </div>
                     @* @Html.TextBox("passwordregister", "", new { placeholder = "Пароль" }) *@
                     <div style="display:flex">
                         <input id="passwordregistersecond" type="password" placeholder="Повторите пароль" style="width:710px;margin-top:3px">
-                            <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -10px;">
+                            <button id="showPasswordButton3" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -10px;">
                                 &#128065;
                             </button>
                         </div>
@@ -82,7 +82,7 @@
 
         <div id="modaluserr" class="modal" style="overflow-y:hidden">
             <!-- Модальный контент -->
-            <div class="modal-content2" style="height:700px; border: 3px solid black;border-radius: 25px;">
+            <div class="modal-content4" style="height:700px; border: 3px solid black;border-radius: 25px;">
                 <span class="close" style="margin-top:-5px">&times;</span>
                 <center>
                 <h5 class="modal-title" style="margin-top:-5px">
@@ -110,9 +110,13 @@
                 <div>
                         <button id="logoutButton" class="fas fa-sign-out-alt"></button>
                     <center style="padding:1%;margin-top:50px">
-                        <div class="userimg" style="height: 150px; width: 150px;"></div>
+                        <div class="userimg" style="height: 150px; width: 150px;">
+                            
+                                <p id="nameuserphoto" style="margin-top:66px">Абоба</p>
+                            
+                        </div>
                     </center>
-                    <div style="width:100%;gap:30px;display:inline-grid">
+                    <div style="width:100%;gap:30px;display:inline-grid;margin-top:40px">
                             
                         @Html.TextBox("Emailuser", "", new { placeholder = "Email",@class ="userinf" })
                         @Html.TextBox("Nameuser", "", new { placeholder = "Ваше имя",@class ="userinf" })
@@ -120,10 +124,18 @@
                         @* <input id="passwordregister" class="userinf" type="password" placeholder="Пароль">
                         <input id="passwordregistersecond" class="userinf" type="password" placeholder="Повторите пароль" style="width:710px;margin-top:3px"> *@
                         <div style="display:flex;gap:10px;margin-left:auto;margin-right:auto" class="userinf">
-                            <p style="padding-top: 5px;margin-left:-30px">+7</p>
+                            <p style="margin-left:-30px">+7</p>
                             @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
                             @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
                         </div>
+                        <center>
+                            <button style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
+                                <center>
+                                    <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>
+                                <p style="margin-top:4px">Сохранить</p>
+                                </center>
+                        </button>
+                            </center>
                     </div>
                 </div>
                 </div>
@@ -928,7 +940,7 @@
     </script>
     <script>
         $(document).ready(function () {
-            $('#showPasswordButton').click(function () {
+            $('#showPasswordButton3').click(function () {
                 var passwordField = $('#passwordregistersecond');
 
                 // Изменяем тип поля ввода в зависимости от его текущего типа
@@ -942,7 +954,7 @@
     </script>
     <script>
         $(document).ready(function () {
-            $('#showPasswordButton').click(function () {
+            $('#showPasswordButton2').click(function () {
                 var passwordField = $('#passwordregister');
 
                 // Изменяем тип поля ввода в зависимости от его текущего типа
@@ -998,6 +1010,10 @@
                                 $('#Nameuser').val(data.name);
                                 $('#lastNameuser').val(data.surname);
                                 $('#phoneRegisteruser').val(data.phoneNumber);
+
+                                // Вставка первой буквы имени и фамилии в элемент с идентификатором nameuserphoto
+                                var initials = (data.name.charAt(0) + data.surname.charAt(0)).toUpperCase();
+                                $('#nameuserphoto').text(initials);
 
                                 // Отображение модального окна
                                 $('#modaluserr').show();
