@@ -92,7 +92,7 @@
                 <hr style="color: black;background: black;border: black;height: 1px;">
                 <div style="display:flex;width:100%;height:100%;gap:250px">
                     <div>
-                        <div id="myTabsuser" style="gap:20px">
+                        <div id="myTabsuser" style="gap:20px;width: 207px;">
                             <div style="display:flex;gap:10px">
                                 <i class="fas fa-home"></i>
                                 <div data-tab="tab-information">Личная информация</div>
@@ -116,18 +116,18 @@
                             
                         </div>
                     </center>
-                    <div style="width:100%;gap:30px;display:inline-grid;margin-top:40px">
+                    <div style="width:100%;gap:50px;display:inline-grid;margin-top:40px">
                             <form id="userForm">
-
+                                <div style="display:inline-grid;gap:20px">
                         @Html.TextBox("Emailuser", "", new { placeholder = "Email",@class ="userinf" })
                         @Html.TextBox("Nameuser", "", new { placeholder = "Ваше имя",@class ="userinf" })
                         @Html.TextBox("lastNameuser", "", new { placeholder = "Ваша фамилия",@class ="userinf" })
-                        @* <input id="passwordregister" class="userinf" type="password" placeholder="Пароль">
-                        <input id="passwordregistersecond" class="userinf" type="password" placeholder="Повторите пароль" style="width:710px;margin-top:3px"> *@
+                                
                         <div style="display:flex;gap:10px;margin-left:auto;margin-right:auto" class="userinf">
                             <p style="margin-left:-30px">+7</p>
                             @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
                             @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
+                                    </div>
                         </div>
                         </form>
                         <center>
