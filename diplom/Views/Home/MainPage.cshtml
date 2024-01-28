@@ -1060,7 +1060,8 @@
                     data: { email: email, name: name, lastName: lastName, phone: phone },
                     success: function (result) {
                         // Обработка успешного ответа от сервера
-                        alert(result.message);
+                        
+                        $('#modaluserr').hide();
                     },
                     error: function () {
                         // Обработка ошибки

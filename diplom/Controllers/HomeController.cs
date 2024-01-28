@@ -266,7 +266,7 @@ namespace diplom.Controllers
                     // Сохраняем изменения
                     db.SaveChanges();
 
-                    return Json(new { success = true, message = "Данные пользователя успешно обновлены" });
+                    return Json(new { success = true });
                 }
                 else
                 {
