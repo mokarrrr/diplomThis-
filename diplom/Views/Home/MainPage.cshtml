@@ -117,7 +117,8 @@
                         </div>
                     </center>
                     <div style="width:100%;gap:30px;display:inline-grid;margin-top:40px">
-                            
+                            <form id="userForm">
+
                         @Html.TextBox("Emailuser", "", new { placeholder = "Email",@class ="userinf" })
                         @Html.TextBox("Nameuser", "", new { placeholder = "Ваше имя",@class ="userinf" })
                         @Html.TextBox("lastNameuser", "", new { placeholder = "Ваша фамилия",@class ="userinf" })
@@ -128,8 +129,9 @@
                             @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
                             @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
                         </div>
+                        </form>
                         <center>
-                            <button style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
+                                <button id="savebutton" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
                                 <center>
                                     <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>
                                 <p style="margin-top:4px">Сохранить</p>
@@ -1044,14 +1046,30 @@
         });
     </script>
 
-@*     <script>
-        document.getElementById('logoutButton').addEventListener('click', function () {
-            // Установка значения AuthenticationSuccess в 0 в локальном хранилище
-            localStorage.setItem('AuthenticationSuccess', '0');
+    <script>
+        $(document).ready(function () {
+            $("#savebutton").click(function () {
+                var email = $("#Emailuser").val();
+                var name = $("#Nameuser").val();
+                var lastName = $("#lastNameuser").val();
+                var phone = $("#phoneRegisteruser").val();
 
-
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/SaveUser",
+                    data: { email: email, name: name, lastName: lastName, phone: phone },
+                    success: function (result) {
+                        // Обработка успешного ответа от сервера
+                        alert(result.message);
+                    },
+                    error: function () {
+                        // Обработка ошибки
+                        alert("Произошла ошибка при отправке данных");
+                    }
+                });
+            });
         });
-    </script> *@
+    </script>
    
     <script>
         $(document).ready(function () {

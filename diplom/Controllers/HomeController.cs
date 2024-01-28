@@ -248,6 +248,37 @@ namespace diplom.Controllers
             return Json(new { success = false, message = "Не удалось получить информацию о пользователе." });
         }
 
+        [HttpPost]
+        public JsonResult SaveUser(string email, string name, string lastName, string phone)
+        {
+            try
+            {
+                // Поиск пользователя по email (вы можете использовать другой уникальный идентификатор)
+                var existingUser = db._User.FirstOrDefault(u => u.Email == email);
+
+                if (existingUser != null)
+                {
+                    // Обновляем данные пользователя
+                    existingUser.User_name = name;
+                    existingUser.Surname = lastName;
+                    existingUser.PhoneNumber = phone;
+
+                    // Сохраняем изменения
+                    db.SaveChanges();
+
+                    return Json(new { success = true, message = "Данные пользователя успешно обновлены" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Пользователь не найден" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Ошибка: {ex.Message}" });
+            }
+        }
+
         private _User FindUserById(int userId)
         {
             // Подключение к вашему контексту базы данных
