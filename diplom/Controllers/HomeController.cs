@@ -100,6 +100,24 @@ namespace diplom.Controllers
             return View(viewModel);
         }
 
+        public PartialViewResult FilteredProductsPartial(int? categoryId, int? secondCategoryId, int? thirdCategoryId, int? fourthCategoryId, int? fifthCategoryId)
+        {
+            IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
+
+            FilterProductsByCategory(ref productsQuery, categoryId);
+            FilterProductsByCategory(ref productsQuery, secondCategoryId);
+            FilterProductsByCategory(ref productsQuery, thirdCategoryId);
+            FilterProductsByCategory(ref productsQuery, fourthCategoryId);
+            FilterProductsByCategory(ref productsQuery, fifthCategoryId);
+
+            var model = new ProductViewModel
+            {
+                HasResults = productsQuery.Any(),
+                Products = productsQuery.ToList()
+            };
+
+            return PartialView("_ProductPartial", model);
+        }
         private void FilterProductsByCategory(ref IQueryable<Product> productsQuery, int? categoryId)
         {
             if (categoryId.HasValue)

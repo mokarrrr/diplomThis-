@@ -218,7 +218,7 @@ $(document).ready(function () {
         $('#productImage').attr('src', '' + productImageBase64);
         $('#productWeight').text(productWeight + ' гр.');
         $('#productMassPerFat').text('Массовая доля жира:' + productMassPerFat + '%');
-        $('#productfat').text('Жирность:' + productFat);
+        $('#productfat').text('Жирность:' + productFat + '%');
         $('#productProtein').text('Белки:' + productProtein + 'г.');
         $('#productFatty').text('Жиры:' + productFatty + 'г.');
         $('#productCarb').text('Углеводы:' + productCarb + 'г.');

@@ -29,6 +29,7 @@ using Microsoft.EntityFrameworkCore;
     public DbSet<_Provider> _Provider{ get; set; }
     public DbSet<_status> _statuses { get; set; }
     public DbSet<_User> _User { get; set; }
+    public DbSet<order_detail> order_detail { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

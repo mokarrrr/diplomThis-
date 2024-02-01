@@ -1,0 +1,82 @@
+﻿@model IEnumerable<diplom.Models.Product>
+
+@foreach (var item in Model)
+{
+    <div class="col-sm-4">
+        <div class="product-card">
+            <div class="card-thumbnail">
+                <img class="img-responsive" src="@item.product_img" style="height:300px;width:400px">
+            </div>
+            <div class="card-content">
+                <div class="send">
+                    <img class="basket" src="/img/basket.png" />
+                    <i class="fa fa-send fa-2x"></i>
+                </div>
+                @if (item.product_sale > 0)
+                {
+                    <!-- Покажите div, только если product_sale больше 0 -->
+                    <div class="sale">-@item.product_sale%</div>
+                }
+                <h1 class="card-title">
+                    @item.Name_product
+                </h1>
+                <h2 class="card-sub-title">
+                    @item.product_article
+                </h2>
+                <p class="description">
+                    @item.product_description_
+                </p>
+                <div style="display:flex">
+                    @if (item.product_sale > 0)
+                    {
+                        <p class="price">
+                            <s>@item.product_price руб.</s>
+                            @(Math.Round(Convert.ToDecimal(item.product_price - (item.product_price * item.product_sale / 100)))) руб.
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="price" id="price_@item.IdProduct">Цена: @(Math.Round(Convert.ToDecimal(item.product_price))) руб.</p>
+                    }
+                    <p class="price1">за @item.product_weight грамм </p>
+                </div>
+
+                <ul class="list-inline post-meta">
+                    <li class="time-stamp">
+                        <i class="fa fa-clock-o"></i> Массовая доля жира: @item.product_mass_per_fat%
+                    </li>
+                    <li class="time-stamp">
+                        <i class="fa fa-clock-o"></i> Энергетическая ценность: @item.product_fatty кДж.
+                    </li>
+                </ul>
+                <button class="info-button1" data-toggle="modal" data-target="#exampleModal" title="Подробнее"
+                        data-nametitle="@item.Name_product"
+                        data-idd="@item.IdProduct"
+                        data-description="@item.product_description_"
+                        data-price="@item.product_price"
+                        data-weight="@item.product_weight"
+                        data-mass_per_fat="@item.product_mass_per_fat"
+                        data-fat="@item.product_fat"
+                        data-protein="@item.product_protein"
+                        data-fatty="@item.product_fatty"
+                        data-carb="@item.product_carb"
+                        data-energy_value="@item.product_energy_value"
+                        data-storage_life="@item.product_storage_life"
+                        data-package_id="@item.product_package_id"
+                        data-storage_conditions="@item.product_storage_conditions"
+                        data-sale="@item.product_sale"
+                        data-remain="@item.product_remain"
+                        data-article="@item.product_article"
+                        data-sostav="@item.product_sostav"
+                        data-img="@item.product_img"
+                        data-provider_id="@item.Provider_id"
+                        data-package_name="">
+                    <i class="fa fa-question"></i>
+                </button>
+                <button class="fav-button1" title="В избранное">
+                    <i class="fa fa-heart"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+}
