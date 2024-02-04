@@ -44,6 +44,10 @@ namespace diplom.Controllers
         {
             return View();
         }
+        public IActionResult User_like()
+        {
+            return View();
+        }
         //public ActionResult MainPage(string searchQuery)
         //{
         //    IQueryable<Product> products = db.Product;
@@ -363,21 +367,39 @@ namespace diplom.Controllers
                 ModelState.AddModelError("", "Пароли не совпадают");
                 return Json(new { success = false, message = "Пароли не совпадают" });
             }
-
-            // Проверка существования пользователя с таким номером телефона
-            if (UserExistsByPhoneNumber(phoneRegister))
+            try
             {
-                ModelState.AddModelError("", "Пользователь с таким номером телефона уже зарегистрирован");
-                return Json(new { success = false, message = "Пользователь с таким номером телефона уже зарегистрирован" });
+                var mailAddress = new System.Net.Mail.MailAddress(Email);
             }
-
-            // Проверка существования пользователя с такой почтой
-            if (UserExistsByEmail(Email))
+            catch (FormatException)
             {
-                ModelState.AddModelError("", "Пользователь с такой почтой уже зарегистрирован");
-                return Json(new { success = false, message = "Пользователь с такой почтой уже зарегистрирован" });
+                // Ошибка в формате почты (отсутствует знак '@')
+                return Json(new { success = false, message = "mailFormatError" });
             }
+            bool userExistsByEmail = UserExistsByEmail(Email);
+            bool userExistsByPhoneNumber = UserExistsByPhoneNumber(phoneRegister);
+            if (userExistsByPhoneNumber || userExistsByEmail)
+            {
+                if (UserExistsByPhoneNumber(phoneRegister) && userExistsByEmail)
+                {
+                    // Пользователь с таким номером телефона и с такой почтой уже существует
+                    return Json(new { success = false, message = "bothExists" });
+                }
+                if (userExistsByEmail)
+                {
+                    //ModelState.AddModelError("", "Пользователь с такой почтой уже зарегистрирован");
+                    return Json(new { success = false, message = "emailExists" });
+                }
 
+                if (UserExistsByPhoneNumber(phoneRegister))
+                {
+                    //ModelState.AddModelError("", "Пользователь с таким номером телефона уже зарегистрирован");
+                    return Json(new { success = false, message = "phoneExists" });
+                }
+
+                // Проверка существования пользователя с такой почтой
+                
+            }
             // Создание нового пользователя
             var newUser = new _User
             {
@@ -389,6 +411,7 @@ namespace diplom.Controllers
 
                 // Дополнительные поля, если есть
             };
+
 
             // Добавление пользователя в базу данных
             db._User.Add(newUser);
@@ -427,6 +450,25 @@ namespace diplom.Controllers
             return Ok(); // Пример возвращения успешного ответа
         }
 
+        public IActionResult LikedProducts()
+        {
+            // Получаем IdUser из кук
+            string userIdCookie = Request.Cookies["IdUser"];
+
+            if (!string.IsNullOrEmpty(userIdCookie) && int.TryParse(userIdCookie, out int userId))
+            {
+                // Запрос к базе данных для получения избранных продуктов пользователя
+                var likedProducts = db.user_likes
+                    .Include(ul => ul.product_id) // Если есть связь с продуктом
+                    .Where(ul => ul.client_id == userId)
+                    .ToList();
+
+                return View(likedProducts);
+            }
+
+            // В случае, если IdUser отсутствует в куках, можно реализовать другую логику
+            return RedirectToAction("Index", "Home"); // Например, перенаправление на главную страницу
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

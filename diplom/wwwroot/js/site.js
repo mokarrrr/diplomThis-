@@ -18,18 +18,7 @@ $(function (maam) {
 //    document.getElementById('registerContent').style.display = 'block'; // Показать контент страницы регистрации
 //});
 /*кнопка вверх*/
-        $(document).ready(function () {
-            $(window).scroll(function () {
-                var scroll = $(window).scrollTop();
-                var mainBodyOffset = $('.main_body').offset().top;
-
-                if (scroll >= mainBodyOffset) {
-                    $('header').addClass('header-scrolled');
-                } else {
-                    $('header').removeClass('header-scrolled');
-                }
-            });
-        });
+        
 
 /*        .......прокрутка хедер*/
         $(document).ready(function () {
@@ -542,5 +531,496 @@ function getPrice(card) {
         //        });
         //    });
         //});
+
+    function scrollToElement(elementId) {
+            var element = document.getElementById(elementId);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+
+
+    $(document).ready(function () {
+        // Сохраняем начальное состояние чекбоксов
+        var isChecked = $('#softCheeseCheckbox').prop('checked');
+        var isSecondChecked = $('#secondCheckbox').prop('checked');
+        var isThirdChecked = $('#thirdCheckbox').prop('checked');
+        var isFourthChecked = $('#fourthCheckbox').prop('checked');
+        var isFifthChecked = $('#fifthCheckbox').prop('checked');
+
+
+        // Обработчик для первого чекбокса
+        $('#softCheeseCheckbox').change(function () {
+            updateProducts();
+        });
+
+        // Обработчик для второго чекбокса
+        $('#secondCheckbox').change(function () {
+            updateProducts();
+        });
+
+        // Обработчик для третьего чекбокса
+        $('#thirdCheckbox').change(function () {
+            updateProducts();
+        });
+
+        // Обработчик для четвертого чекбокса
+        $('#fourthCheckbox').change(function () {
+            updateProducts();
+        });
+
+        // Обработчик для пятого чекбокса
+        $('#fifthCheckbox').change(function () {
+            updateProducts();
+        });
+
+        function updateProducts() {
+            // Получаем значения всех чекбоксов
+            var isChecked = $('#softCheeseCheckbox').prop('checked');
+            var isSecondChecked = $('#secondCheckbox').prop('checked');
+            var isThirdChecked = $('#thirdCheckbox').prop('checked');
+            var isFourthChecked = $('#fourthCheckbox').prop('checked');
+            var isFifthChecked = $('#fifthCheckbox').prop('checked');
+
+            // Отправляем запрос на сервер с обновленными значениями категорий
+            $.ajax({
+                url: '/Home/MainPage',
+                type: 'GET',
+                data: {
+                    categoryId: isChecked ? 1 : null,
+                    secondCategoryId: isSecondChecked ? 2 : null,
+                    thirdCategoryId: isThirdChecked ? 3 : null,
+                    fourthCategoryId: isFourthChecked ? 4 : null,
+                    fifthCategoryId: isFifthChecked ? 5 : null,
+                    // Другие параметры запроса, если нужны
+                },
+                timeout: 30000,
+                success: function (data) {
+                    // Скрываем модальное окно modaluserr перед обновлением страницы
+                    $('#modaluserr').css('display', 'none');
+
+                    // Обновляем содержимое всей страницы
+                    $('body').html(data);
+
+                    // Восстанавливаем состояние чекбоксов
+                    $('#softCheeseCheckbox').prop('checked', isChecked);
+                    $('#secondCheckbox').prop('checked', isSecondChecked);
+                    $('#thirdCheckbox').prop('checked', isThirdChecked);
+                    $('#fourthCheckbox').prop('checked', isFourthChecked);
+                    $('#fifthCheckbox').prop('checked', isFifthChecked);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    });
+
+        // Добавляем обработчик события клика к кнопке
+        $('.info-button1').on('click', function () {
+            // Получаем ID продукта из атрибута data-idd
+            var productId = $(this).data('idd');
+
+            // Выполняем AJAX-запрос для получения количества оценок
+            $.ajax({
+                url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
+                type: 'GET',
+                data: { productId: productId },
+                success: function (data) {
+                    // Обновляем содержимое элементов <p> с id "five", "four", "three", "two", "one"
+                    var count5 = data[5] || 0;
+                    $('#five').text(count5);
+
+                    var count4 = data[4] || 0;
+                    $('#four').text(count4);
+
+                    var count3 = data[3] || 0;
+                    $('#three').text(count3);
+
+                    var count2 = data[2] || 0;
+                    $('#two').text(count2);
+
+                    var count1 = data[1] || 0;
+                    $('#one').text(count1);
+                },
+                error: function (error) {
+                    console.error('Ошибка при получении количества оценок:', error);
+                }
+            });
+        });
+
+        // Добавляем обработчик события клика к кнопке
+        $('.info-button1').on('click', function () {
+            // Получаем ID продукта из атрибута data-idd
+            var productId = $(this).data('idd');
+
+            // Выполняем AJAX-запрос для получения количества оценок
+            $.ajax({
+                url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
+                type: 'GET',
+                data: { productId: productId },
+                success: function (data) {
+                    // Обновляем содержимое элементов <p> с id "five", "four", "three", "two", "one"
+                    var count5 = data[5] || 0;
+                    var count4 = data[4] || 0;
+                    var count3 = data[3] || 0;
+                    var count2 = data[2] || 0;
+                    var count1 = data[1] || 0;
+
+                    $('#five').text(count5);
+                    $('#four').text(count4);
+                    $('#three').text(count3);
+                    $('#two').text(count2);
+                    $('#one').text(count1);
+
+                    // Подсчитываем общее количество оценок
+                    var totalRatings = count5 + count4 + count3 + count2 + count1;
+
+                    // Рассчитываем процентные доли для оценок 5, 4, 3, 2 и 1
+                    var percentage5 = totalRatings > 0 ? (count5 / totalRatings) * 100 : 0;
+                    var percentage4 = totalRatings > 0 ? (count4 / totalRatings) * 100 : 0;
+                    var percentage3 = totalRatings > 0 ? (count3 / totalRatings) * 100 : 0;
+                    var percentage2 = totalRatings > 0 ? (count2 / totalRatings) * 100 : 0;
+                    var percentage1 = totalRatings > 0 ? (count1 / totalRatings) * 100 : 0;
+
+                    // Обновляем ширину линий заполнения
+                    $('#progress-bar').css('width', percentage5 + '%');
+                    $('#progress-bar1').css('width', percentage4 + '%');
+                    $('#progress-bar2').css('width', percentage3 + '%');
+                    $('#progress-bar3').css('width', percentage2 + '%');
+                    $('#progress-bar4').css('width', percentage1 + '%');
+                },
+                error: function (error) {
+                    console.error('Ошибка при получении количества оценок:', error);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            // Устанавливаем значение в Local Storage при загрузке страницы
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+            if (authenticationSuccess === null) {
+                // Если значение не установлено, устанавливаем в "0"
+                localStorage.setItem("AuthenticationSuccess", "0");
+            } else if (authenticationSuccess === "1") {
+                // Если пользователь успешно авторизован, скрываем модальное окно и выходим
+                $('#modal').hide();
+                enableSendButton();
+                return;
+            }
+
+            // Проверяем, есть ли кука "FirstVisit"
+            var firstVisitCookie = getCookie("FirstVisit");
+
+            if (!firstVisitCookie) {
+                // Если кука не установлена, отображаем модальное окно
+                $('#modal').show();
+
+                // Устанавливаем куку "FirstVisit"
+                document.cookie = "FirstVisit=true; expires=" + new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString() + "; path=/";
+            }
+
+            // Закрытие модального окна при клике на крестик
+            $('#modal .close').click(function () {
+                $('#modal').hide();
+
+                // Устанавливаем значение "AuthenticationSuccess" в "0" при закрытии окна
+                localStorage.setItem("AuthenticationSuccess", "0");
+            });
+
+            // Закрытие модального окна при клике вне его области
+            $(window).click(function (event) {
+                if (event.target == $('#modal')[0]) {
+                    $('#modal').hide();
+
+                    // Устанавливаем значение "AuthenticationSuccess" в "0" при закрытии окна
+                    localStorage.setItem("AuthenticationSuccess", "0");
+                }
+            });
+
+            // ... (остальной код скрипта)
+
+            $('#loginButton').click(function () {
+                var phoneLogin = $('#phoneLogin').val();
+                var password = $('#password').val();
+
+                var formData = {
+                    phoneLogin: phoneLogin,
+                    password: password
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/Login',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.success) {
+                            // Успешная авторизация
+
+                            // Скрываем модальное окно
+                            $('#modal').hide();
+
+                            // Скрываем сообщение об ошибке (если видимо)
+                            $('#errorMessage').hide();
+
+                            // Устанавливаем значение в Local Storage
+                            localStorage.setItem("AuthenticationSuccess", "1");
+                            location.reload();
+
+                        } else {
+                            // Показываем сообщение об ошибке
+                            $('#errorMessage').show();
+                        }
+                    },
+                    error: function () {
+                        alert('Произошла ошибка при выполнении запроса.');
+                    }
+                });
+            });
+
+            function getCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length == 2) return parts.pop().split(";").shift();
+                return null;
+            }
+        });
+
+        $(document).ready(function () {
+            $('#registerButton').click(function () {
+                var email = $('#Email').val();
+                var name = $('#Name').val();
+                var lastName = $('#lastName').val();
+                var password = $('#passwordregister').val();
+                var passwordConfirmation = $('#passwordregistersecond').val();
+                var phone = $('#phoneRegister').val();
+
+                // Проверка пароля и его подтверждения
+                if (password !== passwordConfirmation) {
+                    alert('Пароли не совпадают');
+                    return;
+                }
+
+                // Отправка данных на сервер
+                var formData = {
+                    Email: email,
+                    Name: name,
+                    LastName: lastName,
+                    passwordregister: password,
+                    passwordregistersecond: passwordConfirmation,
+                    phoneRegister: phone
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/Register', // Укажите путь к вашему методу регистрации
+                    data: formData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.success) {
+                            var loginData = {
+                                phoneLogin: phone,
+                                password: password
+                            };
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/Login',
+                                data: loginData,
+                                dataType: 'json',
+                                success: function (loginResult) {
+                                    if (loginResult.success) {                                       
+                                        localStorage.setItem("AuthenticationSuccess", "1");
+                                        $('#modal').hide();
+                                        location.reload();
+                                    } else {
+                                        alert('Ошибка при авторизации после регистрации');
+                                    }
+                                },
+                                error: function () {
+                                    alert('Произошла ошибка при выполнении запроса авторизации.');
+                                }
+                            });
+                        } else {
+                            // Регистрация не успешна
+                            if (data.message === "bothExists") {
+                                // Оба типа ошибок (и телефон, и почта)
+                                $('#phoneExistsErrorMessage').show();
+                                $('#mailErrorMessage').hide();
+                                $('#mailExistsErrorMessage').show();
+                            } else if (data.message === "phoneExists") {
+                                // Только ошибка по номеру телефона
+                                $('#mailExistsErrorMessage').hide();
+                                $('#mailErrorMessage').hide();
+                                $('#phoneExistsErrorMessage').show();
+                            } else if (data.message === "emailExists") {
+                                // Только ошибка по почте
+                                $('#phoneExistsErrorMessage').hide();
+                                $('#mailErrorMessage').hide();
+                                $('#mailExistsErrorMessage').show();
+                            }else if (data.message === "mailFormatError") {
+
+                                $('#phoneExistsErrorMessage').hide();
+                                $('#mailExistsErrorMessage').hide();
+                                $('#mailErrorMessage').show();
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert('Произошла ошибка при выполнении запроса регистрации.');
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#showPasswordButton3').click(function () {
+                var passwordField = $('#passwordregistersecond');
+
+                // Изменяем тип поля ввода в зависимости от его текущего типа
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                } else {
+                    passwordField.attr('type', 'password');
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#showPasswordButton2').click(function () {
+                var passwordField = $('#passwordregister');
+
+                // Изменяем тип поля ввода в зависимости от его текущего типа
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                } else {
+                    passwordField.attr('type', 'password');
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#showPasswordButton').click(function () {
+                var passwordField = $('#password');
+
+                // Изменяем тип поля ввода в зависимости от его текущего типа
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                } else {
+                    passwordField.attr('type', 'password');
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            // Добавьте обработчик события для кнопки с классом "btn user-button"
+            $('.btn.user-button').click(function () {
+                // Проверяем значение в Local Storage перед открытием модального окна
+                if (localStorage.getItem("AuthenticationSuccess") === "0") {
+                    $('#modal').show();
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            // Проверяем значение в Local Storage при загрузке страницы
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+            if (authenticationSuccess === "1") {
+                // Если AuthenticationSuccess равно 1, открываем модальное окно
+                $('#openAuthModalButton').click(function () {
+                    // Получение данных о пользователе
+                    $.ajax({
+                        url: '/Home/UserProfile', // Замените на путь к вашему методу UserProfile
+                        type: 'GET',
+                        success: function (data) {
+                            if (data.success) {
+                                // Заполнение полей формы данными о пользователе
+                                $('#Emailuser').val(data.email);
+                                $('#Nameuser').val(data.name);
+                                $('#lastNameuser').val(data.surname);
+                                $('#phoneRegisteruser').val(data.phoneNumber);
+
+                                // Вставка первой буквы имени и фамилии в элемент с идентификатором nameuserphoto
+                                var initials = (data.name.charAt(0) + data.surname.charAt(0)).toUpperCase();
+                                $('#nameuserphoto').text(initials);
+
+                                // Отображение модального окна
+                                $('#modaluserr').show();
+                            } else {
+                                // Обработка ошибки, если не удалось получить данные о пользователе
+                                console.error('Ошибка при получении данных о пользователе.');
+                            }
+                        },
+                        error: function () {
+                            // Обработка ошибки AJAX-запроса
+                            console.error('Ошибка при выполнении AJAX-запроса.');
+                        }
+                    });
+                });
+            }
+
+            // Закрытие модального окна при клике на крестик
+            $('#modaluserr .close').click(function () {
+                $('#modaluserr').hide();
+            });
+
+            // Закрытие модального окна при клике вне его области
+            $(window).click(function (event) {
+                if (event.target == $('#modaluserr')[0]) {
+                    $('#modaluserr').hide();
+                }
+            });
+        });
    
+
+
+        $(document).ready(function () {
+            $("#savebutton").click(function () {
+                var email = $("#Emailuser").val();
+                var name = $("#Nameuser").val();
+                var lastName = $("#lastNameuser").val();
+                var phone = $("#phoneRegisteruser").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/SaveUser",
+                    data: { email: email, name: name, lastName: lastName, phone: phone },
+                    success: function (result) {
+                        // Обработка успешного ответа от сервера
+                        
+                        $('#modaluserr').hide();
+                    },
+                    error: function () {
+                        // Обработка ошибки
+                        alert("Произошла ошибка при отправке данных");
+                    }
+                });
+            });
+        });
+
+   
+
+        $(document).ready(function () {
+            $('#logoutButton').click(function () {
+                $.ajax({
+                    url: '/Home/Logout', // Замените на реальный URL вашего контроллера
+                    type: 'POST', // или 'GET', в зависимости от вашего контроллера
+                    success: function (response) {
+                        // Успешное выполнение запроса
+                        console.log(response);
+                        localStorage.setItem('AuthenticationSuccess', '0');
+                         window.location.reload(); // Пример обновления страницы
+                    },
+                    error: function (error) {
+                        // Ошибка выполнения запроса
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    
 

@@ -1,0 +1,34 @@
+﻿<link rel="stylesheet" href="~/css/User_like_page.css" />
+
+<div>
+    @foreach (var userLike in Mod)
+    {
+        <div class="catalog_card">
+            <div class="card_image">
+                <img alt="@userLike.Product.Image" src="data:image/png;base64,@userLike.Product.Image">
+            </div>
+            <div class="card_main">
+                <div class="card_main_name">
+                    <h3>@userLike.Product.Name</h3>
+                </div>
+                <div class="card_main_description">
+                    <h3>@userLike.Product.Description</h3>
+                </div>
+                <div class="card_main_weight">
+                    <h3>Вес: @userLike.Product.Weight</h3>
+                </div>
+                <div class="card_main_count">
+                    <h3>Количество: @userLike.Product.Count</h3>
+                </div>
+                <div class="card_main_cost">
+                    <h3>Цена: @userLike.Product.Cost</h3>
+                </div>
+                <div class="card_main_btn">
+                    <button class="card_main_btn_style" onclick="removeFromFavorites(@userLike.Id)">Убрать из избранного</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
