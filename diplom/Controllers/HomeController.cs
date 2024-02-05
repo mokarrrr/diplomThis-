@@ -46,7 +46,21 @@ namespace diplom.Controllers
         }
         public IActionResult User_like()
         {
-            return View();
+            string userIdCookie = Request.Cookies["UserId"];
+
+            if (!string.IsNullOrEmpty(userIdCookie) && int.TryParse(userIdCookie, out int userId))
+            {
+                // Запрос к базе данных для получения избранных продуктов пользователя
+                var liked = db.UserLike.Where(cart => cart.UserID == userId).Include(cart => cart.Product).ToList();
+                ULVM VM = new ULVM
+                {
+                    User_Likes = liked
+                };
+                return View(VM);
+            }
+
+            // В случае, если IdUser отсутствует в куках, можно реализовать другую логику
+            return RedirectToAction("HomePage", "Home"); // Например, перенаправление на главную страницу
         }
         //public ActionResult MainPage(string searchQuery)
         //{
@@ -276,7 +290,7 @@ namespace diplom.Controllers
             try
             {
                 // Поиск пользователя по email (вы можете использовать другой уникальный идентификатор)
-                var existingUser = db._User.FirstOrDefault(u => u.Email == email);
+                var existingUser = db.User.FirstOrDefault(u => u.Email == email);
 
                 if (existingUser != null)
                 {
@@ -301,14 +315,14 @@ namespace diplom.Controllers
             }
         }
 
-        private _User FindUserById(int userId)
+        private User FindUserById(int userId)
         {
             // Подключение к вашему контексту базы данных
 
                 try
                 {
                     // Поиск пользователя по Id
-                    var user = db._User.FirstOrDefault(u => u.IdUser == userId);
+                    var user = db.User.FirstOrDefault(u => u.IdUser == userId);
 
                     // Вернуть найденного пользователя или null, если пользователь не найден
                     return user;
@@ -323,11 +337,11 @@ namespace diplom.Controllers
             
         }
 
-        private _User FindUserByPhone(string phoneLogin)
+        private User FindUserByPhone(string phoneLogin)
         {
             // Ваш код для поиска пользователя по номеру телефона в базе данных
             // Пример:
-            return db._User.FirstOrDefault(u => u.PhoneNumber == phoneLogin);
+            return db.User.FirstOrDefault(u => u.PhoneNumber == phoneLogin);
         }
 
         private bool VerifyPassword(string enteredPassword, string hashedPassword)
@@ -342,11 +356,11 @@ namespace diplom.Controllers
             }
         }
 
-        private _User FindUser(string phoneLogin, string password)
+        private User FindUser(string phoneLogin, string password)
         {
             try
             {
-                var user = db._User.FirstOrDefault(u => u.PhoneNumber == phoneLogin && u.user_password == password);
+                var user = db.User.FirstOrDefault(u => u.PhoneNumber == phoneLogin && u.user_password == password);
                 return user;
             }
             catch (Exception ex)
@@ -401,7 +415,7 @@ namespace diplom.Controllers
                 
             }
             // Создание нового пользователя
-            var newUser = new _User
+            var newUser = new User
             {
                 PhoneNumber = phoneRegister,
                 Email = Email,
@@ -414,7 +428,7 @@ namespace diplom.Controllers
 
 
             // Добавление пользователя в базу данных
-            db._User.Add(newUser);
+            db.User.Add(newUser);
             db.SaveChanges();
 
 
@@ -424,13 +438,13 @@ namespace diplom.Controllers
         // Метод для проверки существования пользователя по номеру телефона
         private bool UserExistsByPhoneNumber(string phoneNumber)
         {
-            return db._User.Any(u => u.PhoneNumber == phoneNumber);
+            return db.User.Any(u => u.PhoneNumber == phoneNumber);
         }
 
         // Метод для проверки существования пользователя по адресу электронной почты
         private bool UserExistsByEmail(string email)
         {
-            return db._User.Any(u => u.Email == email);
+            return db.User.Any(u => u.Email == email);
         }
 
         // Метод для хеширования пароля
@@ -453,17 +467,17 @@ namespace diplom.Controllers
         public IActionResult LikedProducts()
         {
             // Получаем IdUser из кук
-            string userIdCookie = Request.Cookies["IdUser"];
+            string userIdCookie = Request.Cookies["UserId"];
 
             if (!string.IsNullOrEmpty(userIdCookie) && int.TryParse(userIdCookie, out int userId))
             {
                 // Запрос к базе данных для получения избранных продуктов пользователя
-                var likedProducts = db.user_likes
-                    .Include(ul => ul.product_id) // Если есть связь с продуктом
-                    .Where(ul => ul.client_id == userId)
-                    .ToList();
-
-                return View(likedProducts);
+                var liked = db.UserLike.Where(cart => cart.UserID == userId).Include(cart => cart.Product).ToList();
+                ULVM VM = new ULVM
+                {
+                    User_Likes = liked
+                };
+                return View(VM);
             }
 
             // В случае, если IdUser отсутствует в куках, можно реализовать другую логику

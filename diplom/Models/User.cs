@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace diplom.Models
 {
-    public class _User
+    public class User
     {
         [Key]
         public int IdUser { get; set; }

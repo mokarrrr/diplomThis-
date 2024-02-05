@@ -1,13 +1,13 @@
 ﻿namespace diplom.Models
 {
-    public class UserLike
+    public class UserLikes
     {
         public int Id { get; set; }
 
-        public _User User { get; set; }
+        public User _User { get; set; }
         public int UserID { get; set; }
 
-        public Product product { get; set; }
+        public Product Product { get; set; }
         public int ProductID { get; set; }
     }
 }

@@ -1,30 +1,29 @@
 ﻿<link rel="stylesheet" href="~/css/User_like_page.css" />
-
+@using diplom.Models.ViewModels
+@model ULVM
 <div>
-    @foreach (var userLike in Mod)
+    @foreach (var userLike in Model.User_Likes)
     {
         <div class="catalog_card">
             <div class="card_image">
-                <img alt="@userLike.Product.Image" src="data:image/png;base64,@userLike.Product.Image">
+                <img alt="@userLike.Product.product_img" src="data:image/png;base64,@userLike.Product.product_img">
             </div>
             <div class="card_main">
                 <div class="card_main_name">
-                    <h3>@userLike.Product.Name</h3>
+                    <h3>@userLike.Product.Name_product</h3>
                 </div>
                 <div class="card_main_description">
-                    <h3>@userLike.Product.Description</h3>
+                    <h3>@userLike.Product.product_description_</h3>
                 </div>
                 <div class="card_main_weight">
-                    <h3>Вес: @userLike.Product.Weight</h3>
+                    <h3>Вес: @userLike.Product.product_weight</h3>
                 </div>
-                <div class="card_main_count">
-                    <h3>Количество: @userLike.Product.Count</h3>
-                </div>
+                
                 <div class="card_main_cost">
-                    <h3>Цена: @userLike.Product.Cost</h3>
+                    <h3>Цена: @userLike.Product.product_price</h3>
                 </div>
                 <div class="card_main_btn">
-                    <button class="card_main_btn_style" onclick="removeFromFavorites(@userLike.Id)">Убрать из избранного</button>
+                    <button class="card_main_btn_style" onclick="removeFromFavorites(@userLike.Product.IdProduct)">Убрать из избранного</button>
                 </div>
             </div>
         </div>
