@@ -1,8 +1,23 @@
 ﻿body {
+   height:100%;
+     
+
+}
+.class {
+
+}
+html {
+    height: 100%;
     background: linear-gradient(to bottom right,#F9D86EAA,#ffffff);
     background-color: #F9D86E;
     overflow-x: hidden;
     background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.catalog_card {
+    border: 3px solid black;
+    height: 250px;
+    border-radius: 14px;
 }
 header {
     position: fixed;
@@ -49,8 +64,10 @@ header {
 .header-buttons {
     margin-bottom: 65px;
     display: flex;
-    justify-content: space-around;
+    justify-content: end;
     align-items: center;
+    gap:10%;
+    margin-right:10%;
 }
 
 .btn {
@@ -199,4 +216,15 @@ header {
     top: -10px;
     right: -10px;
     border: 2px solid #ffcc01;
+}
+
+.catalog_card {
+    background-color:transparent;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+.card_image{
+    grid-column:1;
+    width:200px;
+    height:200px;
 }

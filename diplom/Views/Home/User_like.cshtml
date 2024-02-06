@@ -1,12 +1,32 @@
-﻿<link rel="stylesheet" href="~/css/User_like_page.css" />
+﻿
+
+<link rel="stylesheet" href="~/css/User_like_page.css" />
+<script src="~/js/site.js"></script>
 @using diplom.Models.ViewModels
 @model ULVM
-<div>
+
+<header class="_header">
+    <div class="logo">
+        <a href="/Home/MainPage" class="company-name">Dairy Delights Emporium</a>
+    </div>
+    <div class="mogo">
+        <a href="/Home/AboutUsPage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
+    </div>
+    <div class="header-buttons">
+        <button id="cartButton" class="btn cart-button" style="border: 2px solid black;">
+            <i class="fas fa-shopping-basket"></i>
+        </button>
+        <a href="/Home/User_like" class="btn fav-button" style="border: 2px solid black;width: 37px;height: 37px;">
+            <i class="fas fa-heart" style="margin-top: 20%;margin-left: 13%;color:red"></i>
+        </a>
+    </div>
+</header>
+<div class="class" style="margin-top:6%">
     @foreach (var userLike in Model.User_Likes)
     {
         <div class="catalog_card">
             <div class="card_image">
-                <img alt="@userLike.Product.product_img" src="data:image/png;base64,@userLike.Product.product_img">
+                <img alt="@userLike.Product.product_img" style="height:100%;padding:10%" src="@userLike.Product.product_img">
             </div>
             <div class="card_main">
                 <div class="card_main_name">
@@ -29,5 +49,6 @@
         </div>
     }
 </div>
+
 
 
