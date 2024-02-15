@@ -789,92 +789,108 @@ function getPrice(card) {
             }
         });
 
-        $(document).ready(function () {
-            $('#registerButton').click(function () {
-                var email = $('#Email').val();
-                var name = $('#Name').val();
-                var lastName = $('#lastName').val();
-                var password = $('#passwordregister').val();
-                var passwordConfirmation = $('#passwordregistersecond').val();
-                var phone = $('#phoneRegister').val();
+$(document).ready(function () {
+    $('#registerButton').click(function () {
+        var email = $('#Email').val();
+        var name = $('#Name').val();
+        var lastName = $('#lastName').val();
+        var password = $('#passwordregister').val();
+        var passwordConfirmation = $('#passwordregistersecond').val();
+        var phone = $('#phoneRegister').val();
 
-                // Проверка пароля и его подтверждения
-                if (password !== passwordConfirmation) {
-                    alert('Пароли не совпадают');
-                    return;
-                }
 
-                // Отправка данных на сервер
-                var formData = {
-                    Email: email,
-                    Name: name,
-                    LastName: lastName,
-                    passwordregister: password,
-                    passwordregistersecond: passwordConfirmation,
-                    phoneRegister: phone
-                };
 
-                $.ajax({
-                    type: 'POST',
-                    url: '/Home/Register', // Укажите путь к вашему методу регистрации
-                    data: formData,
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.success) {
-                            var loginData = {
-                                phoneLogin: phone,
-                                password: password
-                            };
+        // Отправка данных на сервер
+        var formData = {
+            Email: email,
+            Name: name,
+            lastName: lastName, // Была исправлена ошибка в имени параметра
+            passwordregister: password,
+            passwordregistersecond: passwordConfirmation,
+            phoneRegister: phone
+        };
 
-                            $.ajax({
-                                type: 'POST',
-                                url: '/Home/Login',
-                                data: loginData,
-                                dataType: 'json',
-                                success: function (loginResult) {
-                                    if (loginResult.success) {                                       
-                                        localStorage.setItem("AuthenticationSuccess", "1");
-                                        $('#modal').hide();
-                                        location.reload();
-                                    } else {
-                                        alert('Ошибка при авторизации после регистрации');
-                                    }
-                                },
-                                error: function () {
-                                    alert('Произошла ошибка при выполнении запроса авторизации.');
-                                }
-                            });
-                        } else {
-                            // Регистрация не успешна
-                            if (data.message === "bothExists") {
-                                // Оба типа ошибок (и телефон, и почта)
-                                $('#phoneExistsErrorMessage').show();
-                                $('#mailErrorMessage').hide();
-                                $('#mailExistsErrorMessage').show();
-                            } else if (data.message === "phoneExists") {
-                                // Только ошибка по номеру телефона
-                                $('#mailExistsErrorMessage').hide();
-                                $('#mailErrorMessage').hide();
-                                $('#phoneExistsErrorMessage').show();
-                            } else if (data.message === "emailExists") {
-                                // Только ошибка по почте
-                                $('#phoneExistsErrorMessage').hide();
-                                $('#mailErrorMessage').hide();
-                                $('#mailExistsErrorMessage').show();
-                            }else if (data.message === "mailFormatError") {
+        $.ajax({
+            type: 'POST',
+            url: '/Home/Register', // Укажите путь к вашему методу регистрации
+            data: formData,
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    var loginData = {
+                        phoneLogin: phone,
+                        password: password
+                    };
 
-                                $('#phoneExistsErrorMessage').hide();
-                                $('#mailExistsErrorMessage').hide();
-                                $('#mailErrorMessage').show();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Home/Login',
+                        data: loginData,
+                        dataType: 'json',
+                        success: function (loginResult) {
+                            if (loginResult.success) {
+                                localStorage.setItem("AuthenticationSuccess", "1");
+                                $('#modal').hide();
+                                location.reload();
+                            } else {
+                                alert('Ошибка при авторизации после регистрации');
                             }
+                        },
+                        error: function () {
+                            alert('Произошла ошибка при выполнении запроса авторизации.');
                         }
-                    },
-                    error: function () {
-                        alert('Произошла ошибка при выполнении запроса регистрации.');
+                    });
+                }
+                else {
+                    // Регистрация не успешна
+                    if (data.message === "bothExists") {
+                        // Оба типа ошибок (и телефон, и почта)
+                        $('#phoneExistsErrorMessage').show();
+                        $('#mailErrorMessage').hide();
+                        $('#errorMessage3').hide();
+                        $('#errorMessage2').hide();
+                        $('#mailExistsErrorMessage').show();
+                    } else if (data.message === "phoneExists") {
+                        // Только ошибка по номеру телефона
+                        $('#mailExistsErrorMessage').hide();
+                        $('#mailErrorMessage').hide();
+                        $('#errorMessage3').hide();
+                        $('#errorMessage2').hide();
+                        $('#phoneExistsErrorMessage').show();
+                    } else if (data.message === "emailExists") {
+                        // Только ошибка по почте
+                        $('#phoneExistsErrorMessage').hide();
+                        $('#mailErrorMessage').hide();
+                        $('#errorMessage3').hide();
+                        $('#errorMessage2').hide();
+                        $('#mailExistsErrorMessage').show();
+                    } else if (data.message === "mailFormatError") {
+                        $('#phoneExistsErrorMessage').hide();
+                        $('#mailExistsErrorMessage').hide();
+                        $('#errorMessage3').hide();
+                        $('#errorMessage2').hide();
+                        $('#mailErrorMessage').show();
+                    } else if (data.message === "Не все поля заполнены") {
+                        // Поля не заполнены
+                        $('#errorMessage2').show();
+                        if (password !== passwordConfirmation) {
+                            $('#errorMessage3').show(); // Пароли не совпадают
+                        }
+                    } else if (data.message === "Пароли не совпадают") {
+                        // Пароли не совпадают
+                        $('#errorMessage3').show();
+                        if (email === '' || name === '' || lastName === '' || password === '' || passwordConfirmation === '' || phone === '') {
+                            $('#errorMessage2').show(); // Не все поля заполнены
+                        }
                     }
-                });
-            });
+                }
+            },
+            error: function () {
+                alert('Произошла ошибка при выполнении запроса регистрации.');
+            }
         });
+    });
+});
 
         $(document).ready(function () {
             $('#showPasswordButton3').click(function () {

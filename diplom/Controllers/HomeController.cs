@@ -375,10 +375,16 @@ namespace diplom.Controllers
         [HttpPost]
         public ActionResult Register(string Email, string Name, string lastName, string passwordregister, string passwordregistersecond, string phoneRegister)
         {
+            if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(lastName) ||
+        string.IsNullOrEmpty(passwordregister) || string.IsNullOrEmpty(passwordregistersecond) || string.IsNullOrEmpty(phoneRegister))
+            {
+                // Возвращаем сообщение об ошибке
+                return Json(new { success = false, message = "Не все поля заполнены" });
+            }
             // Проверка пароля и его подтверждения
             if (passwordregister != passwordregistersecond)
             {
-                ModelState.AddModelError("", "Пароли не совпадают");
+                //ModelState.AddModelError("", "Пароли не совпадают");
                 return Json(new { success = false, message = "Пароли не совпадают" });
             }
             try

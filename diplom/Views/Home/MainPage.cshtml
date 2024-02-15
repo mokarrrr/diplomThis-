@@ -59,8 +59,8 @@
                         <div id="mailErrorMessage" style="display:none;">
                             <p style="z-index:1;color:red;margin-top: 1%;">Проверьте правильность заполнения поля</p>
                         </div>
-                    @Html.TextBox("Name", "", new { placeholder = "Ваше имя" })
-                    @Html.TextBox("lastName", "", new { placeholder = "Ваша фамилия" })
+                        @Html.TextBox("Name", "", new { placeholder = "Ваше имя", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')" })
+                        @Html.TextBox("lastName", "", new { placeholder = "Ваша фамилия", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')" })
                         <div style="display:flex">
                         <input id="passwordregister" type="password" placeholder="Пароль">
                             <button id="showPasswordButton2" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
@@ -74,16 +74,19 @@
                                 &#128065;
                             </button>
                         </div>
+                        <p id="errorMessage3" style="color:red;z-index:1;display:none">Пароли не совпадают</p>
                     @* @Html.TextBox("passwordregistersecond", "", new { placeholder = "Повторите пароль" }) *@
                     <div style="display:flex;gap:10px">
                         <p style="padding-top: 5px;">+7</p>
                     @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
                         @Html.TextBox("phoneRegister", "", new { placeholder = "Номер телефона",@class ="phoneRegister1"})
                             
-                    </div>
+                    </div>  
+                        <p id="errorMessage2" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
                         <div id="phoneExistsErrorMessage" style="display:none;">
                             <p style="z-index:1;color:red;margin-top: 1%;margin-left: 5%;">Пользователь с таким номером телефона уже существует</p>
                         </div>
+                        
                         <center> <button id="registerButton" type="button">Зарегистрироваться</button> </center>
                 </div>
                 }
