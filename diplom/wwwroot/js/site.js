@@ -128,6 +128,13 @@ switchToRegister.onclick = function (event) {
     registerContent.style.display = "block";
     modal.scrollTop = 0;
 }
+var returnToLoginButton = document.getElementById("returnToLoginButton");
+returnToLoginButton.onclick = function (event) {
+    event.preventDefault(); // Предотвращаем стандартное действие кнопки
+    document.getElementById("loginContent").style.display = "block";
+    document.getElementById("registerContent").style.display = "none";
+    document.getElementById("modal").scrollTop = 0;
+}
 
 for (var i = 0; i < closeButtons.length; i++) {
     closeButtons[i].onclick = function () {
@@ -743,7 +750,9 @@ function getPrice(card) {
             // ... (остальной код скрипта)
 
             $('#loginButton').click(function () {
-                var phoneLogin = $('#phoneLogin').val();
+                // Получаем значение поля phoneLogin и удаляем лишние пробелы, символы () и -
+                var phoneLogin = $('#phoneLogin').val().replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
+
                 var password = $('#password').val();
 
                 var formData = {
@@ -796,29 +805,32 @@ $(document).ready(function () {
         var lastName = $('#lastName').val();
         var password = $('#passwordregister').val();
         var passwordConfirmation = $('#passwordregistersecond').val();
-        var phone = $('#phoneRegister').val();
+        var phoneLogin = $('#phoneRegister').val().replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
+        var checkbox = $('#givetrue');
 
-
+        // Проверяем, активен ли чекбокс
+        var consentChecked = checkbox.prop('checked');
 
         // Отправка данных на сервер
         var formData = {
             Email: email,
             Name: name,
-            lastName: lastName, // Была исправлена ошибка в имени параметра
+            lastName: lastName,
             passwordregister: password,
             passwordregistersecond: passwordConfirmation,
-            phoneRegister: phone
+            phoneRegister: phoneLogin
         };
 
         $.ajax({
             type: 'POST',
-            url: '/Home/Register', // Укажите путь к вашему методу регистрации
+            url: '/Home/Register',
             data: formData,
             dataType: 'json',
             success: function (data) {
                 if (data.success) {
+                    // Регистрация успешна, теперь пытаемся войти
                     var loginData = {
-                        phoneLogin: phone,
+                        phoneLogin: phoneLogin,
                         password: password
                     };
 
@@ -840,57 +852,44 @@ $(document).ready(function () {
                             alert('Произошла ошибка при выполнении запроса авторизации.');
                         }
                     });
-                }
-                else {
-                    // Регистрация не успешна
-                    if (data.message === "bothExists") {
-                        // Оба типа ошибок (и телефон, и почта)
-                        $('#phoneExistsErrorMessage').show();
-                        $('#mailErrorMessage').hide();
-                        $('#errorMessage3').hide();
-                        $('#errorMessage2').hide();
-                        $('#mailExistsErrorMessage').show();
-                    } else if (data.message === "phoneExists") {
-                        // Только ошибка по номеру телефона
-                        $('#mailExistsErrorMessage').hide();
-                        $('#mailErrorMessage').hide();
-                        $('#errorMessage3').hide();
-                        $('#errorMessage2').hide();
-                        $('#phoneExistsErrorMessage').show();
-                    } else if (data.message === "emailExists") {
-                        // Только ошибка по почте
-                        $('#phoneExistsErrorMessage').hide();
-                        $('#mailErrorMessage').hide();
-                        $('#errorMessage3').hide();
-                        $('#errorMessage2').hide();
-                        $('#mailExistsErrorMessage').show();
-                    } else if (data.message === "mailFormatError") {
-                        $('#phoneExistsErrorMessage').hide();
-                        $('#mailExistsErrorMessage').hide();
-                        $('#errorMessage3').hide();
-                        $('#errorMessage2').hide();
-                        $('#mailErrorMessage').show();
-                    } else if (data.message === "Не все поля заполнены") {
-                        // Поля не заполнены
+                } else {
+                    // Обработка ошибок регистрации
+                    if (!consentChecked || email === '' || name === '' || lastName === '' || password === '' || passwordConfirmation === '' || phoneLogin === '') {
                         $('#errorMessage2').show();
-                        if (password !== passwordConfirmation) {
-                            $('#errorMessage3').show(); // Пароли не совпадают
-                        }
-                    } else if (data.message === "Пароли не совпадают") {
-                        // Пароли не совпадают
+                        $('#consentLink').css('color', 'black');
+                    }
+                    if (!consentChecked && data.message === "bothExists") {
+                        $('#consentLink').css('color', 'red');
+                        $('#phoneExistsErrorMessage').show();
+                        $('#mailExistsErrorMessage').show();
+                    }
+                    if (!consentChecked && data.message === "phoneExists") {
+                        $('#consentLink').css('color', 'red');
+                        $('#phoneExistsErrorMessage').show();
+                    }
+                    if (!consentChecked && data.message === "emailExists") {
+                        $('#consentLink').css('color', 'red');
+                        $('#mailExistsErrorMessage').show();
+                    }
+                    if (!consentChecked && data.message === "mailFormatError") {
+                        $('#consentLink').css('color', 'red');
+                        $('#mailErrorMessage').show();
+                    }
+                    if (!consentChecked && data.message === "Пароли не совпадают") {
                         $('#errorMessage3').show();
-                        if (email === '' || name === '' || lastName === '' || password === '' || passwordConfirmation === '' || phone === '') {
-                            $('#errorMessage2').show(); // Не все поля заполнены
-                        }
+                    }
+                    if (!consentChecked && /0{3,}/.test(phoneLogin)) {
+                        $('#phoneErrorMessage').show();
                     }
                 }
             },
             error: function () {
-                alert('Произошла ошибка при выполнении запроса регистрации.');
+                // Обработка ошибки запроса регистрации
             }
         });
     });
 });
+
 
         $(document).ready(function () {
             $('#showPasswordButton3').click(function () {
@@ -941,82 +940,121 @@ $(document).ready(function () {
             });
         });
 
-        $(document).ready(function () {
-            // Проверяем значение в Local Storage при загрузке страницы
-            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+$(document).ready(function () {
+    // Функция для форматирования номера телефона
+    function formatPhoneNumber(phoneNumber) {
+        return '+7 (' + phoneNumber.slice(0, 3) + ') ' + phoneNumber.slice(3, 6) + '-' + phoneNumber.slice(6, 8) + '-' + phoneNumber.slice(8);
+    }
 
-            if (authenticationSuccess === "1") {
-                // Если AuthenticationSuccess равно 1, открываем модальное окно
-                $('#openAuthModalButton').click(function () {
-                    // Получение данных о пользователе
-                    $.ajax({
-                        url: '/Home/UserProfile', // Замените на путь к вашему методу UserProfile
-                        type: 'GET',
-                        success: function (data) {
-                            if (data.success) {
-                                // Заполнение полей формы данными о пользователе
-                                $('#Emailuser').val(data.email);
-                                $('#Nameuser').val(data.name);
-                                $('#lastNameuser').val(data.surname);
-                                $('#phoneRegisteruser').val(data.phoneNumber);
+    // Функция для проверки и восстановления начальных символов "+7" при изменении значения поля ввода
+    $('#phoneRegisteruser').on('input', function () {
+        var phoneNumber = $(this).val();
+        if (!phoneNumber.startsWith('+7')) {
+            // Если номер не начинается с "+7", восстанавливаем символы "+7"
+            $(this).val('+7' + phoneNumber);
+        }
+    });
 
-                                // Вставка первой буквы имени и фамилии в элемент с идентификатором nameuserphoto
-                                var initials = (data.name.charAt(0) + data.surname.charAt(0)).toUpperCase();
-                                $('#nameuserphoto').text(initials);
+    // Проверяем значение в Local Storage при загрузке страницы
+    var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
 
-                                // Отображение модального окна
-                                $('#modaluserr').show();
-                            } else {
-                                // Обработка ошибки, если не удалось получить данные о пользователе
-                                console.error('Ошибка при получении данных о пользователе.');
-                            }
-                        },
-                        error: function () {
-                            // Обработка ошибки AJAX-запроса
-                            console.error('Ошибка при выполнении AJAX-запроса.');
-                        }
-                    });
-                });
-            }
+    if (authenticationSuccess === "1") {
+        // Если AuthenticationSuccess равно 1, открываем модальное окно
+        $('#openAuthModalButton').click(function () {
+            // Получение данных о пользователе
+            $.ajax({
+                url: '/Home/UserProfile', // Замените на путь к вашему методу UserProfile
+                type: 'GET',
+                success: function (data) {
+                    if (data.success) {
+                        // Заполнение полей формы данными о пользователе
+                        $('#Emailuser').val(data.email);
+                        $('#Nameuser').val(data.name);
+                        $('#lastNameuser').val(data.surname);
 
-            // Закрытие модального окна при клике на крестик
-            $('#modaluserr .close').click(function () {
-                $('#modaluserr').hide();
-            });
+                        // Форматируем и устанавливаем номер телефона
+                        $('#phoneRegisteruser').val(formatPhoneNumber(data.phoneNumber));
 
-            // Закрытие модального окна при клике вне его области
-            $(window).click(function (event) {
-                if (event.target == $('#modaluserr')[0]) {
-                    $('#modaluserr').hide();
+                        // Вставка первой буквы имени и фамилии в элемент с идентификатором nameuserphoto
+                        var initials = (data.name.charAt(0) + data.surname.charAt(0)).toUpperCase();
+                        $('#nameuserphoto').text(initials);
+
+                        // Отображение модального окна
+                        $('#modaluserr').show();
+                    } else {
+                        // Обработка ошибки, если не удалось получить данные о пользователе
+                        console.error('Ошибка при получении данных о пользователе.');
+                    }
+                },
+                error: function () {
+                    // Обработка ошибки AJAX-запроса
+                    console.error('Ошибка при выполнении AJAX-запроса.');
                 }
             });
         });
+    }
+
+    // Проверка наличия символов "+7" в начале номера телефона при нажатии клавиши "Backspace"
+    $('#phoneRegisteruser').on('keydown', function (event) {
+        var phoneNumber = $(this).val();
+        if (event.which === 8 && $(this).get(0).selectionStart <= 4 && phoneNumber.startsWith('+7')) {
+            event.preventDefault();
+        }
+        if (event.which === 8 && $(this).get(0).selectionStart == 8 && phoneNumber.startsWith('+7 (')) {
+            event.preventDefault();
+        }
+        if (event.which === 8 && $(this).get(0).selectionStart == 9 && phoneNumber.startsWith('+7 (')) {
+            event.preventDefault();
+        }
+        if (event.which === 8 && $(this).get(0).selectionStart == 13 && phoneNumber.startsWith('+7 (')) {
+            event.preventDefault();
+        }
+        if (event.which === 8 && $(this).get(0).selectionStart == 16 && phoneNumber.startsWith('+7 (')) {
+            event.preventDefault();
+        }
+    });
+
+    // Закрытие модального окна при клике на крестик
+    $('#modaluserr .close').click(function () {
+        $('#modaluserr').hide();
+    });
+
+    // Закрытие модального окна при клике вне его области
+    $(window).click(function (event) {
+        if (event.target == $('#modaluserr')[0]) {
+            $('#modaluserr').hide();
+        }
+    });
+});
    
 
 
-        $(document).ready(function () {
-            $("#savebutton").click(function () {
-                var email = $("#Emailuser").val();
-                var name = $("#Nameuser").val();
-                var lastName = $("#lastNameuser").val();
-                var phone = $("#phoneRegisteruser").val();
+$(document).ready(function () {
+    // Отправка данных на сервер при редактировании пользователя
+    $("#savebutton").click(function () {
+        var email = $("#Emailuser").val();
+        var name = $("#Nameuser").val();
+        var lastName = $("#lastNameuser").val();
+        var phone = $("#phoneRegisteruser").val().replace(/\D/g, ''); // Удаление всех нечисловых символов
+        if (phone.startsWith('7')) {
+            phone = phone.slice(1); // Удаление первого символа "7", если он есть в начале номера
+        }
 
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/SaveUser",
-                    data: { email: email, name: name, lastName: lastName, phone: phone },
-                    success: function (result) {
-                        // Обработка успешного ответа от сервера
-                        
-                        $('#modaluserr').hide();
-                    },
-                    error: function () {
-                        // Обработка ошибки
-                        alert("Произошла ошибка при отправке данных");
-                    }
-                });
-            });
+        $.ajax({
+            type: "POST",
+            url: "/Home/SaveUser",
+            data: { email: email, name: name, lastName: lastName, phone: phone },
+            success: function (result) {
+                // Обработка успешного ответа от сервера
+                $('#modaluserr').hide();
+            },
+            error: function () {
+                // Обработка ошибки
+                alert("Произошла ошибка при отправке данных");
+            }
         });
+    });
+});
 
    
 

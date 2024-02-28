@@ -29,11 +29,9 @@
                     <div id="loginContent">
                         <span class="close">&times;</span>
                         <h2>Авторизация</h2>
-                        <div style="display:flex;gap:10px" >
-                            <p style="padding-top: 5px;">+7</p>
-                        @Html.TextBox("phoneLogin", "", new { placeholder = "Введите номер телефона",@class = "phoneregister2" })
-                          
-                        </div>
+                        
+                               @Html.TextBox("phoneLogin", "", new { placeholder = "Введите номер телефона",@class = "phoneregister2" })  
+                            
                         <div style="display:flex">
                         @* @Html.TextBox("password", "", new { placeholder = "Введите пароль" }) *@
                             <input id="password" type="password" placeholder="Повторите пароль" >
@@ -50,7 +48,12 @@
                     {
                 <div id="registerContent" style="display:none;">
                     <span class="close">&times;</span>
-                    <h2>Регистрация</h2>
+                    <h2 style="height:70px">
+                            <button id="returnToLoginButton" style="font-size:16pt;background-color:transparent;color:black">&#8592;</button>
+                        Авторизация
+                            
+                    </h2>
+
                     @* <input type="text" placeholder="Email"> *@
                         @Html.TextBox("Email", "", new { placeholder = "Email", })
                         <div id="mailExistsErrorMessage" style="display:none;">
@@ -76,18 +79,22 @@
                         </div>
                         <p id="errorMessage3" style="color:red;z-index:1;display:none">Пароли не совпадают</p>
                     @* @Html.TextBox("passwordregistersecond", "", new { placeholder = "Повторите пароль" }) *@
-                    <div style="display:flex;gap:10px">
-                        <p style="padding-top: 5px;">+7</p>
-                    @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
+                                         
+                    @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@                  
                         @Html.TextBox("phoneRegister", "", new { placeholder = "Номер телефона",@class ="phoneRegister1"})
-                            
-                    </div>  
-                        <p id="errorMessage2" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
+                        <p id="phoneErrorMessage" style="z-index:1;color:red;margin-top: 1%;display:none">Неверный формат номера телефона</p>
                         <div id="phoneExistsErrorMessage" style="display:none;">
                             <p style="z-index:1;color:red;margin-top: 1%;margin-left: 5%;">Пользователь с таким номером телефона уже существует</p>
                         </div>
+                        <div style="display:flex;height:70px;align-items: center;gap:10px;">
+                        <input id="givetrue" type="checkbox"/>
+                            <a id="consentLink" style="color: black" >Даю согласие на обработку персональных данных</a>
+                    </div>
                         
-                        <center> <button id="registerButton" type="button">Зарегистрироваться</button> </center>
+                        <p id="errorMessage2" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
+                        
+
+                        <center> <button id="registerButton" style="height:50px;color:black" type="button" >Зарегистрироваться</button> </center>
                 </div>
                 }
             </div>
@@ -138,7 +145,7 @@
                         @Html.TextBox("lastNameuser", "", new { placeholder = "Ваша фамилия",@class ="userinf" })
                                 
                         <div style="display:flex;gap:10px;margin-left:auto;margin-right:auto" class="userinf">
-                            <p style="margin-left:-30px">+7</p>
+                            @* <p style="margin-left:-30px">+7</p> *@
                             @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
                             @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
                                     </div>
@@ -563,6 +570,121 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var inputs = document.querySelectorAll('.phoneregister2');
+
+            inputs.forEach(function (input) {
+                input.addEventListener("input", function (event) {
+                    var keyCode = event.keyCode || event.which;
+                    var pos = this.selectionStart;
+
+                    // Remember the cursor position before any changes
+                    var prevPos = pos;
+
+                    // Only proceed if the key pressed is not a backspace
+                    if (keyCode !== 8) {
+                        var matrix = "+7 (___) ___-__-__",
+                            val = this.value.replace(/\D/g, ""),
+                            newValue = matrix,
+                            j = 0;
+
+                        // Remove leading 7 if present
+                        if (val.startsWith("7")) {
+                            val = val.slice(1);
+                        }
+
+                        // Iterate over each character in the mask and fill it with the input value
+                        for (var i = 0; i < matrix.length; i++) {
+                            if (matrix[i] === "_") {
+                                if (val[j]) {
+                                    newValue = newValue.replace("_", val[j]);
+                                    j++;
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Set the value with the formatted version
+                        this.value = newValue;
+
+                        // Adjust position to prevent digit displacement
+                        while (pos < newValue.length && newValue[pos] && newValue[pos] !== '_') {
+                            pos++;
+                        }
+                    } else {
+                        // If backspace is pressed, move the cursor to the previous position
+                        pos = Math.max(0, pos - 1);
+                    }
+
+                    // Move cursor to the next position if available
+                    if (pos >= 15 && newValue[14] !== "_") {
+                        pos++;
+                    }
+
+                    // Set cursor position
+                    this.setSelectionRange(pos, pos);
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var input = document.querySelector('.phoneRegister1');
+
+            input.addEventListener("input", function (event) {
+                var keyCode = event.keyCode || event.which;
+                var pos = this.selectionStart;
+
+                // Remember the cursor position before any changes
+                var prevPos = pos;
+
+                // Only proceed if the key pressed is not a backspace
+                if (keyCode !== 8) {
+                    var matrix = "+7 (___) ___-__-__",
+                        val = this.value.replace(/\D/g, ""),
+                        newValue = matrix,
+                        j = 0;
+
+                    // Remove leading 7 if present
+                    if (val.startsWith("7")) {
+                        val = val.slice(1);
+                    }
+
+                    // Iterate over each character in the mask and fill it with the input value
+                    for (var i = 0; i < matrix.length; i++) {
+                        if (matrix[i] === "_") {
+                            if (val[j]) {
+                                newValue = newValue.replace("_", val[j]);
+                                j++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    // Set the value with the formatted version
+                    this.value = newValue;
+
+                    // Adjust position to prevent digit displacement
+                    while (pos < newValue.length && newValue[pos] && newValue[pos] !== '_') {
+                        pos++;
+                    }
+                } else {
+                    // If backspace is pressed, move the cursor to the previous position
+                    pos = prevPos;
+                }
+
+                // Set cursor position
+                this.setSelectionRange(pos, pos);
+            });
+        });
+    </script>
+
+   
 
 </body>
 
