@@ -231,9 +231,9 @@
                                     <button id="buttton" class="btn cart-button" style="border: 2px solid black;grid-row:1;grid-column:2;display:flex;align-items: center;width:fit-content">
                                         <i class="fas fa-shopping-basket">В корзину</i>
                                     </button>
-                                    <button class="btn fav-button" style="border: 2px solid black;grid-row:1;grid-column:2;margin-left:20px">
-                                        <i class="fas fa-heart"></i>
-                                    </button>
+                                        <button class="fav-button1" id="deletee" title="Удалить из избранного" style="position:inherit;    margin-left: 20px;width: 60px;height: 60px;">
+                                            <i class="fas fa-heart-broken"></i>
+                                        </button>
                                 </div>
                             </div>
                         </div>
@@ -856,6 +856,56 @@
                         console.log('Произошла ошибка при удалении товара из избранного');
                     }
                 });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var productId; // Переменная для хранения айди продукта
+
+            // Обработчик события клика для кнопки info-button1
+            $('.info-button1').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                productId = $(this).data('idd');
+            });
+
+            // Обработчик события клика для кнопки fav-button2
+            $('#deletee').click(function (event) {
+                event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
+
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
+                    $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
+                    return;
+                }
+
+                // Проверяем, был ли установлен productId
+                if (productId !== undefined) {
+                    // productId был установлен, можем его использовать
+                    // Проверяем наличие записи в таблице UserLike
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Home/RemoveUserLike',
+                        data: { productId: productId },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                console.log('Товар успешно удален из избранного');
+                                window.location.reload();
+                            } else {
+                                console.log('Произошла ошибка: ' + response.message);
+                            }
+                        },
+                        error: function () {
+                            console.log('Произошла ошибка при удалении товара из избранного');
+                        }
+                    });
+                } else {
+                    console.log('Айди продукта не определено');
+                }
             });
         });
     </script>
