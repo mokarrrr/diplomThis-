@@ -3,7 +3,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 @using diplom.Models.ViewModels
-@model ULVM
+@model Cart
 <body>
 <header class="_header" style="background: linear-gradient(to bottom right,#F9D86E,#EDC237);">
     <div class="logo">
@@ -93,7 +93,7 @@
 
 <div class="main" style="margin-top:6%">
 <div class="container3" id="container3">
-    @foreach (var userLike in Model.User_Likes)
+    @foreach (var userLike in Model.Users_Baskets)
     {
         <div class="col-sm-4">
                     <div class="product-card" style="z-index:0">

@@ -22,7 +22,6 @@ using Microsoft.EntityFrameworkCore;
     public DbSet<Package> Package { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<Rate> Rate { get; set; }
-    public DbSet<UserBaskets> User_basket { get; set; }
     public DbSet<_catalog> _catalog { get; set; }
     public DbSet<_order> _orders { get; set; }
     public DbSet<_Provider> _Provider{ get; set; }
@@ -30,7 +29,7 @@ using Microsoft.EntityFrameworkCore;
     public DbSet<User> User { get; set; }
     public DbSet<order_detail> order_detail { get; set; }
 
-
+    public DbSet<UserBasket> User_Baskets { get; set; }
     public DbSet<UserLikes> UserLike { get; set; }
 
 
@@ -39,9 +38,9 @@ using Microsoft.EntityFrameworkCore;
     {
         //optionsBuilder.UseSqlServer(@"Data Source=192.168.227.12;User ID=user04;Password=04;database=1myay;TrustServerCertificate=True");
 
-        optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-SD2NSU5\MSSQLSERVER05;User ID=sa;Password=12345;database=this2;TrustServerCertificate=True");
+        //optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-SD2NSU5\MSSQLSERVER05;User ID=sa;Password=12345;database=this2;TrustServerCertificate=True");
 
-        //optionsBuilder.UseSqlServer("Data Source=DESKTOP-3FU748J;Database=павпапав;Integrated Security = sspi; Encrypt=False;");
+        optionsBuilder.UseSqlServer("Data Source=DESKTOP-3FU748J;Database=misha;Integrated Security = sspi; Encrypt=False;");
     }
     public MainContext()
     {

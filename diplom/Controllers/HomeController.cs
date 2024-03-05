@@ -66,10 +66,10 @@ namespace diplom.Controllers
             if (!string.IsNullOrEmpty(userIdCookie) && int.TryParse(userIdCookie, out int userId))
             {
                 // Запрос к базе данных для получения избранных продуктов пользователя
-                var liked = db.User_basket.Where(cart => cart.client_id == userId).Include(cart => cart.Product).ToList();
-                ULVM VM = new ULVM
+                var liked = db.User_Baskets.Where(cart => cart.UserID == userId).Include(cart => cart.Product).ToList();
+                Cart VM = new Cart
                 {
-                    User_baskets = liked
+                    Users_Baskets = liked
                 };
                 return View(VM);
             }
