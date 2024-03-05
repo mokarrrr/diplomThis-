@@ -21,9 +21,9 @@
 
         <!-- Модальное окно -->
         
-        <div id="modal" class="modal" style="overflow-y:hidden">
+        <div id="modal" class="modal" style="overflow-y:hidden;">
             <!-- Модальный контент -->
-            <div class="modal-content">
+            <div class="modal-content" style="z-index:2">
                 @using (Html.BeginForm("MainPage", "", FormMethod.Post, new { id = "loginForm" }))
                 {
                     <div id="loginContent">
@@ -214,9 +214,9 @@
                 <button id="cartButton" class="btn cart-button" style="border: 2px solid black;">
                     <i class="fas fa-shopping-basket"></i>
                 </button>
-                <a href="/Home/User_like" class="btn fav-button" style="border: 2px solid black;">
-                    <i class="fas fa-heart" style="margin-top: 75%;"></i>
-                </a>
+                <button  class="btn fav-button" style="border: 2px solid black;">
+                    <i class="fas fa-heart" ></i>
+                </button>
                 <button class="btn user-button" style="border: 2px solid black;" type="button" id="openAuthModalButton">
                     <i class="fas fa-user" ></i>
                 </button>
@@ -359,7 +359,7 @@
                                     <button id="buttton" class="btn cart-button" style="border: 2px solid black;grid-row:1;grid-column:2;display:flex;align-items: center;width:fit-content">
                                         <i class="fas fa-shopping-basket">В корзину</i>                                       
                                     </button>
-                                    <button class="btn fav-button" style="border: 2px solid black;grid-row:1;grid-column:2;margin-left:20px">
+                                            <button class="fav-button2" id="cardfav" style="border: 2px solid black;grid-row:1;grid-column:2;margin-left:20px;width: 60px;height: 60px;">
                                         <i class="fas fa-heart"></i>
                                     </button>
                                     </div>
@@ -483,7 +483,7 @@
 
 
 
-        <div class="container4">
+          <div class="container4">
                 <footer class="footer">
                     <div class="footer-left col-md-4 col-sm-6">
                         <p class="about">
@@ -521,7 +521,7 @@
                         <p class="name"> Dairy Delights Emporium; 2004</p>
                     </div>
                 </footer>
-        </div>
+           </div>
         </div>
 
 @*         <svg width="0" height="0" style="display:none;">
@@ -684,7 +684,201 @@
         });
     </script>
 
-   
+    <script>
+        $(document).ready(function () {
+            $('.fav-button').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                var productId = $(this).data('idd');
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    return;
+                }
+
+                // Проверяем наличие записи в таблице UserLike
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/CheckUserLike',
+                    data: { productId: productId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Получаем userId из ответа
+                        var userId = data.userId;
+
+                        if (data.exists) {
+                            // Запись уже существует, не делаем ничего
+                            console.log('Запись уже существует');
+                        } else {
+                            // Записи нет, добавляем новую запись
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/AddUserLike',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    console.log('Запись успешно добавлена');
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при добавлении записи');
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.log('Произошла ошибка при проверке наличия записи');
+                    }
+                });
+            });
+        });
+    </script>
+
+   <script>
+        $(document).ready(function () {
+            $('.fav-button1').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                var productId = $(this).data('idd');
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    return;
+                }
+                // Проверяем наличие записи в таблице UserLike
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/CheckUserLike',
+                    data: { productId: productId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Получаем userId из ответа
+                        var userId = data.userId;
+
+                        if (data.exists) {
+                            // Запись уже существует, не делаем ничего
+                            console.log('Запись уже существует');
+                        } else {
+                            // Записи нет, добавляем новую запись
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/AddUserLike',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    console.log('Запись успешно добавлена');
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при добавлении записи');
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.log('Произошла ошибка при проверке наличия записи');
+                    }
+                });
+            });
+        });
+   </script>
+
+    <script>
+        $(document).ready(function () {
+            // Добавляем обработчик события для кнопки с классом "btn fav-button"
+            $('.btn.fav-button').click(function () {
+                // Проверяем значение в Local Storage перед открытием модального окна
+                if (localStorage.getItem("AuthenticationSuccess") === "0") {
+                    $('#modal').show(); // Открываем модальное окно для входа
+                } else {
+                    // Если аутентификация успешна, переходим на страницу User_like
+                    window.location.href = '/Home/User_like';
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Добавляем обработчик события для кнопки с классом "btn user-button"
+            $('#cartButton').click(function () {
+                // Проверяем значение в Local Storage перед открытием модального окна
+                if (localStorage.getItem("AuthenticationSuccess") === "0") {
+                    $('#modal').show(); // Открываем модальное окно для входа
+                } else {
+                    // Если аутентификация успешна, переходим на страницу User_like
+                    window.location.href = '/Home/User_basket';
+                }
+            });
+        });
+    </script>
+  @*   для добавления из карточки продукта в избранное *@
+    <script>
+        $(document).ready(function () {
+            var productId; // Переменная для хранения айди продукта
+
+            // Обработчик события клика для кнопки info-button1
+            $('.info-button1').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                productId = $(this).data('idd');
+            });
+
+            // Обработчик события клика для кнопки fav-button2
+            $('#cardfav').click(function (event) {
+                event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
+
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
+                    $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
+                    return;
+                }
+
+                // Проверяем, был ли установлен productId
+                if (productId !== undefined ) {
+                    // productId был установлен, можем его использовать
+                    // Проверяем наличие записи в таблице UserLike
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Home/CheckUserLike',
+                        data: { productId: productId },
+                        dataType: 'json',
+                        success: function (data) {
+                            // Получаем userId из ответа
+                            var userId = data.userId;
+
+                            if (data.exists) {
+                                // Запись уже существует, не делаем ничего
+                                console.log('Запись уже существует');
+                            } else {
+                                // Записи нет, добавляем новую запись
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Home/AddUserLike',
+                                    data: { userId: userId, productId: productId },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        console.log('Запись успешно добавлена');
+                                        // Скрываем модальное окно                                       
+                                    },
+                                    error: function () {
+                                        console.log('Произошла ошибка при добавлении записи');
+                                        
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            console.log('Произошла ошибка при проверке наличия записи');
+                        }
+                    });
+                } else {
+                    console.log('Айди продукта не определено');
+                }
+            });
+        });
+    </script>
+
+
 
 </body>
 

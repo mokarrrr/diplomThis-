@@ -36,10 +36,7 @@ namespace diplom.Controllers
             _logger = logger;
         }
 
-        public IActionResult HomePage()
-        {
-           return View("HomePage", "~/css/site.css"); 
-        }
+       
         public IActionResult AboutUsPage()
         {
             return View();
@@ -60,7 +57,25 @@ namespace diplom.Controllers
             }
 
             // В случае, если IdUser отсутствует в куках, можно реализовать другую логику
-            return RedirectToAction("HomePage", "Home"); // Например, перенаправление на главную страницу
+            return Json(new { success = false, message = "Не удалось получить информацию о пользователе." });
+        }
+        public IActionResult User_basket()
+        {
+            string userIdCookie = Request.Cookies["UserId"];
+
+            if (!string.IsNullOrEmpty(userIdCookie) && int.TryParse(userIdCookie, out int userId))
+            {
+                // Запрос к базе данных для получения избранных продуктов пользователя
+                var liked = db.User_basket.Where(cart => cart.client_id == userId).Include(cart => cart.Product).ToList();
+                ULVM VM = new ULVM
+                {
+                    User_baskets = liked
+                };
+                return View(VM);
+            }
+
+            // В случае, если IdUser отсутствует в куках, можно реализовать другую логику
+            return Json(new { success = false, message = "Не удалось получить информацию о пользователе." });
         }
         //public ActionResult MainPage(string searchQuery)
         //{
@@ -238,13 +253,13 @@ namespace diplom.Controllers
             if (user != null && VerifyPassword(password, user.user_password))
             {
                 // Если учетные данные верны, устанавливаем куку
-                CookieOptions options = new CookieOptions
+                HttpContext.Response.Cookies.Append("UserId", user.IdUser.ToString(), new CookieOptions
                 {
                     Expires = DateTime.Now.AddHours(400), // Установите желаемое время жизни куки
-                    HttpOnly = true
-                };
-
-                Response.Cookies.Append("UserId", user.IdUser.ToString(), options);
+                    HttpOnly = true,
+                    Secure = false, // Устанавливаем Secure в false, чтобы кука отправлялась в любом случае
+                    Path = "/" // Устанавливаем путь, чтобы куки были доступны на всех страницах сайта
+                });
 
                 return Json(new { success = true, message = "Авторизация успешна.", userName = user.User_name });
             }
@@ -490,6 +505,96 @@ namespace diplom.Controllers
             // В случае, если IdUser отсутствует в куках, можно реализовать другую логику
             return RedirectToAction("Index", "Home"); // Например, перенаправление на главную страницу
         }
+
+        [HttpPost]
+        public IActionResult CheckUserLike(int productId)
+        {
+            try
+            {
+                // Получаем UserId из куки
+                string userIdCookie = Request.Cookies["UserId"];
+
+                // Проверяем, существует ли запись в таблице UserLike
+                if (int.TryParse(userIdCookie, out int userId))
+                {
+                    var existingLike = db.UserLike.FirstOrDefault(like => like.UserID == userId && like.ProductID == productId);
+                    return Json(new { exists = existingLike != null, userId = userId });
+                }
+                else
+                {
+                    return Json(new { error = "UserId не найден в куках" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем сообщение об ошибке
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddUserLike(int userId, int productId)
+        {
+            try
+            {
+                // Создаем новую запись в таблице UserLike
+                var newUserLike = new UserLikes
+                {
+                    UserID = userId,
+                    ProductID = productId
+                };
+
+                // Добавляем запись в контекст базы данных и сохраняем изменения
+                db.UserLike.Add(newUserLike);
+                db.SaveChanges();
+
+                return Json(new { success = true, message = "Запись успешно добавлена" });
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем сообщение об ошибке
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult RemoveUserLike(int productId)
+        {
+            try
+            {
+                // Получаем значение куки "UserId"
+                string userIdCookie = HttpContext.Request.Cookies["UserId"];
+
+                // Если куки не содержат значения, вы можете вернуть ошибку или принять другие меры
+                if (string.IsNullOrEmpty(userIdCookie))
+                {
+                    return Json(new { success = false, message = "Куки с идентификатором пользователя не найдены" });
+                }
+
+                int userId = int.Parse(userIdCookie);
+
+                // Находим запись в таблице UserLike для данного пользователя и продукта
+                var userLike = db.UserLike.FirstOrDefault(ul => ul.UserID == userId && ul.ProductID == productId);
+
+                // Если запись найдена, удаляем ее из базы данных
+                if (userLike != null)
+                {
+                    db.UserLike.Remove(userLike);
+                    db.SaveChanges();
+                    return Json(new { success = true, message = "Товар успешно удален из избранного" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Запись о лайке не найдена" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем сообщение об ошибке
+                return Json(new { error = ex.Message });
+            }
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

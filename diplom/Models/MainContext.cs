@@ -22,8 +22,7 @@ using Microsoft.EntityFrameworkCore;
     public DbSet<Package> Package { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<Rate> Rate { get; set; }
-    public DbSet<user_basket> user_baskets { get; set; }
-    public DbSet<user_like> user_like { get; set; }
+    public DbSet<UserBaskets> User_basket { get; set; }
     public DbSet<_catalog> _catalog { get; set; }
     public DbSet<_order> _orders { get; set; }
     public DbSet<_Provider> _Provider{ get; set; }

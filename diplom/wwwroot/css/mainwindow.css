@@ -445,6 +445,25 @@ a:active {
         background-color: red;
         color: white;
     }
+.fav-button2 {
+    z-index:1;
+    font-size: 20px;
+    height:40px;
+    bottom: 20px;
+    right: 20px;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    width: 50px;
+    transition: background-color 0.3s, color 0.3s;
+    border-width: 3px;
+}
+
+    .fav-button2:hover {
+        background-color: red;
+        color: white;
+    }
 .header-scrolled {
     background-color: #F9D86E; 
     transition: background-color 0.5s; 

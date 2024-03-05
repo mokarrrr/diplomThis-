@@ -348,21 +348,7 @@ $(document).ready(function () {
     // Функция для обновления текста и звезд
     function updateProductRating($productRate, $ratingStars, averageRate) {
         $productRate.text("Рейтинг продукта: " + averageRate + '★');
-                // Очистить звезды
-                // $ratingStars.empty();
 
-                // // Добавить полные и неполные звезды
-                // for (var i = 0; i < 5; i++) {
-        //     var starHtml = '<svg class="c-icon" width="32" height="32" viewBox="0 0 32 32">';
-        //     if (averageRate > i) {
-        //         var fillPercentage = (averageRate - i) >= 1 ? 100 : ((averageRate - i) * 100);
-        //         starHtml += '<use xlink:href="#star" style="fill: url(#gradient-' + i + ');"/>';
-        //         // Добавить градиент для части звезды
-        //         starHtml += '<defs><linearGradient id="gradient-' + i + '" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="' + fillPercentage + '%" style="stop-color: #FFD700; stop-opacity: 1" /><stop offset="' + fillPercentage + '%" style="stop-color: transparent; stop-opacity: 0" /></linearGradient></defs>';
-        //     }
-        //     starHtml += '</svg>';
-        //     $ratingStars.append(starHtml);
-        // }
     }
         });
 
@@ -777,7 +763,7 @@ function getPrice(card) {
 
                             // Устанавливаем значение в Local Storage
                             localStorage.setItem("AuthenticationSuccess", "1");
-                            location.reload();
+                            /*location.reload();*/
 
                         } else {
                             // Показываем сообщение об ошибке
@@ -800,6 +786,8 @@ function getPrice(card) {
 
 $(document).ready(function () {
     $('#registerButton').click(function () {
+        console.log('Кнопка регистрации нажата');
+
         var email = $('#Email').val();
         var name = $('#Name').val();
         var lastName = $('#lastName').val();
@@ -843,7 +831,7 @@ $(document).ready(function () {
                             if (loginResult.success) {
                                 localStorage.setItem("AuthenticationSuccess", "1");
                                 $('#modal').hide();
-                                location.reload();
+                                /*location.reload();*/
                             } else {
                                 alert('Ошибка при авторизации после регистрации');
                             }
@@ -885,6 +873,7 @@ $(document).ready(function () {
             },
             error: function () {
                 // Обработка ошибки запроса регистрации
+                console.log('Ошибка при выполнении запроса регистрации.');
             }
         });
     });
