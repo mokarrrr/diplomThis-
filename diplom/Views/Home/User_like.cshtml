@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="~/css/mainwindow.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
 @using diplom.Models.ViewModels
 @model ULVM
@@ -93,87 +94,88 @@
 
 
 <div class="main" style="margin-top:6%">
-        <div class="container3" id="container3" style="padding-left: 2%;">
-    @foreach (var userLike in Model.User_Likes)
-    {
-        <div class="col-sm-4">
-                    <div class="product-card" style="z-index:0">
-                <div class="card-thumbnail">
-                    <img class="img-responsive" src="@userLike.Product.product_img" style="height:300px;width:400px">
-                </div>
-                <div class="card-content">
-                    <div class="send">
-                        <img class="basket" src="/img/basket.png" />
-                        <i class="fa fa-send fa-2x"></i>
+    <div class="container3" id="container3" style="padding-left: 2%;">
+        @foreach (var userLike in Model.User_Likes)
+        {
+            <div class="col-sm-4">
+                <div class="product-card" style="z-index:0">
+                    <div class="card-thumbnail">
+                        <img class="img-responsive" src="@userLike.Product.product_img" style="height:300px;width:400px">
                     </div>
-                    @if (@userLike.Product.product_sale > 0)
-                    {
-                        <!-- Покажите div, только если product_sale больше 0 -->
-                        <div class="sale">-@userLike.Product.product_sale%</div>
-                    }
-                    <h1 class="card-title">
-                        @userLike.Product.Name_product
-                    </h1>
-                    <h2 class="card-sub-title">
-                        @userLike.Product.product_article
-                    </h2>
-                    <p class="description">
-                        @userLike.Product.product_description_
-                    </p>
-                    <div style="display:flex">
+                    <div class="card-content">
+                        <div class="send">
+                            <img class="basket" src="/img/basket.png" />
+                            <i class="fa fa-send fa-2x"></i>
+                        </div>
                         @if (@userLike.Product.product_sale > 0)
                         {
-                            <p class="price">
-                                <s>@userLike.Product.product_price руб.</s>
-                                @(Math.Round(Convert.ToDecimal(@userLike.Product.product_price - (@userLike.Product.product_price * @userLike.Product.product_sale / 100)))) руб.
-                            </p>
+                            <!-- Покажите div, только если product_sale больше 0 -->
+                            <div class="sale">-@userLike.Product.product_sale%</div>
                         }
-                        else
-                        {
-                            <p class="price" id="price_@userLike.Product.IdProduct">Цена: @(Math.Round(Convert.ToDecimal(@userLike.Product.product_price))) руб.</p>
-                        }
-                        <p class="price1">за @userLike.Product.product_weight грамм </p>
-                    </div>
+                        <h1 class="card-title">
+                            @userLike.Product.Name_product
+                        </h1>
+                        <h2 class="card-sub-title">
+                            @userLike.Product.product_article
+                        </h2>
+                        <p class="description">
+                            @userLike.Product.product_description_
+                        </p>
+                        <div style="display:flex">
+                            @if (@userLike.Product.product_sale > 0)
+                            {
+                                <p class="price">
+                                    <s>@userLike.Product.product_price руб.</s>
+                                    @(Math.Round(Convert.ToDecimal(@userLike.Product.product_price - (@userLike.Product.product_price * @userLike.Product.product_sale / 100)))) руб.
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="price" id="price_@userLike.Product.IdProduct">Цена: @(Math.Round(Convert.ToDecimal(@userLike.Product.product_price))) руб.</p>
+                            }
+                            <p class="price1">за @userLike.Product.product_weight грамм </p>
+                        </div>
 
-                    <ul class="list-inline post-meta">
-                        <li class="time-stamp">
-                            <i class="fa fa-clock-o"></i> Массовая доля жира: @userLike.Product.product_mass_per_fat%
-                        </li>
-                        <li class="time-stamp">
-                            <i class="fa fa-clock-o"></i> Энергетическая ценность: @userLike.Product.product_fatty кДж.
-                        </li>
-                    </ul>
-                    <button class="info-button1" data-toggle="modal" data-target="#exampleModal" title="Подробнее"
-                            data-nametitle="@userLike.Product.Name_product"
-                            data-idd="@userLike.Product.IdProduct"
-                            data-description="@userLike.Product.product_description_"
-                            data-price="@userLike.Product.product_price"
-                            data-weight="@userLike.Product.product_weight"
-                            data-mass_per_fat="@userLike.Product.product_mass_per_fat"
-                            data-fat="@userLike.Product.product_fat"
-                            data-protein="@userLike.Product.product_protein"
-                            data-fatty="@userLike.Product.product_fatty"
-                            data-carb="@userLike.Product.product_carb"
-                            data-energy_value="@userLike.Product.product_energy_value"
-                            data-storage_life="@userLike.Product.product_storage_life"
-                            data-package_id="@userLike.Product.product_package_id"
-                            data-storage_conditions="@userLike.Product.product_storage_conditions"
-                            data-sale="@userLike.Product.product_sale"
-                            data-remain="@userLike.Product.product_remain"
-                            data-article="@userLike.Product.product_article"
-                            data-sostav="@userLike.Product.product_sostav"
-                            data-img="@userLike.Product.product_img"
-                            data-provider_id="@userLike.Product.Provider_id"
-                            data-package_name="">
-                        <i class="fa fa-question"></i>
-                    </button>
+                        <ul class="list-inline post-meta">
+                            <li class="time-stamp">
+                                <i class="fa fa-clock-o"></i> Массовая доля жира: @userLike.Product.product_mass_per_fat%
+                            </li>
+                            <li class="time-stamp">
+                                <i class="fa fa-clock-o"></i> Энергетическая ценность: @userLike.Product.product_fatty кДж.
+                            </li>
+                        </ul>
+                        <button class="info-button1" data-toggle="modal" data-target="#exampleModal" title="Подробнее"
+                                data-nametitle="@userLike.Product.Name_product"
+                                data-idd="@userLike.Product.IdProduct"
+                                data-description="@userLike.Product.product_description_"
+                                data-price="@userLike.Product.product_price"
+                                data-weight="@userLike.Product.product_weight"
+                                data-mass_per_fat="@userLike.Product.product_mass_per_fat"
+                                data-fat="@userLike.Product.product_fat"
+                                data-protein="@userLike.Product.product_protein"
+                                data-fatty="@userLike.Product.product_fatty"
+                                data-carb="@userLike.Product.product_carb"
+                                data-energy_value="@userLike.Product.product_energy_value"
+                                data-storage_life="@userLike.Product.product_storage_life"
+                                data-package_id="@userLike.Product.product_package_id"
+                                data-storage_conditions="@userLike.Product.product_storage_conditions"
+                                data-sale="@userLike.Product.product_sale"
+                                data-remain="@userLike.Product.product_remain"
+                                data-article="@userLike.Product.product_article"
+                                data-sostav="@userLike.Product.product_sostav"
+                                data-img="@userLike.Product.product_img"
+                                data-provider_id="@userLike.Product.Provider_id"
+                                data-package_name="">
+                            <i class="fa fa-question"></i>
+                        </button>
                             <button class="fav-button1" title="Удалить из избранного" data-idd="@userLike.Product.IdProduct">
                             <i class="fas fa-heart-broken"></i>
-                    </button>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="">
         <div class="modal-dialog">
@@ -959,5 +961,34 @@
         });
     </script>
 
+    <script>
+        function checkUserLike(productId) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/CheckUserLike",
+                data: { productId: productId },
+                success: function (response) {
+                    if (response.exists) {
+                        // Если товар в избранном, добавляем красный фон кнопке
+                        $('button[data-idd="' + productId + '"]').css('background-color', 'red');
+                    } else {
+                        // Если товар не в избранном, убираем красный фон кнопки
+                        $('button[data-idd="' + productId + '"]').css('background-color', 'inherit');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Обработка ошибки, если не удалось выполнить запрос
+                    console.error(error);
+                }
+            });
+        }
 
+        // После загрузки страницы проверяем наличие товара в избранном для каждой кнопки
+        $(document).ready(function () {
+            $('.fav-button1').each(function () {
+                var productId = $(this).data('idd');
+                checkUserLike(productId);
+            });
+        });
+    </script>
 </body>

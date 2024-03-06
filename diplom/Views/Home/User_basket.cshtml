@@ -1,6 +1,7 @@
 ﻿<link rel="stylesheet" href="~/css/mainwindow.css" />
 <script src="~/js/aboutus.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
 @using diplom.Models.ViewModels
 @model Cart
@@ -437,6 +438,37 @@
                         console.log('Произошла ошибка при проверке наличия записи');
                     }
                 });
+            });
+        });
+    </script>
+
+    <script>
+        function checkUserLike(productId) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/CheckUserLike",
+                data: { productId: productId },
+                success: function (response) {
+                    if (response.exists) {
+                        // Если товар в избранном, добавляем красный фон кнопке
+                        $('button[data-idd="' + productId + '"]').css('background-color', 'red');
+                    } else {
+                        // Если товар не в избранном, убираем красный фон кнопки
+                        $('button[data-idd="' + productId + '"]').css('background-color', 'inherit');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Обработка ошибки, если не удалось выполнить запрос
+                    console.error(error);
+                }
+            });
+        }
+
+        // После загрузки страницы проверяем наличие товара в избранном для каждой кнопки
+        $(document).ready(function () {
+            $('.fav-button1').each(function () {
+                var productId = $(this).data('idd');
+                checkUserLike(productId);
             });
         });
     </script>
