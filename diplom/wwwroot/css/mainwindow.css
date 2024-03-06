@@ -418,6 +418,7 @@ a:active {
     background: #333;
     color: transparent;
     -webkit-background-clip: text;
+    
     background-clip: text;
     font-size: 24px;
     transition: color 0.3s;
@@ -427,6 +428,8 @@ a:active {
     background: linear-gradient(to bottom right,red,#e27105);
     -webkit-background-clip: text;
     background-clip: text;
+    color:red;
+    
 }
 .fav-button1 {
     position: absolute;
@@ -442,7 +445,7 @@ a:active {
     border-width:3px;
 }
     .fav-button1:hover {
-        background-color: red;
+        background-color: red !important;
         color: white;
     }
 .fav-button2 {

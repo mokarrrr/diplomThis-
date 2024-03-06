@@ -908,7 +908,37 @@
         });
     </script>
 
+        <script>
+        function checkUserLike(productId, button) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/CheckUserLike",
+                data: { productId: productId },
+                success: function (response) {
+                    if (response.exists) {
+                        // Если товар в избранном, добавляем красный фон кнопке
+                        button.css('background-color', 'red');
+                    } else {
+                        // Если товар не в избранном, убираем красный фон кнопки
+                        button.css('background-color', 'transparent');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Обработка ошибки, если не удалось выполнить запрос
+                    console.error(error);
+                }
+            });
+        }
 
+        // При загрузке страницы выполним проверку наличия товара в избранном для каждой кнопки
+        $(document).ready(function () {
+            $('.fav-button1').each(function () {
+                var button = $(this);
+                var productId = button.data('idd');
+                checkUserLike(productId, button);
+            });
+        });
+    </script>
 
 </body>
 
