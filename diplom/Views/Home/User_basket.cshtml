@@ -92,7 +92,7 @@
 
 
 <div class="main" style="margin-top:6%">
-<div class="container3" id="container3">
+        <div class="container3" id="container3" style="padding-left: 2%;">
     @foreach (var userLike in Model.Users_Baskets)
     {
         <div class="col-sm-4">
@@ -166,9 +166,12 @@
                             data-package_name="">
                         <i class="fa fa-question"></i>
                     </button>
-                            <button class="fav-button1" title="Удалить из избранного" data-idd="@userLike.Product.IdProduct">
+                            @* <button class="fav-button1" title="Удалить из избранного" data-idd="@userLike.Product.IdProduct">
                             <i class="fas fa-heart-broken"></i>
-                    </button>
+                    </button> *@
+                            <button class="fav-button1" title="В избранное" data-idd="@userLike.Product.IdProduct">
+                                <i class="fa fa-heart"></i>
+                            </button>
                 </div>
             </div>
         </div>
@@ -390,4 +393,51 @@
         </footer>
     </div>
 </div>
+    <script>
+        $(document).ready(function () {
+            $('.fav-button1').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                var productId = $(this).data('idd');
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    return;
+                }
+                // Проверяем наличие записи в таблице UserLike
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/CheckUserLike',
+                    data: { productId: productId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Получаем userId из ответа
+                        var userId = data.userId;
+
+                        if (data.exists) {
+                            // Запись уже существует, не делаем ничего
+                            console.log('Запись уже существует');
+                        } else {
+                            // Записи нет, добавляем новую запись
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/AddUserLike',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    console.log('Запись успешно добавлена');
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при добавлении записи');
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.log('Произошла ошибка при проверке наличия записи');
+                    }
+                });
+            });
+        });
+    </script>
 </body>

@@ -1,6 +1,6 @@
 ﻿
 <link rel="stylesheet" href="~/css/mainwindow.css" />
-<script src="~/js/aboutus.js"></script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 @using diplom.Models.ViewModels
@@ -93,7 +93,7 @@
 
 
 <div class="main" style="margin-top:6%">
-<div class="container3" id="container3">
+        <div class="container3" id="container3" style="padding-left: 2%;">
     @foreach (var userLike in Model.User_Likes)
     {
         <div class="col-sm-4">
@@ -231,8 +231,8 @@
                                     <button id="buttton" class="btn cart-button" style="border: 2px solid black;grid-row:1;grid-column:2;display:flex;align-items: center;width:fit-content">
                                         <i class="fas fa-shopping-basket">В корзину</i>
                                     </button>
-                                        <button class="fav-button1" id="deletee" title="Удалить из избранного" style="position:inherit;    margin-left: 20px;width: 60px;height: 60px;">
-                                            <i class="fas fa-heart-broken"></i>
+                                        <button class="fav-button2" id="cardfav" style="border: 2px solid black;grid-row:1;grid-column:2;margin-left:20px;width: 60px;height: 60px;">
+                                            <i class="fas fa-heart"></i>
                                         </button>
                                 </div>
                             </div>
@@ -861,6 +861,21 @@
     </script>
     <script>
         $(document).ready(function () {
+            // Добавляем обработчик события для кнопки с классом "btn user-button"
+            $('#cartButton').click(function () {
+                // Проверяем значение в Local Storage перед открытием модального окна
+                if (localStorage.getItem("AuthenticationSuccess") === "0") {
+                    $('#modal').show(); // Открываем модальное окно для входа
+                } else {
+                    // Если аутентификация успешна, переходим на страницу User_like
+                    window.location.href = '/Home/User_basket';
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
             var productId; // Переменная для хранения айди продукта
 
             // Обработчик события клика для кнопки info-button1
@@ -870,7 +885,7 @@
             });
 
             // Обработчик события клика для кнопки fav-button2
-            $('#deletee').click(function (event) {
+            $('#cardfav').click(function (event) {
                 event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
 
                 var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
@@ -888,19 +903,53 @@
                     // Проверяем наличие записи в таблице UserLike
                     $.ajax({
                         type: 'POST',
-                        url: '/Home/RemoveUserLike',
+                        url: '/Home/CheckUserLike',
                         data: { productId: productId },
                         dataType: 'json',
-                        success: function (response) {
-                            if (response.success) {
-                                console.log('Товар успешно удален из избранного');
-                                window.location.reload();
+                        success: function (data) {
+                            // Получаем userId из ответа
+                            var userId = data.userId;
+
+                            if (data.exists) {
+                                // Запись уже существует, не делаем ничего
+                                console.log('я твой рот ебал');
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Home/RemoveUserLike',
+                                    data: { userId: userId, productId: productId },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        if (response.success) {
+                                            console.log('Товар успешно удален из избранного');
+                                        } else {
+                                            console.log('Произошла ошибка: ' + response.message);
+                                        }
+                                    },
+                                    error: function () {
+                                        console.log('Произошла ошибка при удалении товара из избранного');
+                                    }
+                                });
+                                return;
                             } else {
-                                console.log('Произошла ошибка: ' + response.message);
+                                // Записи нет, добавляем новую запись
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Home/AddUserLike',
+                                    data: { userId: userId, productId: productId },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        console.log('Запись успешно добавлена');
+                                        // Скрываем модальное окно
+                                    },
+                                    error: function () {
+                                        console.log('Произошла ошибка при добавлении записи');
+
+                                    }
+                                });
                             }
                         },
                         error: function () {
-                            console.log('Произошла ошибка при удалении товара из избранного');
+                            console.log('Произошла ошибка при проверке наличия записи');
                         }
                     });
                 } else {

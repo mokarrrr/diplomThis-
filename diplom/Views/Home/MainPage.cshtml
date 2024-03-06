@@ -752,8 +752,24 @@
                         var userId = data.userId;
 
                         if (data.exists) {
-                            // Запись уже существует, не делаем ничего
-                            console.log('Запись уже существует');
+                            console.log('я твой рот ебал');
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/RemoveUserLike',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    if (response.success) {
+                                        console.log('Товар успешно удален из избранного');
+                                    } else {
+                                        console.log('Произошла ошибка: ' + response.message);
+                                    }
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при удалении товара из избранного');
+                                }
+                            });
+                            return;
                         } else {
                             // Записи нет, добавляем новую запись
                             $.ajax({
@@ -845,7 +861,24 @@
 
                             if (data.exists) {
                                 // Запись уже существует, не делаем ничего
-                                console.log('Запись уже существует');
+                                console.log('я твой рот ебал');
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Home/RemoveUserLike',
+                                    data: { userId: userId, productId: productId },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        if (response.success) {
+                                            console.log('Товар успешно удален из избранного');                                           
+                                        } else {
+                                            console.log('Произошла ошибка: ' + response.message);
+                                        }
+                                    },
+                                    error: function () {
+                                        console.log('Произошла ошибка при удалении товара из избранного');
+                                    }
+                                });
+                                return;
                             } else {
                                 // Записи нет, добавляем новую запись
                                 $.ajax({
