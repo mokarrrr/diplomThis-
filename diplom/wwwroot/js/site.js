@@ -763,7 +763,7 @@ function getPrice(card) {
 
                             // Устанавливаем значение в Local Storage
                             localStorage.setItem("AuthenticationSuccess", "1");
-                            /*location.reload();*/
+                            location.reload();
 
                         } else {
                             // Показываем сообщение об ошибке
@@ -831,7 +831,7 @@ $(document).ready(function () {
                             if (loginResult.success) {
                                 localStorage.setItem("AuthenticationSuccess", "1");
                                 $('#modal').hide();
-                                /*location.reload();*/
+                                location.reload();
                             } else {
                                 alert('Ошибка при авторизации после регистрации');
                             }
@@ -846,27 +846,27 @@ $(document).ready(function () {
                         $('#errorMessage2').show();
                         $('#consentLink').css('color', 'black');
                     }
-                    if (!consentChecked && data.message === "bothExists") {
+                   else if (!consentChecked && data.message === "bothExists") {
                         $('#consentLink').css('color', 'red');
                         $('#phoneExistsErrorMessage').show();
                         $('#mailExistsErrorMessage').show();
                     }
-                    if (!consentChecked && data.message === "phoneExists") {
+                    else if (!consentChecked && data.message === "phoneExists") {
                         $('#consentLink').css('color', 'red');
                         $('#phoneExistsErrorMessage').show();
                     }
-                    if (!consentChecked && data.message === "emailExists") {
+                    else if (!consentChecked && data.message === "emailExists") {
                         $('#consentLink').css('color', 'red');
                         $('#mailExistsErrorMessage').show();
                     }
-                    if (!consentChecked && data.message === "mailFormatError") {
+                    else if (!consentChecked && data.message === "mailFormatError") {
                         $('#consentLink').css('color', 'red');
                         $('#mailErrorMessage').show();
                     }
-                    if (!consentChecked && data.message === "Пароли не совпадают") {
+                    else if (!consentChecked && data.message === "Пароли не совпадают") {
                         $('#errorMessage3').show();
                     }
-                    if (!consentChecked && /0{3,}/.test(phoneLogin)) {
+                    else  if (!consentChecked && /0{3,}/.test(phoneLogin)) {
                         $('#phoneErrorMessage').show();
                     }
                 }

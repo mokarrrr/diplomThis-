@@ -8,10 +8,10 @@
                 <img class="img-responsive" src="@item.product_img" style="height:300px;width:400px">
             </div>
             <div class="card-content">
-                <div class="send">
-                    <img class="basket" src="/img/basket.png" />
+                <button class="send" data-idd="@item.IdProduct">
+                    <img class="basket" src="/img/basket.png" alt="Корзина">
                     <i class="fa fa-send fa-2x"></i>
-                </div>
+                </button>
                 @if (item.product_sale > 0)
                 {
                     <!-- Покажите div, только если product_sale больше 0 -->

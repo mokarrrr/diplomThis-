@@ -594,7 +594,94 @@ namespace diplom.Controllers
                 return Json(new { error = ex.Message });
             }
         }
+        [HttpPost]
+        public IActionResult CheckUserBasket(int productId)
+        {
+            try
+            {
+                // Получаем UserId из куки
+                string userIdCookie = Request.Cookies["UserId"];
 
+                // Проверяем, существует ли запись в таблице UserLike
+                if (int.TryParse(userIdCookie, out int userId))
+                {
+                    var existingLike = db.User_Baskets.FirstOrDefault(like => like.UserID == userId && like.ProductID == productId);
+                    return Json(new { exists = existingLike != null, userId = userId });
+                }
+                else
+                {
+                    return Json(new { error = "UserId не найден в куках" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем сообщение об ошибке
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddUserBasket(int userId, int productId)
+        {
+            try
+            {
+                // Создаем новую запись в таблице UserLike
+                var newUserBasket = new UserBasket
+                {
+                    UserID = userId,
+                    ProductID = productId
+                };
+
+                // Добавляем запись в контекст базы данных и сохраняем изменения
+                db.User_Baskets.Add(newUserBasket);
+                db.SaveChanges();
+
+                return Json(new { success = true, message = "Запись успешно добавлена" });
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем сообщение об ошибке
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult RemoveUserBasket(int productId)
+        {
+            try
+            {
+                // Получаем значение куки "UserId"
+                string userIdCookie = HttpContext.Request.Cookies["UserId"];
+
+                // Если куки не содержат значения, вы можете вернуть ошибку или принять другие меры
+                if (string.IsNullOrEmpty(userIdCookie))
+                {
+                    return Json(new { success = false, message = "Куки с идентификатором пользователя не найдены" });
+                }
+
+                int userId = int.Parse(userIdCookie);
+
+                // Находим запись в таблице UserLike для данного пользователя и продукта
+                var userLike = db.User_Baskets.FirstOrDefault(ul => ul.UserID == userId && ul.ProductID == productId);
+
+                // Если запись найдена, удаляем ее из базы данных
+                if (userLike != null)
+                {
+                    db.User_Baskets.Remove(userLike);
+                    db.SaveChanges();
+                    return Json(new { success = true, message = "Товар успешно удален из избранного" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Запись о лайке не найдена" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем сообщение об ошибке
+                return Json(new { error = ex.Message });
+            }
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
