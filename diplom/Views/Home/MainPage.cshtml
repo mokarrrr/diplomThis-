@@ -151,6 +151,8 @@
                                         @* <p style="margin-left:-30px">+7</p> *@
                                         @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
                                         @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
+                                        <p id="phoneErrorMessage10" style="z-index:1;color:red;margin-top: 1%;display:none">Пользвоатель с таким номером телефона уже существует</p>
+                                        <p id="phoneErrorMessage" style="z-index:1;color:red;margin-top: 1%;display:none">Неверный формат номера телефона</p>
                                     </div>
                                 </div>
                                 @* </form> *@
