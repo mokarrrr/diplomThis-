@@ -810,6 +810,12 @@ $(document).ready(function () {
             consentChecked: consentChecked  // Добавляем состояние чекбокса в данные формы
         };
 
+        if (!consentChecked) {
+            $('#consentLink').css('color', 'red');
+        } else {
+            $('#consentLink').css('color', ''); // Возвращаем цвет ссылки к исходному состоянию
+        }
+
         $.ajax({
             type: 'POST',
             url: '/Home/Register',
@@ -834,7 +840,7 @@ $(document).ready(function () {
                                 $('#modal').hide();
                                 location.reload();
                             } else {
-                                alert('Ошибка при авторизации после регистрации');
+                                // Обработка ошибок авторизации
                             }
                         },
                         error: function () {
@@ -842,44 +848,65 @@ $(document).ready(function () {
                         }
                     });
                 } else {
-                    // Обработка ошибок регистрации
-                    if (email === '' || name === '' || lastName === '' || password === '' || passwordConfirmation === '' || phoneLogin === '') {
+                    // Регистрация не успешна
+                    if (data.message === "Не все поля заполнены") {
                         $('#errorMessage2').show();
-                    } else if (!consentChecked) {
-                        $('#consentLink').css('color', 'red');
-                    } else if (!consentChecked && data.message === "bothExists") {
-                        $('#consentLink').css('color', 'red');
-                        $('#phoneExistsErrorMessage').show();
-                        $('#mailExistsErrorMessage').show();
-                    } else if (!consentChecked && data.message === "phoneExists") {
-                        $('#consentLink').css('color', 'red');
-                        $('#phoneExistsErrorMessage').show();
-                    } else if (!consentChecked && data.message === "emailExists") {
-                        $('#consentLink').css('color', 'red');
-                        $('#mailExistsErrorMessage').show();
-                    } else if (!consentChecked && data.message === "mailFormatError") {
-                        $('#consentLink').css('color', 'red');
-                        $('#mailErrorMessage').show();
-                    } else if (!consentChecked && data.message === "Пароли не совпадают") {
+                    } else if (data.message === "Пароли не совпадают") {
                         $('#errorMessage3').show();
-                    } else if (!consentChecked && data.message === "Номер телефона содержит три подряд нуля") {
+                    } else if (data.message === "Неверный формат адреса электронной почты") {
+                        $('#mailErrorMessage').show();
+                    } else if (data.message === "Номер телефона содержит три подряд нуля") {
                         $('#phoneErrorMessage').show();
-                    } else if (!consentChecked && data.message === "Номер телефона не может состоять только из нулей") {
+                    } else if (data.message === "Номер телефона не может состоять только из нулей") {
                         $('#phoneErrorMessage').show();
-                    } 
-                    else {
-                        // Другие возможные ошибки
-                        alert('Произошла ошибка при регистрации: ' + data.message);
+                    } else if (data.message === "Необходимо согласиться с условиями") {
+                        if (!consentChecked) {
+                            $('#consentLink').css('color', 'red');
+                        }
+                    } else if (data.message === "Пользователь с таким номером телефона и адресом электронной почты уже существует") {
+                        $('#phoneExistsErrorMessage').show();
+                        $('#mailExistsErrorMessage').show();
+                    } else if (data.message === "Пользователь с таким адресом электронной почты уже зарегистрирован") {
+                        $('#mailExistsErrorMessage').show();
+                    } else if (data.message === "Пользователь с таким номером телефона уже зарегистрирован") {
+                        $('#phoneExistsErrorMessage').show();
+                    } else {
+                        $('#errorDiv').text('Произошла ошибка при регистрации: ' + data.message).show();
+                    }
+                }
+
+                // Добавим обработку ошибок с !consentChecked
+                if (!consentChecked) {
+                    if (data.message === "Не все поля заполнены") {
+                        $('#errorMessage2').show();
+                    } else if (data.message === "Пароли не совпадают") {
+                        $('#errorMessage3').show();
+                    } else if (data.message === "Неверный формат адреса электронной почты") {
+                        $('#mailErrorMessage').show();
+                    } else if (data.message === "Номер телефона содержит три подряд нуля") {
+                        $('#phoneErrorMessage').show();
+                    } else if (data.message === "Номер телефона не может состоять только из нулей") {
+                        $('#phoneErrorMessage').show();
+                    } else if (data.message === "Пользователь с таким номером телефона и адресом электронной почты уже существует") {
+                        $('#phoneExistsErrorMessage').show();
+                        $('#mailExistsErrorMessage').show();
+                    } else if (data.message === "Пользователь с таким адресом электронной почты уже зарегистрирован") {
+                        $('#mailExistsErrorMessage').show();
+                    } else if (data.message === "Пользователь с таким номером телефона уже зарегистрирован") {
+                        $('#phoneExistsErrorMessage').show();
+                    } else {
+                        $('#errorDiv').text('Произошла ошибка при регистрации: ' + data.message).show();
                     }
                 }
             },
             error: function () {
                 // Обработка ошибки запроса регистрации
-                console.log('Ошибка при выполнении запроса регистрации.');
+                $('#errorDiv').text('Произошла ошибка при выполнении запроса регистрации.').show();
             }
         });
     });
 });
+
 
 
 
