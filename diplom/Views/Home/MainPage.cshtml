@@ -380,7 +380,7 @@
                                 </div>
 
                                     <div class="gf" style="display:flex">
-                                            <button class="send" >
+                                            <button class="send btn cart-button" id="senddd">
                                                 <img class="basket" src="/img/basket.png" alt="Корзина">
                                                 <i class="fa fa-send fa-2x"></i>
                                             </button>
@@ -992,8 +992,8 @@
                 productId = $(this).data('idd');
             });
 
-            // Обработчик события клика для кнопки fav-button2
-            $('.send').click(function (event) {
+            // Обработчик события клика для кнопки senddd
+            $('#senddd').click(function (event) {
                 event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
 
                 var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
@@ -1060,18 +1060,6 @@
                             console.log('Произошла ошибка при проверке наличия записи');
                         }
                     });
-                } else {
-                    console.log('Айди продукта не определено');
-                }
-            });
-
-            // Обработчик события клика для кнопки send
-            $('.send').click(function () {
-                // Проверяем, был ли установлен productId
-                if (productId !== undefined) {
-                    // productId был установлен, можем его использовать
-                    // Добавляем ваш код для добавления продукта в корзину
-                    console.log('Добавление продукта с ID: ' + productId);
                 } else {
                     console.log('Айди продукта не определено');
                 }

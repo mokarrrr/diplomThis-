@@ -797,7 +797,7 @@ $(document).ready(function () {
         var checkbox = $('#givetrue');
 
         // Проверяем, активен ли чекбокс
-        var consentChecked = checkbox.prop('checked');
+        var consentChecked = checkbox.is(':checked');
 
         // Отправка данных на сервер
         var formData = {
@@ -806,7 +806,8 @@ $(document).ready(function () {
             lastName: lastName,
             passwordregister: password,
             passwordregistersecond: passwordConfirmation,
-            phoneRegister: phoneLogin
+            phoneRegister: phoneLogin,
+            consentChecked: consentChecked  // Добавляем состояние чекбокса в данные формы
         };
 
         $.ajax({
@@ -842,32 +843,33 @@ $(document).ready(function () {
                     });
                 } else {
                     // Обработка ошибок регистрации
-                    if (!consentChecked || email === '' || name === '' || lastName === '' || password === '' || passwordConfirmation === '' || phoneLogin === '') {
+                    if (email === '' || name === '' || lastName === '' || password === '' || passwordConfirmation === '' || phoneLogin === '') {
                         $('#errorMessage2').show();
-                        $('#consentLink').css('color', 'black');
-                    }
-                   else if (!consentChecked && data.message === "bothExists") {
+                    } else if (!consentChecked) {
+                        $('#consentLink').css('color', 'red');
+                    } else if (!consentChecked && data.message === "bothExists") {
                         $('#consentLink').css('color', 'red');
                         $('#phoneExistsErrorMessage').show();
                         $('#mailExistsErrorMessage').show();
-                    }
-                    else if (!consentChecked && data.message === "phoneExists") {
+                    } else if (!consentChecked && data.message === "phoneExists") {
                         $('#consentLink').css('color', 'red');
                         $('#phoneExistsErrorMessage').show();
-                    }
-                    else if (!consentChecked && data.message === "emailExists") {
+                    } else if (!consentChecked && data.message === "emailExists") {
                         $('#consentLink').css('color', 'red');
                         $('#mailExistsErrorMessage').show();
-                    }
-                    else if (!consentChecked && data.message === "mailFormatError") {
+                    } else if (!consentChecked && data.message === "mailFormatError") {
                         $('#consentLink').css('color', 'red');
                         $('#mailErrorMessage').show();
-                    }
-                    else if (!consentChecked && data.message === "Пароли не совпадают") {
+                    } else if (!consentChecked && data.message === "Пароли не совпадают") {
                         $('#errorMessage3').show();
-                    }
-                    else  if (!consentChecked && /0{3,}/.test(phoneLogin)) {
+                    } else if (!consentChecked && data.message === "Номер телефона содержит три подряд нуля") {
                         $('#phoneErrorMessage').show();
+                    } else if (!consentChecked && data.message === "Номер телефона не может состоять только из нулей") {
+                        $('#phoneErrorMessage').show();
+                    } 
+                    else {
+                        // Другие возможные ошибки
+                        alert('Произошла ошибка при регистрации: ' + data.message);
                     }
                 }
             },
@@ -878,6 +880,8 @@ $(document).ready(function () {
         });
     });
 });
+
+
 
 
         $(document).ready(function () {

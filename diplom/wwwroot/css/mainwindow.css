@@ -378,8 +378,8 @@ a:active {
 }
 .basket{
     height:47px;
-    margin-left:6px;
-    margin-top:5px;
+    margin-left:-1px;
+    margin-top:2px;
 }
 .price{
     font-size:15pt;

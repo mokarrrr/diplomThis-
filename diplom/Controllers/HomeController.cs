@@ -388,21 +388,21 @@ namespace diplom.Controllers
 
 
         [HttpPost]
-        public ActionResult Register(string Email, string Name, string lastName, string passwordregister, string passwordregistersecond, string phoneRegister)
+        public ActionResult Register(string Email, string Name, string lastName, string passwordregister, string passwordregistersecond, string phoneRegister, bool consentChecked)
         {
-
             if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(lastName) ||
-        string.IsNullOrEmpty(passwordregister) || string.IsNullOrEmpty(passwordregistersecond) || string.IsNullOrEmpty(phoneRegister))
+                string.IsNullOrEmpty(passwordregister) || string.IsNullOrEmpty(passwordregistersecond) || string.IsNullOrEmpty(phoneRegister))
             {
                 // Возвращаем сообщение об ошибке
                 return Json(new { success = false, message = "Не все поля заполнены" });
             }
+
             // Проверка пароля и его подтверждения
             if (passwordregister != passwordregistersecond)
             {
-                //ModelState.AddModelError("", "Пароли не совпадают");
                 return Json(new { success = false, message = "Пароли не совпадают" });
             }
+
             try
             {
                 var mailAddress = new System.Net.Mail.MailAddress(Email);
@@ -410,32 +410,56 @@ namespace diplom.Controllers
             catch (FormatException)
             {
                 // Ошибка в формате почты (отсутствует знак '@')
-                return Json(new { success = false, message = "mailFormatError" });
+                return Json(new { success = false, message = "Неверный формат адреса электронной почты" });
             }
+
+            // Проверка наличия трех подряд нулей в номере телефона
+            if (phoneRegister.Contains("000"))
+            {
+                // Номер телефона содержит три подряд нуля
+                return Json(new { success = false, message = "Номер телефона содержит три подряд нуля" });
+            }
+
+            // Проверка, что номер телефона не состоит из всех нулей
+            if (phoneRegister.All(c => c == '0'))
+            {
+                return Json(new { success = false, message = "Номер телефона не может состоять только из нулей" });
+            }
+
+            // Проверка состояния чекбокса
+
+
+            if (!consentChecked)
+            {
+                // Чекбокс не отмечен
+                return Json(new { success = false, message = "Необходимо согласиться с условиями" });
+            }
+
+            // Проверка существования пользователя с такой почтой или номером телефона
             bool userExistsByEmail = UserExistsByEmail(Email);
             bool userExistsByPhoneNumber = UserExistsByPhoneNumber(phoneRegister);
+
             if (userExistsByPhoneNumber || userExistsByEmail)
             {
-                if (UserExistsByPhoneNumber(phoneRegister) && userExistsByEmail)
+                if (userExistsByPhoneNumber && userExistsByEmail)
                 {
                     // Пользователь с таким номером телефона и с такой почтой уже существует
-                    return Json(new { success = false, message = "bothExists" });
+                    return Json(new { success = false, message = "Пользователь с таким номером телефона и адресом электронной почты уже существует" });
                 }
+
                 if (userExistsByEmail)
                 {
-                    //ModelState.AddModelError("", "Пользователь с такой почтой уже зарегистрирован");
-                    return Json(new { success = false, message = "emailExists" });
+                    // Пользователь с такой почтой уже зарегистрирован
+                    return Json(new { success = false, message = "Пользователь с таким адресом электронной почты уже зарегистрирован" });
                 }
 
-                if (UserExistsByPhoneNumber(phoneRegister))
+                if (userExistsByPhoneNumber)
                 {
-                    //ModelState.AddModelError("", "Пользователь с таким номером телефона уже зарегистрирован");
-                    return Json(new { success = false, message = "phoneExists" });
+                    // Пользователь с таким номером телефона уже зарегистрирован
+                    return Json(new { success = false, message = "Пользователь с таким номером телефона уже зарегистрирован" });
                 }
-
-                // Проверка существования пользователя с такой почтой
-                
             }
+
             // Создание нового пользователя
             var newUser = new User
             {
@@ -448,12 +472,20 @@ namespace diplom.Controllers
                 // Дополнительные поля, если есть
             };
 
-
             // Добавление пользователя в базу данных
             db.User.Add(newUser);
-            db.SaveChanges();
 
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                // Произошла ошибка при добавлении пользователя
+                return Json(new { success = false, message = "Произошла ошибка при регистрации пользователя: " + ex.Message });
+            }
 
+            // Возвращаем успешный результат, если все проверки прошли успешно
             return Json(new { success = true, message = "Регистрация успешна" });
         }
 
