@@ -793,11 +793,22 @@ $(document).ready(function () {
         var lastName = $('#lastName').val();
         var password = $('#passwordregister').val();
         var passwordConfirmation = $('#passwordregistersecond').val();
-        var phoneLogin = $('#phoneRegister').val().replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
+        var phoneLogin = $('#phoneRegister').val().replace(/_/g, '').replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
         var checkbox = $('#givetrue');
 
         // Проверяем, активен ли чекбокс
         var consentChecked = checkbox.is(':checked');
+
+        // Проверка длины номера телефона
+        if (phoneLogin.length !== 10) {
+            $('#phoneErrorMessage').text('Номер телефона должен содержать ровно 10 цифр').show();
+            return; // Прекращаем выполнение функции, если длина номера телефона неверна
+        } else {
+            $('#phoneErrorMessage').hide(); // Если длина номера телефона правильная, скрываем сообщение об ошибке
+        }
+
+        // Удаление всех символов форматирования из номера телефона
+        phoneLogin = phoneLogin.replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
 
         // Отправка данных на сервер
         var formData = {
@@ -853,9 +864,11 @@ $(document).ready(function () {
                         $('#errorMessage2').show();
                     } else if (data.message === "Пароли не совпадают") {
                         $('#errorMessage3').show();
+                    } else if (data.message === "Номер телефона должен содержать ровно 10 символов") {
+                        $('#phoneErrorMessage').show();
                     } else if (data.message === "Неверный формат адреса электронной почты") {
                         $('#mailErrorMessage').show();
-                    } else if (data.message === "Номер телефона содержит три подряд нуля") {
+                    } else if (data.message === "Номер телефона содержит четыре подряд нуля") {
                         $('#phoneErrorMessage').show();
                     } else if (data.message === "Номер телефона не может состоять только из нулей") {
                         $('#phoneErrorMessage').show();
@@ -881,12 +894,18 @@ $(document).ready(function () {
                         $('#errorMessage2').show();
                     } else if (data.message === "Пароли не совпадают") {
                         $('#errorMessage3').show();
+                    } else if (data.message === "Номер телефона должен содержать ровно 10 символов") {
+                        $('#phoneErrorMessage').show();
                     } else if (data.message === "Неверный формат адреса электронной почты") {
                         $('#mailErrorMessage').show();
-                    } else if (data.message === "Номер телефона содержит три подряд нуля") {
+                    } else if (data.message === "Номер телефона содержит четыре подряд нуля") {
                         $('#phoneErrorMessage').show();
                     } else if (data.message === "Номер телефона не может состоять только из нулей") {
                         $('#phoneErrorMessage').show();
+                    } else if (data.message === "Необходимо согласиться с условиями") {
+                        if (!consentChecked) {
+                            $('#consentLink').css('color', 'red');
+                        }
                     } else if (data.message === "Пользователь с таким номером телефона и адресом электронной почты уже существует") {
                         $('#phoneExistsErrorMessage').show();
                         $('#mailExistsErrorMessage').show();
@@ -906,6 +925,8 @@ $(document).ready(function () {
         });
     });
 });
+
+
 
 
 
@@ -1050,29 +1071,213 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
+    // Флаг, указывающий на изменение номера телефона
+    var phoneChanged = false;
+    // Флаг, указывающий на изменение email
+    var emailChanged = false;
+
+    // Вызываем функцию для активации или деактивации кнопки сохранения при первой загрузке модального окна
+    toggleSaveButton();
+
+    // Следим за изменениями в полях ввода email
+    $("#Emailuser").on("input", function () {
+        emailChanged = true; // Установка флага изменения email
+        toggleSaveButton();
+    });
+
+    // Следим за изменениями в полях ввода имени и фамилии
+    $("#Nameuser, #lastNameuser").on("input", function () {
+        toggleSaveButton();
+    });
+
+    // Следим за изменением номера телефона
+    $("#phoneRegisteruser").on("input", function () {
+        phoneChanged = true;
+        toggleSaveButton();
+    });
+
+    // Функция для активации или деактивации кнопки сохранения в зависимости от наличия изменений в полях
+    function toggleSaveButton() {
+        var email = $("#Emailuser").val();
+        var name = $("#Nameuser").val();
+        var lastName = $("#lastNameuser").val();
+        var phone = $('#phoneRegisteruser').val().replace(/_/g, '').replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
+
+        // Проверяем, есть ли в полях ввода изменения, кроме email
+        var hasChanges = phoneChanged || emailChanged || name.trim() !== "" || lastName.trim() !== "";
+
+        // Активируем или деактивируем кнопку сохранения
+        $("#savebutton").prop("disabled", !hasChanges);
+    }
+
     // Отправка данных на сервер при редактировании пользователя
     $("#savebutton").click(function () {
         var email = $("#Emailuser").val();
         var name = $("#Nameuser").val();
         var lastName = $("#lastNameuser").val();
-        var phone = $("#phoneRegisteruser").val().replace(/\D/g, ''); // Удаление всех нечисловых символов
-        if (phone.startsWith('7')) {
-            phone = phone.slice(1); // Удаление первого символа "7", если он есть в начале номера
-        }
+        var phone = $('#phoneRegisteruser').val().replace(/_/g, '').replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
 
+        // Показываем сообщение об ошибке
+        $("#phoneErrorMessage").hide();
+        $("#phoneMail10").hide();
+
+        // Если номер телефона не изменился и не было изменений в email, отправляем данные без проверки на сервер
+        if (!phoneChanged && !emailChanged) {
+            updateUser(email, name, lastName, phone);
+        } else {
+            // Проверяем длину номера телефона
+            if (phone.trim() !== "") {
+                // Проверяем, изменился ли номер телефона
+                if (phoneChanged) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/CheckPhoneNumber",
+                        data: { phone: phone },
+                        success: function (result) {
+                            if (result.exists) {
+                                $("#phoneErrorMessage10").text("Номер телефона уже используется").show();
+                            } else {
+                                // Проверяем, изменился ли email
+                                if (emailChanged) {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/Home/CheckEmail",
+                                        data: { email: email },
+                                        success: function (emailResult) {
+                                            if (emailResult.exists) {
+                                                $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                            } else {
+                                                updateUser(email, name, lastName, phone);
+                                            }
+                                        },
+                                        error: function () {
+                                            // Обработка ошибки
+                                            alert("Произошла ошибка при проверке email");
+                                        }
+                                    });
+                                } else {
+                                    updateUser(email, name, lastName, phone);
+                                }
+                            }
+                        },
+                        error: function () {
+                            // Обработка ошибки
+                            alert("Произошла ошибка при проверке номера телефона");
+                        }
+                    });
+                } else {
+                    // Номер телефона не изменился, отправляем данные без проверки на сервер
+                    // Проверяем, изменился ли email
+                    if (emailChanged) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/Home/CheckEmail",
+                            data: { email: email },
+                            success: function (emailResult) {
+                                if (emailResult.exists) {
+                                    $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                } else {
+                                    updateUser(email, name, lastName, phone);
+                                }
+                            },
+                            error: function () {
+                                // Обработка ошибки
+                                alert("Произошла ошибка при проверке email");
+                            }
+                        });
+                    } else {
+                        updateUser(email, name, lastName, phone);
+                    }
+                }
+            } else {
+                // Если номер телефона не указан, просто отправляем данные без проверки на сервер
+                // Проверяем, изменился ли email
+                if (emailChanged) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/CheckEmail",
+                        data: { email: email },
+                        success: function (emailResult) {
+                            if (emailResult.exists) {
+                                $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                            } else {
+                                updateUser(email, name, lastName, phone);
+                            }
+                        },
+                        error: function () {
+                            // Обработка ошибки
+                            alert("Произошла ошибка при проверке email");
+                        }
+                    });
+                } else {
+                    updateUser(email, name, lastName, phone);
+                }
+            }
+        }
+    });
+
+    // Функция для обновления данных пользователя
+    function updateUser(email, name, lastName, phone) {
         $.ajax({
             type: "POST",
             url: "/Home/SaveUser",
             data: { email: email, name: name, lastName: lastName, phone: phone },
             success: function (result) {
-                // Обработка успешного ответа от сервера
-                $('#modaluserr').hide();
+                if (result.success) {
+                    // Обработка успешного сохранения данных
+                    $('#modaluserr').hide();
+                } else {
+                    // Обработка ошибок при сохранении данных
+                    if (result.message === "Номер телефона содержит четыре подряд нуля") {
+                        $('#phoneErrorMessage20').text("Номер телефона содержит четыре подряд нуля").show();
+                    } else if (result.message === "Номер телефона должен содержать не менее 10 символов") {
+                        $('#phoneErrorMessage20').text("Номер телефона должен содержать не менее 10 символов").show();
+                    } else if (result.message === "Номер телефона не может состоять только из нулей") {
+                        $('#phoneErrorMessage20').text("Номер телефона не может состоять только из нулей").show();
+                    } else if (result.message === "Номер телефона должен содержать не более 10 символов") {
+                        $('#phoneErrorMessage20').text("Номер телефона должен содержать не более 10 символов").show();
+                    } else if (result.message === "Некорректный адрес электронной почты") {
+                        $('#phoneMailMessage20').text("Некорректный адрес электронной почты").show();
+                    } else if (result.message === "Пользователь с таким email уже существует") {
+                        $('#phoneMail10').text("Пользователь с таким email уже существует").show();
+                    } else {
+                        alert("Ошибка: " + result.message);
+                    }
+                }
             },
             error: function () {
                 // Обработка ошибки
                 alert("Произошла ошибка при отправке данных");
             }
         });
+    }
+
+    // Закрытие модального окна при клике на кнопку закрытия ("close")
+    $('#modaluserr .close').click(function () {
+        $('#modaluserr').hide();
+        $("#phoneErrorMessage10").hide();
+        $("#phoneErrorMessage20").hide(); // Скрыть сообщение об ошибке
+        $("#phoneMailMessage20").hide(); // Скрыть сообщение о некорректном адресе электронной почты
+        $("#phoneMail10").hide(); // Скрыть сообщение о существующем email
+        $("#Emailuser, #Nameuser, #lastNameuser, #phoneRegisteruser").val(""); // Сброс значений полей ввода
+        toggleSaveButton(); // Обновить состояние кнопки сохранения
+        phoneChanged = false; // Сбрасываем флаг изменения номера телефона
+        emailChanged = false; // Сбрасываем флаг изменения email
+    });
+
+    // Закрытие модального окна при клике вне его области
+    $(window).click(function (event) {
+        if (event.target == $('#modaluserr')[0]) {
+            $('#modaluserr').hide();
+            $("#phoneErrorMessage10").hide();
+            $("#phoneErrorMessage20").hide(); // Скрыть сообщение об ошибке
+            $("#phoneMailMessage20").hide(); // Скрыть сообщение о некорректном адресе электронной почты
+            $("#phoneMail10").hide(); // Скрыть сообщение о существующем email
+            $("#Emailuser, #Nameuser, #lastNameuser, #phoneRegisteruser").val(""); // Сброс значений полей ввода
+            toggleSaveButton(); // Обновить состояние кнопки сохранения
+            phoneChanged = false; // Сбрасываем флаг изменения номера телефона
+            emailChanged = false; // Сбрасываем флаг изменения email
+        }
     });
 });
 

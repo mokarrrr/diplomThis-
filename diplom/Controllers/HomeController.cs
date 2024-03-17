@@ -300,33 +300,121 @@ namespace diplom.Controllers
         }
 
         [HttpPost]
-        public JsonResult SaveUser(string email, string name, string lastName, string phone)
+        public JsonResult SaveUser(string email, string name, string lastName, string phone, string originalPhone, string originalEmail)
         {
             try
             {
-                // Поиск пользователя по email (вы можете использовать другой уникальный идентификатор)
-                var existingUser = db.User.FirstOrDefault(u => u.Email == email);
-
-                if (existingUser != null)
+                // Проверка наличия символов "@" и "."
+                if (!email.Contains("@") || !email.Contains("."))
                 {
-                    // Обновляем данные пользователя
-                    existingUser.User_name = name;
-                    existingUser.Surname = lastName;
-                    existingUser.PhoneNumber = phone;
+                    return Json(new { success = false, message = "Некорректный адрес электронной почты" });
+                }
 
-                    // Сохраняем изменения
-                    db.SaveChanges();
+                // Проверка наличия четырех нулей подряд в номере телефона
+                if (phone.Contains("0000"))
+                {
+                    return Json(new { success = false, message = "Номер телефона содержит четыре подряд нуля" });
+                }
+                if (phone.All(c => c == '0'))
+                {
+                    return Json(new { success = false, message = "Номер телефона не может состоять только из нулей" });
+                }
 
-                    return Json(new { success = true });
+                // Проверка минимальной длины номера телефона
+                if (phone.Length < 10)
+                {
+                    return Json(new { success = false, message = "Номер телефона должен содержать не более 10 символов" });
+                }
+                if (phone.Length > 10)
+                {
+                    return Json(new { success = false, message = "Номер телефона должен содержать не менее 10 символов" });
+                }
+
+                // Проверка существования пользователя по адресу электронной почты, только если email изменился
+                
+
+                // Получение идентификатора пользователя из cookie
+                string userIdCookie = Request.Cookies["UserId"];
+
+                // Поиск пользователя по идентификатору из cookie
+                int userId;
+                if (int.TryParse(userIdCookie, out userId))
+                {
+                    // Поиск пользователя по идентификатору из cookie
+                    var existingUser = db.User.FirstOrDefault(u => u.IdUser == userId);
+
+                    if (existingUser != null)
+                    {
+                        existingUser.Email = email;
+                        existingUser.User_name = name;
+                        existingUser.Surname = lastName;
+                        existingUser.PhoneNumber = phone;
+
+                        // Сохраняем изменения
+                        db.SaveChanges();
+
+                        return Json(new { success = true });
+                    }
+                    else
+                    {
+                        return Json(new { success = false, message = "Пользователь не найден" });
+                    }
                 }
                 else
                 {
-                    return Json(new { success = false, message = "Пользователь не найден" });
+                    // Обработка ошибки преобразования
+                    return Json(new { success = false, message = "Ошибка при получении идентификатора пользователя" });
                 }
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = $"Ошибка: {ex.Message}" });
+            }
+        }
+
+
+        [HttpPost]
+        public JsonResult CheckPhoneNumber(string phone, string originalPhone)
+        {
+            try
+            {
+                // Проверка существования номера телефона в базе данных
+                if (phone != originalPhone)
+                {
+                    var existingUser = db.User.FirstOrDefault(u => u.PhoneNumber == phone);
+                    return Json(new { exists = existingUser != null });
+                }
+                else
+                {
+                    // Номер телефона не был изменен, поэтому считаем, что такой номер уже существует
+                    return Json(new { exists = false });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = $"Ошибка: {ex.Message}" });
+            }
+        }
+        [HttpPost]
+        public JsonResult CheckEmail(string email, string originalEmail)
+        {
+            try
+            {
+                // Проверка существования email в базе данных
+                if (email != originalEmail)
+                {
+                    var existingUser = db.User.FirstOrDefault(u => u.Email == email);
+                    return Json(new { exists = existingUser != null });
+                }
+                else
+                {
+                    // Email не был изменен, поэтому считаем, что такой email уже существует
+                    return Json(new { exists = false });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = $"Ошибка: {ex.Message}" });
             }
         }
 
@@ -370,6 +458,60 @@ namespace diplom.Controllers
                 return string.Equals(enteredPasswordHash, hashedPassword, StringComparison.OrdinalIgnoreCase);
             }
         }
+        private string HashPasswordSHA256(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            }
+        }
+
+        private bool IsPasswordValid(string enteredPasswordHash, string hashedPassword)
+        {
+            // Сравниваем хеши введенного пароля и хешированного пароля из базы данных
+            return string.Equals(enteredPasswordHash, hashedPassword, StringComparison.OrdinalIgnoreCase);
+        }
+
+        [HttpPost]
+        public IActionResult UpdatePassword(string oldPassword, string newPassword)
+        {
+            // Получаем ID пользователя из куки
+            string userIdCookie = Request.Cookies["UserId"];
+            if (string.IsNullOrEmpty(userIdCookie))
+            {
+                return Unauthorized(); // Куки с идентификатором пользователя отсутствуют или некорректны
+            }
+
+            if (!int.TryParse(userIdCookie, out int userId))
+            {
+                return Unauthorized(); // Некорректный формат идентификатора пользователя
+            }
+
+            // Получаем пользователя из базы данных по его ID
+            var user = db.User.Find(userId);
+
+            if (user == null)
+            {
+                return NotFound(); // Пользователь не найден
+            }
+
+            // Хешируем введенный старый пароль и сравниваем его с хешем пароля из базы данных
+            var sha256 = SHA256.Create();
+            var oldPasswordHash = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(oldPassword))).Replace("-", "").ToLower();
+            if (!IsPasswordValid(oldPasswordHash, user.user_password))
+            {
+                return BadRequest(); // Неправильный старый пароль
+            }
+
+            // Хешируем новый пароль и обновляем в базе данных
+            var newPasswordHash = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(newPassword))).Replace("-", "").ToLower();
+            user.user_password = newPasswordHash;
+            db.SaveChanges();
+
+            return Ok(); // Пароль успешно изменен
+        }
+
 
         private User FindUser(string phoneLogin, string password)
         {
@@ -414,16 +556,21 @@ namespace diplom.Controllers
             }
 
             // Проверка наличия трех подряд нулей в номере телефона
-            if (phoneRegister.Contains("000"))
+            if (phoneRegister.Contains("0000"))
             {
-                // Номер телефона содержит три подряд нуля
-                return Json(new { success = false, message = "Номер телефона содержит три подряд нуля" });
+                // Номер телефона содержит четыре подряд нуля
+                return Json(new { success = false, message = "Номер телефона содержит четыре подряд нуля" });
             }
 
             // Проверка, что номер телефона не состоит из всех нулей
             if (phoneRegister.All(c => c == '0'))
             {
                 return Json(new { success = false, message = "Номер телефона не может состоять только из нулей" });
+            }
+            if (phoneRegister.Length != 10)
+            {
+                // Номер телефона должен содержать ровно 10 символов
+                return Json(new { success = false, message = "Номер телефона должен содержать ровно 10 символов" });
             }
 
             // Проверка состояния чекбокса
