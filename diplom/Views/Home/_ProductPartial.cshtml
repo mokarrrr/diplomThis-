@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<diplom.Models.Product>
 
-@foreach (var item in Model)
+@foreach (var item in Model.Where(x => x.Ishidden == false))
 {
     <div class="col-sm-4">
         <div class="product-card">

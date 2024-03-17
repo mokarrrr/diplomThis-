@@ -22,6 +22,11 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace diplom.Controllers
 {
+    public class ChangePassRequest
+    {
+        public string oldPassword { get; set; }
+        public string newPassword { get; set; }
+    }
     public class HomeController : Controller
     {
         private MainContext db = new MainContext();
@@ -474,7 +479,7 @@ namespace diplom.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdatePassword(string oldPassword, string newPassword)
+        public IActionResult UpdatePassword([FromBody] ChangePassRequest changePassRequest)
         {
             // Получаем ID пользователя из куки
             string userIdCookie = Request.Cookies["UserId"];
@@ -498,14 +503,14 @@ namespace diplom.Controllers
 
             // Хешируем введенный старый пароль и сравниваем его с хешем пароля из базы данных
             var sha256 = SHA256.Create();
-            var oldPasswordHash = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(oldPassword))).Replace("-", "").ToLower();
+            var oldPasswordHash = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(changePassRequest.oldPassword))).Replace("-", "").ToLower();
             if (!IsPasswordValid(oldPasswordHash, user.user_password))
             {
                 return BadRequest(); // Неправильный старый пароль
             }
 
             // Хешируем новый пароль и обновляем в базе данных
-            var newPasswordHash = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(newPassword))).Replace("-", "").ToLower();
+            var newPasswordHash = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(changePassRequest.newPassword))).Replace("-", "").ToLower();
             user.user_password = newPasswordHash;
             db.SaveChanges();
 

@@ -1207,7 +1207,7 @@
             var newPasswordConfirm = document.getElementById("passwordregisteveryf2r").value;
 
             // Проверяем, что значения не пустые
-            if (!oldPassword || !newPassword || !newPasswordConfirm) {
+            if (!(oldPassword && newPassword && newPasswordConfirm)) {
                 console.error("Пожалуйста, заполните все поля пароля");
                 return;
             }
