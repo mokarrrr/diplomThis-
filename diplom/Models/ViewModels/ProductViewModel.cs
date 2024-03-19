@@ -18,5 +18,7 @@ namespace diplom.Models.ViewModels
 
         public IEnumerable<Rate> Rates { get; set; }
 
+        public List<_order> _Orders { get; set; }
+
     }
 }

@@ -123,7 +123,7 @@
                             </div>
                             <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-history">
                                 <i class="fas fa-history"></i>
-                                <div>История покупок</div>
+                                <a href="/Home/UserOrders">История покупок</a>
                             </div>
                         </div>
                     </div>
@@ -514,9 +514,14 @@
                                         </div>
                                         </div>
                                         <div id="rewey" style=" margin-top: 250px;margin-left: -1100px;">
-                                            <div style="border: 3px solid black;">
-                                                <p>dfgdfgdfgdfgdf</p>
-                                            </div>
+                                            
+                                            @foreach (var comments in Model.Rates)
+                                            {
+                                                
+                                                <div style="border: 3px solid black;">
+                                                    <p>@comments.Rate_comment</p>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
                                 </div>

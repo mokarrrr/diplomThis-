@@ -46,6 +46,14 @@ namespace diplom.Controllers
         {
             return View();
         }
+
+        public IActionResult UserOrders()
+        {
+            long userIdCookie = Int64.Parse(Request.Cookies["UserId"]);
+            var _Orders = db._orders.Where(o => o._user_id == userIdCookie).Include(o => o.Products).ToList();
+            return View(_Orders);
+        }
+
         public IActionResult User_like()
         {
             string userIdCookie = Request.Cookies["UserId"];
@@ -111,7 +119,7 @@ namespace diplom.Controllers
             {
                 hasResults = productsQuery.Any();
             }
-
+            
             // Фильтруем продукты по каждой категории, если соответствующий categoryId не равен null
             FilterProductsByCategory(ref productsQuery, categoryId);
             FilterProductsByCategory(ref productsQuery, secondCategoryId);
@@ -123,7 +131,6 @@ namespace diplom.Controllers
 
             Dictionary<int, double> productAverageRates = productsList
                 .ToDictionary(p => p.IdProduct, p => p.Rates.Any() ? p.Rates.Average(r => r._Rate) : 0);
-
             ProductViewModel viewModel = new ProductViewModel
             {
                 Products = productsList,
@@ -132,7 +139,8 @@ namespace diplom.Controllers
                 PackageNames = packageNames,
                 ProviderNames = providerNames,
                 SelectedProductId = selectedProductId ?? 0,
-                ProductAverageRates = productAverageRates
+                ProductAverageRates = productAverageRates,
+                Rates = db.Rate.ToList()
             };
 
             return View(viewModel);
@@ -871,6 +879,7 @@ namespace diplom.Controllers
                 return Json(new { error = ex.Message });
             }
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

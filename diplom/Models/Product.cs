@@ -27,6 +27,8 @@ namespace diplom.Models
         public int Provider_id { get; set; }
         public bool Ishidden { get; set; }
 
+        public List<_order> _Orders { get; set; }
         public ICollection<Rate> Rates { get; set; }
+        public List<order_detail> order_Details { get; set; }
     }
 }

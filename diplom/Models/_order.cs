@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace diplom.Models
 {
+    [Table ("_order")]
     public class _order
     {
         [Key]
@@ -13,5 +15,9 @@ namespace diplom.Models
         public string order_address { get; set;}
         public string order_commentary { get; set;}
         public int _user_id { get; set;}
+
+        public List<Product> Products { get; set; }
+        public List<order_detail> order_Details { get; set; }
+
     }
 }

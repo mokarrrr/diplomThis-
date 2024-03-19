@@ -735,6 +735,12 @@ function getPrice(card) {
 
             // ... (остальной код скрипта)
 
+
+            
+
+
+
+
             $('#loginButton').click(function () {
                 // Получаем значение поля phoneLogin и удаляем лишние пробелы, символы () и -
                 var phoneLogin = $('#phoneLogin').val().replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');

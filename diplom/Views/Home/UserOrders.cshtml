@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Заказы";
+}
+@model List<_order>
+<div >
+    <ul>
+        @foreach(var order in Model)
+        {
+            <li>
+                <p>@order.Idorder</p>
+                <ul>
+                    @foreach (var product in order.Products)
+                    {
+                        <li>
+                            <p>@product.Name_product</p>
+                        </li>
+
+                    }
+                </ul>
+            </li>
+            
+        }
+    </ul>
+</div>
