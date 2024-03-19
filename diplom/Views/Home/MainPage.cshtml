@@ -158,6 +158,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <p id="errorMessage5" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
                                 @* </form> *@
                                 <center style="margin-top: 14%;caret-color: transparent">
                                     <button id="savebutton" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
@@ -172,23 +173,26 @@
                             <div id="tab-password" class="tab-content" style="display:none;margin-top:85%;">
                                 <!-- Ваше содержимое здесь -->
                                 <div style="display:flex; margin-bottom: 20px;">
-                                    <input class="userinf" id="passwordregistersend" type="password" placeholder="Введиет старый пароль">
-                                    <button id="showPasswordButton2" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                    <input class="userinf" id="passwordregistersend" type="password" placeholder="Введите старый пароль">
+                                    <button id="showPasswordButton4" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
                                         &#128065;
                                     </button>
                                 </div>
+                                <p id="errorMessagepastab1" style="color:red;z-index:1;display:none;position:absolute">Проверьте пароль</p>
                                 <div style="display:flex; margin-bottom: 20px;">
                                     <input class="userinf" id="passwordregisterveryf" type="password" placeholder="Новый пароль">
-                                    <button id="showPasswordButton2" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                    <button id="showPasswordButton5" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
                                         &#128065;
                                     </button>
                                 </div>
                                 <div style="display:flex; margin-bottom: 20px;">
                                     <input class="userinf" id="passwordregisteveryf2r" type="password" placeholder="Повторите новый пароль">
-                                    <button id="showPasswordButton2" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                    <button id="showPasswordButton6" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
                                         &#128065;
                                     </button>
                                 </div>
+                                <p id="errorMessagepastab" style="color:red;z-index:1;display:none">Пароли не совпадают</p>
+                                <p id="errorMessage6" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
                                 <center style="margin-top: 14%;">
                                     <button id="savebuttonpas" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
                                         <center style="">
@@ -1189,15 +1193,38 @@
                     if (xhr.status === 200) {
                         // Пароль успешно изменен
                         console.log("Пароль успешно изменен");
+
+                        // Выполняем выход из системы
+                        $.ajax({
+                            url: '/Home/Logout',
+                            type: 'POST',
+                            success: function (response) {
+                                // Успешное выполнение запроса
+                                console.log(response);
+                                localStorage.setItem('AuthenticationSuccess', '0');
+                                window.location.reload(); // Пример обновления страницы
+                            },
+                            error: function (error) {
+                                // Ошибка выполнения запроса
+                                console.error(error);
+                                showError("Произошла ошибка при выходе из системы");
+                            }
+                        });
                     } else {
                         // Произошла ошибка при изменении пароля
                         console.error("Ошибка при изменении пароля");
+                        showError("Проверьте пароль");
                     }
                 }
             };
 
             var data = JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword });
             xhr.send(data);
+        }
+
+        function showError(errorMessage) {
+            // Показываем сообщение об ошибке на странице
+            $('#errorMessagepastab1').text(errorMessage).show();
         }
 
         // Функция для получения и установки нового пароля
@@ -1209,12 +1236,14 @@
             // Проверяем, что значения не пустые
             if (!(oldPassword && newPassword && newPasswordConfirm)) {
                 console.error("Пожалуйста, заполните все поля пароля");
+                $("#errorMessage6").show();
                 return;
             }
 
             // Проверяем, что значения нового пароля совпадают
             if (newPassword !== newPasswordConfirm) {
                 console.error("Пароли не совпадают");
+                $("#errorMessagepastab").show();
                 return;
             }
 
@@ -1225,6 +1254,35 @@
         // Находим кнопку "Сохранить" и назначаем обработчик события на клик
         var saveButton = document.getElementById("savebuttonpas");
         saveButton.addEventListener("click", getAndSetNewPassword);
+    </script>
+
+    <script>
+        document.getElementById('showPasswordButton4').addEventListener('click', function () {
+            var passwordField = document.getElementById('passwordregistersend');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+        document.getElementById('showPasswordButton5').addEventListener('click', function () {
+            var passwordField = document.getElementById('passwordregisterveryf');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+        document.getElementById('showPasswordButton6').addEventListener('click', function () {
+            var passwordField = document.getElementById('passwordregisteveryf2r');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
     </script>
 
 </body>

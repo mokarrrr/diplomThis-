@@ -971,6 +971,8 @@ $(document).ready(function () {
             });
         });
 
+
+
         $(document).ready(function () {
             // Добавьте обработчик события для кнопки с классом "btn user-button"
             $('.btn.user-button').click(function () {
@@ -980,6 +982,8 @@ $(document).ready(function () {
                 }
             });
         });
+
+
 
 $(document).ready(function () {
     // Функция для форматирования номера телефона
@@ -1083,17 +1087,20 @@ $(document).ready(function () {
     $("#Emailuser").on("input", function () {
         emailChanged = true; // Установка флага изменения email
         toggleSaveButton();
+        checkAllFieldsFilled(); // Проверка заполнения всех полей
     });
 
     // Следим за изменениями в полях ввода имени и фамилии
     $("#Nameuser, #lastNameuser").on("input", function () {
         toggleSaveButton();
+        checkAllFieldsFilled(); // Проверка заполнения всех полей
     });
 
     // Следим за изменением номера телефона
     $("#phoneRegisteruser").on("input", function () {
         phoneChanged = true;
         toggleSaveButton();
+        checkAllFieldsFilled(); // Проверка заполнения всех полей
     });
 
     // Функция для активации или деактивации кнопки сохранения в зависимости от наличия изменений в полях
@@ -1108,6 +1115,21 @@ $(document).ready(function () {
 
         // Активируем или деактивируем кнопку сохранения
         $("#savebutton").prop("disabled", !hasChanges);
+    }
+
+    // Функция для проверки заполнения всех полей и отображения сообщения об ошибке при необходимости
+    function checkAllFieldsFilled() {
+        var email = $("#Emailuser").val();
+        var name = $("#Nameuser").val();
+        var lastName = $("#lastNameuser").val();
+        var phone = $("#phoneRegisteruser").val();
+
+        // Проверка наличия пустых полей
+        if (email.trim() === "" || name.trim() === "" || lastName.trim() === "" || phone.trim() === "") {
+            $("#errorMessage5").show();
+        } else {
+            $("#errorMessage5").hide();
+        }
     }
 
     // Отправка данных на сервер при редактировании пользователя
@@ -1258,7 +1280,8 @@ $(document).ready(function () {
         $("#phoneErrorMessage10").hide();
         $("#phoneErrorMessage20").hide(); // Скрыть сообщение об ошибке
         $("#phoneMailMessage20").hide(); // Скрыть сообщение о некорректном адресе электронной почты
-        $("#phoneMail10").hide(); // Скрыть сообщение о существующем email
+        $("#phoneMail10").hide();
+        $("#errorMessage5").hide();// Скрыть сообщение о существующем email
         $("#Emailuser, #Nameuser, #lastNameuser, #phoneRegisteruser").val(""); // Сброс значений полей ввода
         toggleSaveButton(); // Обновить состояние кнопки сохранения
         phoneChanged = false; // Сбрасываем флаг изменения номера телефона
@@ -1272,7 +1295,8 @@ $(document).ready(function () {
             $("#phoneErrorMessage10").hide();
             $("#phoneErrorMessage20").hide(); // Скрыть сообщение об ошибке
             $("#phoneMailMessage20").hide(); // Скрыть сообщение о некорректном адресе электронной почты
-            $("#phoneMail10").hide(); // Скрыть сообщение о существующем email
+            $("#phoneMail10").hide();
+            $("#errorMessage5").hide();// Скрыть сообщение о существующем email
             $("#Emailuser, #Nameuser, #lastNameuser, #phoneRegisteruser").val(""); // Сброс значений полей ввода
             toggleSaveButton(); // Обновить состояние кнопки сохранения
             phoneChanged = false; // Сбрасываем флаг изменения номера телефона

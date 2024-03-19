@@ -334,9 +334,14 @@ namespace diplom.Controllers
                 {
                     return Json(new { success = false, message = "Номер телефона должен содержать не менее 10 символов" });
                 }
+                if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(lastName) || string.IsNullOrWhiteSpace(phone))
+                {
+                    return Json(new { success = false, message = "Все поля должны быть заполнены" });
+                }
+
 
                 // Проверка существования пользователя по адресу электронной почты, только если email изменился
-                
+
 
                 // Получение идентификатора пользователя из cookie
                 string userIdCookie = Request.Cookies["UserId"];
@@ -506,7 +511,7 @@ namespace diplom.Controllers
             var oldPasswordHash = BitConverter.ToString(sha256.ComputeHash(Encoding.UTF8.GetBytes(changePassRequest.oldPassword))).Replace("-", "").ToLower();
             if (!IsPasswordValid(oldPasswordHash, user.user_password))
             {
-                return BadRequest(); // Неправильный старый пароль
+                return BadRequest(new { error = "Неверный старый пароль" }); // Неправильный старый пароль
             }
 
             // Хешируем новый пароль и обновляем в базе данных
