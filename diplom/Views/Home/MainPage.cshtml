@@ -123,17 +123,23 @@
                             </div>
                             <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-history">
                                 <i class="fas fa-history"></i>
-                                <a href="/Home/UserOrders">История покупок</a>
+                                <a href="/Home/UserOrders" style="color:black">История покупок</a>
+                            </div>
+                            <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-history">
+                                <center>
+                                <button id="logoutButton"> Выход</button>
+                                </center>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <button id="logoutButton" class="fas fa-sign-out-alt"></button>                     
+                                            
                         <div style="width:100%;gap:50px;display:inline-grid;margin-top:40px">
 
                             <!-- Содержимое вкладки "Личная информация" -->
                             <div id="tab-information" class="tab-content">
                                 @* <form id="userForm"> *@
+                                
                                 <center style="padding:1%;margin-top:9%;margin-bottom: 15%;margin-left: 7%;">
                                     <div class="userimg" style="height: 150px; width: 150px;">
 
@@ -172,13 +178,14 @@
                             <!-- Содержимое вкладки "Безопасность" -->
                             <div id="tab-password" class="tab-content" style="display:none;margin-top:85%;">
                                 <!-- Ваше содержимое здесь -->
+                                
                                 <div style="display:flex; margin-bottom: 20px;">
                                     <input class="userinf" id="passwordregistersend" type="password" placeholder="Введите старый пароль">
                                     <button id="showPasswordButton4" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
                                         &#128065;
                                     </button>
                                 </div>
-                                <p id="errorMessagepastab1" style="color:red;z-index:1;display:none;position:absolute">Проверьте пароль</p>
+                                <p id="errorMessagepastab1" style="color:red;z-index:1;display:none;position:absolute;margin-top: -1%;margin-left: 1.2%;">Проверьте пароль</p>
                                 <div style="display:flex; margin-bottom: 20px;">
                                     <input class="userinf" id="passwordregisterveryf" type="password" placeholder="Новый пароль">
                                     <button id="showPasswordButton5" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
@@ -191,8 +198,8 @@
                                         &#128065;
                                     </button>
                                 </div>
-                                <p id="errorMessagepastab" style="color:red;z-index:1;display:none">Пароли не совпадают</p>
-                                <p id="errorMessage6" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
+                                <p id="errorMessagepastab" style="color:red;z-index:1;display:none;margin-left: 10.2%">Пароли не совпадают</p>
+                                <p id="errorMessage6" style="color:red;z-index:1;display:none;margin-left: 10.2%;">⚠️ Не все поля заполнены</p>
                                 <center style="margin-top: 14%;">
                                     <button id="savebuttonpas" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
                                         <center style="">
@@ -204,9 +211,7 @@
                             </div>
                             
                             <!-- Содержимое вкладки "История покупок" -->
-                            <div id="tab-history" class="tab-content" style="display:none;">
-                                <!-- Ваше содержимое здесь -->
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -271,7 +276,7 @@
             </div>
         </header>
         <div  >
-            <img class="img1" src="/img/istockphoto-1471815457-1024x1024(2)(1).png" style="height: 1100px;width: 132%;margin-left: -270px;margin-top: -260px;z-index:-2;"/>
+            <img class="img1" src="/img/istockphoto-1471815457-1024x1024(2)(1).png" style="height: 1100px;width: 132%;margin-left: -290px;margin-top: -260px;z-index:-2;" />
         </div> 
         <div class="main_body">
             <form method="get">
@@ -443,9 +448,9 @@
                                 
                                 </div>
                                 </div>
-                                    <div class="tab-content pagination" style="display:flex!important;gap:70px;padding-left:40px;" id="tab-reviews-content">
+                                    <div class="tab-content pagination" style="display:flex!important;gap:70px;overflow-y: auto;" id="tab-reviews-content">
                                         <!-- Ваши отзывы и элементы для пагинации здесь -->
-                                        <div id="ratingcont" style="display:flex;gap:40px">
+                                        <div id="ratingcont" style="display:flex;gap:40px;width:100%">
                                         <div class="ratesss">
                                             <center>
                                                 <p id="productrate2" style=" align-self: center;font-size: 25px;margin-top: 30px;"></p>
@@ -512,18 +517,15 @@
                                             </div>
                                            
                                         </div>
-                                        </div>
-                                        <div id="rewey" style=" margin-top: 250px;margin-left: -1100px;">
+                                            <div id="rewey" style=" margin-top: 250px;margin-left: -1100px;width:97%;">
+                                               
+                                            </div>
                                             
-                                            @foreach (var comments in Model.Rates@* сюда условие добавить точка вере x равно больше x точка комментс продукт айди равно продукт айди который ты передал*@)
-                                            {
-                                                
-                                                <div style="border: 3px solid black;">
-                                                    <p>@comments.Rate_comment</p>
-                                                </div>
-                                            }
                                         </div>
+                                       
+                                        
                                     </div>
+                                   
                                 </div>
                             </form> 
                         </div>
@@ -740,7 +742,7 @@
         $(document).ready(function () {
             $('.fav-button').click(function () {
                 // Получаем айди продукта из атрибута data-idd кнопки
-                var productId = $(this).data('idd');
+                var productId = $(this).data('idproduct');
                 var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
 
                 if (authenticationSuccess === null || authenticationSuccess === "0") {
@@ -789,7 +791,7 @@
         $(document).ready(function () {
             $('.fav-button1').click(function () {
                 // Получаем айди продукта из атрибута data-idd кнопки
-                var productId = $(this).data('idd');
+                var productId = $(this).data('idproduct');
                 var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
 
                 if (authenticationSuccess === null || authenticationSuccess === "0") {
@@ -934,8 +936,9 @@
             // Обработчик события клика для кнопки info-button1
             $('.info-button1').click(function () {
                 // Получаем айди продукта из атрибута data-idd кнопки
-                productId = $(this).data('idd');
+                productId = $(this).data('idproduct');
             });
+
 
             // Обработчик события клика для кнопки fav-button2
             $('#cardfav').click(function (event) {
@@ -1019,7 +1022,7 @@
             // Обработчик события клика для кнопки info-button1
             $('.info-button1').click(function () {
                 // Получаем айди продукта из атрибута data-idd кнопки
-                productId = $(this).data('idd');
+                productId = $(this).data('idproduct');
             });
 
             // Обработчик события клика для кнопки senddd
@@ -1124,7 +1127,7 @@
         $(document).ready(function () {
             $('.fav-button1').each(function () {
                 var button = $(this);
-                var productId = button.data('idd');
+                var productId = button.data('idproduct');
                 checkUserLike(productId, button);
             });
         });
@@ -1132,8 +1135,9 @@
 
     <script>
         $(document).ready(function () {
+            // Отслеживаем клик по кнопке "info-button1"
             $('.info-button1').on('click', function () {
-                var productId = $(this).data('idd'); // Получаем айди товара из кнопки
+                var productId = $(this).data('idproduct'); // Получаем айди товара из кнопки
 
                 // Отправляем запрос на сервер для проверки наличия товара в избранном
                 $.ajax({
@@ -1158,12 +1162,20 @@
                     }
                 });
             });
+
+            // После закрытия модального окна
+            $('#exampleModal').on('hidden.bs.modal', function (e) {
+                // Сбрасываем стили для modalButton
+                var modalButton = $('#exampleModal').find('.fav-button2');
+                modalButton.css('background-color', '');
+                modalButton.css('color', ''); // сброс цвета
+            });
         });
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const tabs = document.querySelectorAll('#myTabsuser [data-tab]');
-            const tabContents = document.querySelectorAll('#tab-information, #tab-password, #tab-history');
+            const tabContents = document.querySelectorAll('#tab-information, #tab-password');
 
             tabs.forEach(function (tab, index) {
                 tab.addEventListener('click', function () {

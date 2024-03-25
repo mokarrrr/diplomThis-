@@ -50,10 +50,24 @@ namespace diplom.Controllers
         public IActionResult UserOrders()
         {
             long userIdCookie = Int64.Parse(Request.Cookies["UserId"]);
-            var _Orders = db._orders.Where(o => o._user_id == userIdCookie).Include(o => o.Products).ToList();
+            var _Orders = db._orders.Where(o => o._user_id == userIdCookie).Include(o => o.Products).Include(o=>o.Status).ToList();
             return View(_Orders);
         }
 
+        //[HttpGet]
+        //public IActionResult GetStatusName(int statusId)
+        //{
+        //    var status = db._statuses.FirstOrDefault(s => s.Id == statusId);
+
+        //    if (status != null)
+        //    {
+        //        return Ok(status.status_name);
+        //    }
+        //    else
+        //    {
+        //        return NotFound("Статус не найден");
+        //    }
+        //}
         public IActionResult User_like()
         {
             string userIdCookie = Request.Cookies["UserId"];
@@ -140,7 +154,7 @@ namespace diplom.Controllers
                 ProviderNames = providerNames,
                 SelectedProductId = selectedProductId ?? 0,
                 ProductAverageRates = productAverageRates,
-                Rates = db.Rate.ToList()
+                
             };
 
             return View(viewModel);
@@ -239,6 +253,13 @@ namespace diplom.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetProduct(int Id)
+        {
+            
+            return StatusCode(200,db.Product.Where(p=>p.IdProduct == Id).Include(p => p.Rates).ThenInclude(r=>r.User).FirstOrDefault());
+        }
+
+        [HttpGet]
         public ActionResult GetPackageName(int packageId)
         {
             var packageName = db.Package
@@ -281,7 +302,37 @@ namespace diplom.Controllers
                 return Json(new { success = false, message = "Неверный номер телефона или пароль." });
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> SaveComment(int productId, string comment, int rating)
+        {
+            // Получаем ID пользователя из куки
+            string userIdCookie = Request.Cookies["UserId"];
 
+            // Проверяем, что ID пользователя из куки представляет собой целое число
+            if (!int.TryParse(userIdCookie, out int userId))
+            {
+                // Если не удалось преобразовать ID пользователя, вернем ошибку
+                return BadRequest("Неверный формат ID пользователя.");
+            }
+
+            // Создаем новый комментарий
+            var newComment = new Rate
+            {
+                _Rate = rating, // Используем переданный рейтинг
+                Rate_comment = comment,
+                client_id = userId, // Используем ID пользователя из куки
+                Productid = productId
+            };
+
+            // Добавляем комментарий в контекст базы данных
+            db.Rate.Add(newComment);
+
+            // Сохраняем изменения в базе данных
+            await db.SaveChangesAsync();
+
+            // Возвращаем успешный результат
+            return Ok("Комментарий успешно сохранен!");
+        }
         public ActionResult UserProfile()
         {
             // Получение значения из куки

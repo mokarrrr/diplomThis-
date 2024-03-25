@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 namespace diplom.Models
 {
     public class User
@@ -9,7 +11,8 @@ namespace diplom.Models
         public string Email { get; set; }
         public string User_name { get; set; }
 
-        public string Surname { get; set; }        
+        public string Surname { get; set; }
+        [JsonIgnore]
         public string user_password { get; set; }
 
     }

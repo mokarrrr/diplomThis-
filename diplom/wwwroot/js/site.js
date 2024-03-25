@@ -173,62 +173,122 @@ window.addEventListener('click', function (event) {
     
 $(document).ready(function () {
     $('.info-button1').on('click', function () {
-        var productName = $(this).data('nametitle');
-        var description = $(this).data('description');
-        var productImageBase64 = $(this).data('img');
-        var productPrice = $(this).data('price');
-        var productWeight = $(this).data('weight');
-        var productMassPerFat = $(this).data('mass_per_fat');
-        var productFat = $(this).data('fat');
-        var productProtein = $(this).data('protein');
-        var productFatty = $(this).data('fatty');
-        var productCarb = $(this).data('carb');
-        var productEnergyValue = $(this).data('energy_value');
-        var productStorageLife = $(this).data('storage_life');
-        var productPackageId = $(this).data('package_id');
-        var productStorageConditions = $(this).data('storage_conditions');
-        var productSale = $(this).data('sale');
-        var productRemain = $(this).data('remain');
-        var productArticle = $(this).data('article');
-        var productSostav = $(this).data('sostav');
+        //var productName = $(this).data('nametitle');
+        //var description = $(this).data('description');
+        //var productImageBase64 = $(this).data('img');
+        //var productPrice = $(this).data('price');
+        //var productWeight = $(this).data('weight');
+        //var productMassPerFat = $(this).data('mass_per_fat');
+        //var productFat = $(this).data('fat');
+        //var productProtein = $(this).data('protein');
+        //var productFatty = $(this).data('fatty');
+        //var productCarb = $(this).data('carb');
+        //var productEnergyValue = $(this).data('energy_value');
+        //var productStorageLife = $(this).data('storage_life');
+        //var productPackageId = $(this).data('package_id');
+        //var productStorageConditions = $(this).data('storage_conditions');
+        //var productSale = $(this).data('sale');
+        //var productRemain = $(this).data('remain');
+        //var productArticle = $(this).data('article');
+        //var productSostav = $(this).data('sostav');
+        var productId = $(this).data('idproduct');
 
-        // Проверяем наличие скидки
-        if (productSale) {
-            // Рассчитываем цену с учетом скидки и округляем до целого числа
-            var discountedPrice = Math.round((1 - productSale / 100) * productPrice);
 
-            // Обновляем значения в таблице
-            $('#productPrice').html('<del>' + productPrice + ' руб.</del> ' + discountedPrice + ' руб. за');
+        $.ajax({
+            type: "GET",
+            url: "/Home/GetProduct", // Замените на ваш реальный URL
+            data: { Id: productId },
+            success: function (Product) {
+                if (Product["productSale"]) {
+                    // Рассчитываем цену с учетом скидки и округляем до целого числа
+                    var discountedPrice = Math.round((1 - Product["productSale"] / 100) * Product["productPrice"]);
 
-            // Обновляем значение скидки в div и отображаем его, если скидка больше 0
-            $('.sale1').text('-'+productSale + '%');
-            $('.sale1').toggle(productSale > 0);
-        } else {
-            // Если скидки нет, просто обновляем цену и скрываем div
-            $('#productPrice').text(productPrice + ' руб. за');
-            $('.sale1').hide();
-        }
+                    // Обновляем значения в таблице
+                    $('#productPrice').html('<del>' + Product["productPrice"] + ' руб.</del> ' + discountedPrice + ' руб. за');
 
-        $('#productNameLabel').text(productName);
-        $('#description').text(description);
-        $('#productImage').attr('src', '' + productImageBase64);
-        $('#productWeight').text(productWeight + ' гр.');
-        $('#productMassPerFat').text('Массовая доля жира:' + productMassPerFat + '%');
-        $('#productfat').text('Жирность:' + productFat + '%');
-        $('#productProtein').text('Белки:' + productProtein + 'г.');
-        $('#productFatty').text('Жиры:' + productFatty + 'г.');
-        $('#productCarb').text('Углеводы:' + productCarb + 'г.');
-        $('#productEnergyValue').text('Энергетическая ценность:' + productEnergyValue + 'ккал');
-        $('#productStorageLife').text('Срок хранения:' + productStorageLife + ' дней с момента фасовки');
-        $('#productPackageId').text(productPackageId);
-        $('#productStorageConditions').text('Условия хранения:' + productStorageConditions);
-        $('#productSale').text(productSale);
-        $('#productRemain').text(productRemain);
-        $('#productArticle').text('Артикул:' + productArticle);
-        $('#productSostav').text('Состав:' + productSostav);
+                    // Обновляем значение скидки в div и отображаем его, если скидка больше 0
+                    $('.sale1').text('-' + Product["productSale"] + '%');
+                    $('.sale1').toggle(Product["productSale"] > 0);
+                } else {
+                    // Если скидки нет, просто обновляем цену и скрываем div
+                    $('#productPrice').text(Product["productPrice"] + ' руб. за');
+                    $('.sale1').hide();
+                }
+
+                $('#productNameLabel').text(Product["name_product"]);
+                $('#description').text(Product["product_description_"]);
+                $('#productImage').attr('src', '' + Product["product_img"]);
+                $('#productWeight').text(Product["product_weight"] + ' гр.');
+                $('#productMassPerFat').text('Массовая доля жира:' + Product["product_mass_per_fat"] + '%');
+                $('#productfat').text('Жирность:' + Product["product_fat"] + '%');
+                $('#productProtein').text('Белки:' + Product["product_protein"] + 'г.');
+                $('#productFatty').text('Жиры:' + Product["product_fatty"] + 'г.');
+                $('#productCarb').text('Углеводы:' + Product["product_carb"] + 'г.');
+                $('#productEnergyValue').text('Энергетическая ценность:' + Product["product_energy_value"] + 'ккал');
+                $('#productStorageLife').text('Срок хранения:' + Product["product_storage_life"] + ' дней с момента фасовки');
+                $('#productPackageId').text(Product["product_package_id"]);
+                $('#productStorageConditions').text('Условия хранения:' + Product["product_storage_conditions"]);
+                $('#productSale').text(Product["product_sale"]);
+                $('#productRemain').text(Product["product_remain"]);
+                $('#productArticle').text('Артикул:' + Product["product_article"]);
+                $('#productSostav').text('Состав:' + Product["product_sostav"]);
+                $('#prodid').text(Product["idProduct"]);
+                Product["rates"].forEach(function (comment) {
+                    var initials = comment["user"]["user_name"].charAt(0) + comment["user"]["surname"].charAt(0);
+                    var starsHTML = '';
+                    // Определяем количество звезд в зависимости от оценки
+                    var rating = parseInt(comment["_Rate"]);
+                    for (var i = 0; i < rating; i++) {
+                        starsHTML += '★'; // Звезда
+                    }
+                    for (var j = rating; j < 5; j++) {  
+                        starsHTML += '<span style=" font-size: 30px;">☆</span>'; 
+                    }
+
+                    var commentHTML = '<div style="width:97%;border: 3px solid black;margin-bottom:10px; border-radius: 10px;max-height:105px;margin-left:30px">';
+                    commentHTML += '<div style="display: flex; align-items: flex-start; padding: 20px;">'; // Изменено здесь
+                    commentHTML += '<div class="user-initials" style="width: 50px; height: 50px; background-color: gray; border-radius: 50%; text-align: center; line-height: 31px; color: white; font-weight: bold; margin-right: 10px;padding:10px;line-width:20px">' + initials + '</div>';
+                    commentHTML += '<div style="flex-grow: 1;">';
+                    commentHTML += '<p style="margin-top: -0.2%; margin-bottom: 0;font-size:20px">' + comment["user"]["user_name"] + " " + comment["user"]["surname"] + '</p>';
+
+                    commentHTML += '<div style="display: flex; flex-direction: row;">'; // Обертка для комментария и звезд
+                    if (comment["rate_comment"] !== null) {
+                        commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:850px">' + comment["rate_comment"] + '</p>';
+                    }
+                    commentHTML += '<p style="margin-top: -16px; margin-bottom: 0; font-size: 30px; margin-left: auto;color:#FFD700">' + starsHTML + '</p>';
+                    commentHTML += '</div>';
+
+                    commentHTML += '</div>';
+                    commentHTML += '</div>';                    
+                    commentHTML += '</div>';
+                    commentHTML += '</div>';
+
+                    $('#rewey').append(commentHTML);
+                });
+
+                $('#exampleModal').on('hidden.bs.modal', function (e) {
+                    $('#rewey').empty(); // Очистка содержимого элемента #rewey
+                });
+                console.log(Product);
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+
+
     });
 });
 
+
+$(document).ready(function () {
+    // Получаем значение айди продукта из элемента <p id="prodid"></p>
+    var productId = $('#prodid').text();
+
+    // Передаем значение айди продукта в представление через модель
+    // Я предполагаю, что у вас есть модель с именем Model, которая имеет свойство SelectedProductId
+    Model.SelectedProductId = productId;
+});
         function getPackageNameById(packageId) {
             return new Promise(function (resolve, reject) {
                 $.ajax({
@@ -306,7 +366,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $(".info-button1").on("click", function () {
-        var productId = $(this).data("idd");
+        var productId = $(this).data('idproduct');
         var $productRate = $("#productrate");
         var $productRate2 = $("#productrate2");
         var $ratingStars = $("#rating-stars");
@@ -405,26 +465,26 @@ $(document).ready(function () {
         }
 
         // Получите цену товара
-        var priceElement = $(this).closest('.card-content').find('.price');
-        var saleElement = $(this).closest('.card-content').find('.sale');
+        //var priceElement = $(this).closest('.card-content').find('.price');
+        //var saleElement = $(this).closest('.card-content').find('.sale');
 
-        // Получите цену без скидки
-        var originalPrice = parseInt(priceElement.text().replace(/[^\d.]/g, ''));
+        //// Получите цену без скидки
+        //var originalPrice = parseInt(priceElement.text().replace(/[^\d.]/g, ''));
 
-        // Получите сумму с учетом скидки
-        var priceWithSale = saleElement.length > 0 ? originalPrice - Math.floor(originalPrice * parseFloat(saleElement.text().replace(/[^\d.]/g, '')) / 100) : originalPrice;
+        //// Получите сумму с учетом скидки
+        //var priceWithSale = saleElement.length > 0 ? originalPrice - Math.floor(originalPrice * parseFloat(saleElement.text().replace(/[^\d.]/g, '')) / 100) : originalPrice;
 
-        // Получите текущую сумму в корзине
-        var currentTotal = parseInt($('#cartButton').attr('data-total')) || 0;
+        //// Получите текущую сумму в корзине
+        //var currentTotal = parseInt($('#cartButton').attr('data-total')) || 0;
 
-        // Прибавьте цену товара с учетом скидки к текущей сумме
-        var newTotal = currentTotal + priceWithSale;
+        //// Прибавьте цену товара с учетом скидки к текущей сумме
+        //var newTotal = currentTotal + priceWithSale;
 
-        // Обновите атрибут data-total у кнопки корзины
-        $('#cartButton').attr('data-total', newTotal);
+        //// Обновите атрибут data-total у кнопки корзины
+        //$('#cartButton').attr('data-total', newTotal);
 
-        // Обновите текст суммы в корзине с символом корзины
-        $('#cartButton').html('<i class="fas fa-shopping-basket"></i> ' + newTotal + ' руб.');
+        //// Обновите текст суммы в корзине с символом корзины
+        //$('#cartButton').html('<i class="fas fa-shopping-basket"></i> ' + newTotal + ' руб.');
     });
 });
  
@@ -613,7 +673,7 @@ function getPrice(card) {
         // Добавляем обработчик события клика к кнопке
         $('.info-button1').on('click', function () {
             // Получаем ID продукта из атрибута data-idd
-            var productId = $(this).data('idd');
+            var productId = $(this).data('idproduct');
 
             // Выполняем AJAX-запрос для получения количества оценок
             $.ajax({
@@ -646,7 +706,7 @@ function getPrice(card) {
         // Добавляем обработчик события клика к кнопке
         $('.info-button1').on('click', function () {
             // Получаем ID продукта из атрибута data-idd
-            var productId = $(this).data('idd');
+            var productId = $(this).data('idproduct');
 
             // Выполняем AJAX-запрос для получения количества оценок
             $.ajax({
@@ -985,6 +1045,7 @@ $(document).ready(function () {
                 // Проверяем значение в Local Storage перед открытием модального окна
                 if (localStorage.getItem("AuthenticationSuccess") === "0") {
                     $('#modal').show();
+                    
                 }
             });
         });

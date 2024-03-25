@@ -51,8 +51,10 @@
                 </ul>
                 
                 <button class="info-button1" data-toggle="modal" data-target="#exampleModal" title="Подробнее"
-                        data-nametitle="@item.Name_product"
-                        data-idd="@item.IdProduct"
+                       @*  data-nametitle="@item.Name_product" *@
+                        data-idproduct="@item.IdProduct"
+@*                         data-idproduct="@item.IdProduct"
+                        data-idproduct="@item.IdProduct"
                         data-description="@item.product_description_"
                         data-price="@item.product_price"
                         data-weight="@item.product_weight"
@@ -62,20 +64,20 @@
                         data-fatty="@item.product_fatty"
                         data-carb="@item.product_carb"
                         data-energy_value="@item.product_energy_value"
-                        data-storage_life="@item.product_storage_life"
+                        data-storage_life="@item.product_storage_life" *@
                         data-package_id="@item.product_package_id"
                         data-storage_conditions="@item.product_storage_conditions"
                         data-sale="@item.product_sale"
-                        data-remain="@item.product_remain"
+@*                         data-remain="@item.product_remain"
                         data-article="@item.product_article"
                         data-sostav="@item.product_sostav"
-                        data-img="@item.product_img"
+                        data-img="@item.product_img" *@
                         data-provider_id="@item.Provider_id"
-                        data-package_name="">
+                        data-package_name="" >
                         
                     <i class="fa fa-question"></i>
                 </button>
-                <button class="fav-button1" title="В избранное" data-idd="@item.IdProduct">
+                <button class="fav-button1" title="В избранное" data-idproduct="@item.IdProduct">
                     <i class="fa fa-heart"></i>
                 </button>
             </div>

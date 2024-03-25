@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 namespace diplom.Models
 {
     
@@ -23,12 +25,16 @@ namespace diplom.Models
         public int? product_remain { get; set; }
         public string product_article { get; set; }
         public string product_sostav { get; set; }
+        
         public string product_img { get; set; }
         public int Provider_id { get; set; }
         public bool Ishidden { get; set; }
 
+        [JsonIgnore]
         public List<_order> _Orders { get; set; }
         public ICollection<Rate> Rates { get; set; }
+        [JsonIgnore]
         public List<order_detail> order_Details { get; set; }
+        
     }
 }
