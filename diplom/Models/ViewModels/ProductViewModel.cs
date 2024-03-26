@@ -20,5 +20,7 @@ namespace diplom.Models.ViewModels
 
         public List<_order> _Orders { get; set; }
 
+        public List<UserBasket> Users_Baskets { get; set; }
+
     }
 }

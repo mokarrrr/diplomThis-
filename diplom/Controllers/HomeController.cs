@@ -315,23 +315,66 @@ namespace diplom.Controllers
                 return BadRequest("Неверный формат ID пользователя.");
             }
 
-            // Создаем новый комментарий
-            var newComment = new Rate
-            {
-                _Rate = rating, // Используем переданный рейтинг
-                Rate_comment = comment,
-                client_id = userId, // Используем ID пользователя из куки
-                Productid = productId
-            };
+            // Проверяем, существует ли уже комментарий от данного пользователя для данного товара
+            var existingComment = db.Rate.FirstOrDefault(c => c.Productid == productId && c.client_id == userId);
 
-            // Добавляем комментарий в контекст базы данных
-            db.Rate.Add(newComment);
+            if (existingComment != null)
+            {
+                // Если комментарий существует, обновляем его
+                existingComment._Rate = rating;
+                existingComment.Rate_comment = comment;
+            }
+            else
+            {
+                // Создаем новый комментарий
+                var newComment = new Rate
+                {
+                    _Rate = rating, // Используем переданный рейтинг
+                    Rate_comment = comment,
+                    client_id = userId, // Используем ID пользователя из куки
+                    Productid = productId
+                };
+
+                // Добавляем комментарий в контекст базы данных
+                db.Rate.Add(newComment);
+            }
 
             // Сохраняем изменения в базе данных
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
-            // Возвращаем успешный результат
-            return Ok("Комментарий успешно сохранен!");
+            // Формируем JSON объект с сообщением об успехе
+            var response = new { message = "Комментарий успешно сохранен!" };
+
+            // Возвращаем успешный результат с JSON объектом
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public IActionResult CheckComment(int productId)
+        {
+            // Получаем ID пользователя из куки
+            string userIdCookie = Request.Cookies["UserId"];
+
+            // Проверяем, что ID пользователя из куки представляет собой целое число
+            if (!int.TryParse(userIdCookie, out int userId))
+            {
+                // Если не удалось преобразовать ID пользователя, возвращаем ошибку
+                return BadRequest("Неверный формат ID пользователя.");
+            }
+
+            // Ищем комментарий для данного пользователя и товара
+            var comment = db.Rate.FirstOrDefault(c => c.Productid == productId && c.client_id == userId);
+
+            if (comment != null)
+            {
+                // Если комментарий найден, возвращаем его
+                return Json(new { success = true, comment = comment.Rate_comment });
+            }
+            else
+            {
+                // Если комментарий не найден, возвращаем сообщение об отсутствии комментария
+                return Json(new { success = false });
+            }
         }
         public ActionResult UserProfile()
         {
@@ -364,6 +407,7 @@ namespace diplom.Controllers
         }
 
         [HttpPost]
+
         public JsonResult SaveUser(string email, string name, string lastName, string phone, string originalPhone, string originalEmail)
         {
             try

@@ -216,6 +216,7 @@ $(document).ready(function () {
                 }
 
                 $('#productNameLabel').text(Product["name_product"]);
+                $('#productPrice').text(Product["product_price"] + " рублей за");
                 $('#description').text(Product["product_description_"]);
                 $('#productImage').attr('src', '' + Product["product_img"]);
                 $('#productWeight').text(Product["product_weight"] + ' гр.');
@@ -541,6 +542,7 @@ $(document).ready(function () {
             container.appendChild(card);
         });
     });
+
 
 function getPrice(card) {
     var saleElement = card.querySelector('.sale');

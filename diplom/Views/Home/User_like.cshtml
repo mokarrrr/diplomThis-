@@ -169,9 +169,9 @@
                             </li>
                         </ul>
                         <button class="info-button1" data-toggle="modal" data-target="#exampleModal" title="Подробнее"
-                                data-nametitle="@userLike.Product.Name_product"
-                                data-idd="@userLike.Product.IdProduct"
-                                data-description="@userLike.Product.product_description_"
+                                
+                                    data-idproduct="@userLike.Product.IdProduct"
+                                
                                 data-price="@userLike.Product.product_price"
                                 data-weight="@userLike.Product.product_weight"
                                 data-mass_per_fat="@userLike.Product.product_mass_per_fat"
@@ -192,7 +192,7 @@
                                 data-package_name="">
                             <i class="fa fa-question"></i>
                         </button>
-                            <button class="fav-button1" id ="mybut" title="Удалить из избранного" data-idd="@userLike.Product.IdProduct">
+                            <button class="fav-button1" id="mybut" title="Удалить из избранного" data-idproduct="@userLike.Product.IdProduct">
                             <i class="fas fa-heart-broken"></i>
                         </button>
                     </div>
@@ -258,9 +258,9 @@
                                         <img class="basket" src="/img/basket.png" alt="Корзина">
                                         <i class="fa fa-send fa-2x"></i>
                                     </button>
-                                        <button class="fav-button2" id="cardfav" style="border: 2px solid black;grid-row:1;grid-column:2;margin-left:20px;width: 60px;height: 60px;">
-                                            <i class="fas fa-heart"></i>
-                                        </button>
+                                    <button class="fav-button2" id="cardfav" style="border: 2px solid black;grid-row:1;grid-column:2;margin-left:20px;width: 60px;height: 60px;">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -293,9 +293,9 @@
 
                                 </div>
                             </div>
-                            <div class="tab-content pagination" style="display:flex!important;gap:70px;padding-left:40px;" id="tab-reviews-content">
+                            <div class="tab-content pagination" style="display:flex!important;gap:70px;overflow-y: auto;" id="tab-reviews-content">
                                 <!-- Ваши отзывы и элементы для пагинации здесь -->
-                                <div id="ratingcont" style="display:flex;gap:40px">
+                                <div id="ratingcont" style="display:flex;gap:40px;width:100%">
                                     <div class="ratesss">
                                         <center>
                                             <p id="productrate2" style=" align-self: center;font-size: 25px;margin-top: 30px;"></p>
@@ -362,22 +362,22 @@
                                         </div>
 
                                     </div>
-                                </div>
-                                <div id="rewey" style=" margin-top: 250px;margin-left: -1100px;">
-                                    <div style="border: 3px solid black;">
-                                        <p>dfgdfgdfgdfgdf</p>
+                                    <div id="rewey" style=" margin-top: 250px;margin-left: -1100px;width:97%;">
                                     </div>
+
                                 </div>
+
+
                             </div>
 
                         </div>
                     </form>
-
-
                 </div>
             </div>
         </div>
     </div>
+
+
     <div class="container4">
         <footer class="footer">
             <div class="footer-left col-md-4 col-sm-6">
@@ -421,60 +421,157 @@
     <script>
         $(document).ready(function () {
             $('.info-button1').on('click', function () {
-                var productName = $(this).data('nametitle');
-                var description = $(this).data('description');
-                var productImageBase64 = $(this).data('img');
-                var productPrice = $(this).data('price');
-                var productWeight = $(this).data('weight');
-                var productMassPerFat = $(this).data('mass_per_fat');
-                var productFat = $(this).data('fat');
-                var productProtein = $(this).data('protein');
-                var productFatty = $(this).data('fatty');
-                var productCarb = $(this).data('carb');
-                var productEnergyValue = $(this).data('energy_value');
-                var productStorageLife = $(this).data('storage_life');
-                var productPackageId = $(this).data('package_id');
-                var productStorageConditions = $(this).data('storage_conditions');
-                var productSale = $(this).data('sale');
-                var productRemain = $(this).data('remain');
-                var productArticle = $(this).data('article');
-                var productSostav = $(this).data('sostav');
+                var productId = $(this).data('idproduct');
 
-                // Проверяем наличие скидки
-                if (productSale) {
-                    // Рассчитываем цену с учетом скидки и округляем до целого числа
-                    var discountedPrice = Math.round((1 - productSale / 100) * productPrice);
 
-                    // Обновляем значения в таблице
-                    $('#productPrice').html('<del>' + productPrice + ' руб.</del> ' + discountedPrice + ' руб. за');
+                $.ajax({
+                    type: "GET",
+                    url: "/Home/GetProduct", // Замените на ваш реальный URL
+                    data: { Id: productId },
+                    success: function (Product) {
+                        if (Product["productSale"]) {
+                            // Рассчитываем цену с учетом скидки и округляем до целого числа
+                            var discountedPrice = Math.round((1 - Product["productSale"] / 100) * Product["productPrice"]);
 
-                    // Обновляем значение скидки в div и отображаем его, если скидка больше 0
-                    $('.sale1').text('-' + productSale + '%');
-                    $('.sale1').toggle(productSale > 0);
-                } else {
-                    // Если скидки нет, просто обновляем цену и скрываем div
-                    $('#productPrice').text(productPrice + ' руб. за');
-                    $('.sale1').hide();
-                }
+                            // Обновляем значения в таблице
+                            $('#productPrice').html('<del>' + Product["productPrice"] + ' руб.</del> ' + discountedPrice + ' руб. за');
 
-                $('#productNameLabel').text(productName);
-                $('#description').text(description);
-                $('#productImage').attr('src', '' + productImageBase64);
-                $('#productWeight').text(productWeight + ' гр.');
-                $('#productMassPerFat').text('Массовая доля жира:' + productMassPerFat + '%');
-                $('#productfat').text('Жирность:' + productFat + '%');
-                $('#productProtein').text('Белки:' + productProtein + 'г.');
-                $('#productFatty').text('Жиры:' + productFatty + 'г.');
-                $('#productCarb').text('Углеводы:' + productCarb + 'г.');
-                $('#productEnergyValue').text('Энергетическая ценность:' + productEnergyValue + 'ккал');
-                $('#productStorageLife').text('Срок хранения:' + productStorageLife + ' дней с момента фасовки');
-                $('#productPackageId').text(productPackageId);
-                $('#productStorageConditions').text('Условия хранения:' + productStorageConditions);
-                $('#productSale').text(productSale);
-                $('#productRemain').text(productRemain);
-                $('#productArticle').text('Артикул:' + productArticle);
-                $('#productSostav').text('Состав:' + productSostav);
+                            // Обновляем значение скидки в div и отображаем его, если скидка больше 0
+                            $('.sale1').text('-' + Product["productSale"] + '%');
+                            $('.sale1').toggle(Product["productSale"] > 0);
+                        } else {
+                            // Если скидки нет, просто обновляем цену и скрываем div
+                            $('#productPrice').text(Product["productPrice"] + ' руб. за');
+                            $('.sale1').hide();
+                        }
+
+                        $('#productNameLabel').text(Product["name_product"]);
+                        $('#description').text(Product["product_description_"]);
+                        $('#productPrice').text(Product["product_price"] + " рублей за");
+                        $('#productImage').attr('src', '' + Product["product_img"]);
+                        $('#productWeight').text(Product["product_weight"] + ' гр.');
+                        $('#productMassPerFat').text('Массовая доля жира:' + Product["product_mass_per_fat"] + '%');
+                        $('#productfat').text('Жирность:' + Product["product_fat"] + '%');
+                        $('#productProtein').text('Белки:' + Product["product_protein"] + 'г.');
+                        $('#productFatty').text('Жиры:' + Product["product_fatty"] + 'г.');
+                        $('#productCarb').text('Углеводы:' + Product["product_carb"] + 'г.');
+                        $('#productEnergyValue').text('Энергетическая ценность:' + Product["product_energy_value"] + 'ккал');
+                        $('#productStorageLife').text('Срок хранения:' + Product["product_storage_life"] + ' дней с момента фасовки');
+                        $('#productPackageId').text(Product["product_package_id"]);
+                        $('#productStorageConditions').text('Условия хранения:' + Product["product_storage_conditions"]);
+                        $('#productSale').text(Product["product_sale"]);
+                        $('#productRemain').text(Product["product_remain"]);
+                        $('#productArticle').text('Артикул:' + Product["product_article"]);
+                        $('#productSostav').text('Состав:' + Product["product_sostav"]);
+                        $('#prodid').text(Product["idProduct"]);
+                        Product["rates"].forEach(function (comment) {
+                            var initials = comment["user"]["user_name"].charAt(0) + comment["user"]["surname"].charAt(0);
+                            var starsHTML = '';
+                            // Определяем количество звезд в зависимости от оценки
+                            var rating = parseInt(comment["_Rate"]);
+                            for (var i = 0; i < rating; i++) {
+                                starsHTML += '★'; // Звезда
+                            }
+                            for (var j = rating; j < 5; j++) {
+                                starsHTML += '<span style=" font-size: 30px;">☆</span>';
+                            }
+
+                            var commentHTML = '<div style="width:97%;border: 3px solid black;margin-bottom:10px; border-radius: 10px;max-height:105px;margin-left:30px">';
+                            commentHTML += '<div style="display: flex; align-items: flex-start; padding: 20px;">'; // Изменено здесь
+                            commentHTML += '<div class="user-initials" style="width: 50px; height: 50px; background-color: gray; border-radius: 50%; text-align: center; line-height: 31px; color: white; font-weight: bold; margin-right: 10px;padding:10px;line-width:20px">' + initials + '</div>';
+                            commentHTML += '<div style="flex-grow: 1;">';
+                            commentHTML += '<p style="margin-top: -0.2%; margin-bottom: 0;font-size:20px">' + comment["user"]["user_name"] + " " + comment["user"]["surname"] + '</p>';
+
+                            commentHTML += '<div style="display: flex; flex-direction: row;">'; // Обертка для комментария и звезд
+                            if (comment["rate_comment"] !== null) {
+                                commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:850px">' + comment["rate_comment"] + '</p>';
+                            }
+                            commentHTML += '<p style="margin-top: -16px; margin-bottom: 0; font-size: 30px; margin-left: auto;color:#FFD700">' + starsHTML + '</p>';
+                            commentHTML += '</div>';
+
+                            commentHTML += '</div>';
+                            commentHTML += '</div>';
+                            commentHTML += '</div>';
+                            commentHTML += '</div>';
+
+                            $('#rewey').append(commentHTML);
+                        });
+
+                        $('#exampleModal').on('hidden.bs.modal', function (e) {
+                            $('#rewey').empty(); // Очистка содержимого элемента #rewey
+                        });
+                        console.log(Product);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+
+
             });
+        });
+    </script>
+    <script>
+        function getPrice(card) {
+            var saleElement = card.querySelector('.sale');
+            var priceElement = card.querySelector('.price');
+
+            if (saleElement && parseInt(saleElement.innerText.replace('-', '')) > 0) {
+                // Если есть скидка, учитываем цену со скидкой
+                return parseFloat(priceElement.innerText.split(' ')[2]);
+            } else {
+                // В противном случае учитываем обычную цену
+                return parseFloat(priceElement.innerText.split(' ')[1]);
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".info-button1").on("click", function () {
+                var productId = $(this).data('idproduct');
+                var $productRate = $("#productrate");
+                var $productRate2 = $("#productrate2");
+                var $ratingStars = $("#rating-stars");
+
+                getProductRatingById(productId)
+                    .then(function (averageRate) {
+                        updateProductRating($productRate, $ratingStars, averageRate);
+
+                        // Добавьте класс для изменения цвета текста, включая звезду
+                        $productRate2.html('<span class="star-rating">' + averageRate + '<span class="star">★</span></span>');
+
+                        // Переопределите цвет только для звезды и добавьте стили
+                        $productRate2.find('.star')
+                            .css('color', '#FFD700')
+
+                    })
+                    .catch(function (error) {
+                        console.error("Ошибка при получении рейтинга продукта:", error);
+                    });
+            });
+
+            // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
+            function getProductRatingById(productId) {
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: '/Home/GetProductRating',
+                        data: { productId: productId },
+                        type: 'GET',
+                        success: function (result) {
+                            resolve(result);
+                        },
+                        error: function (error) {
+                            reject(error);
+                        }
+                    });
+                });
+            }
+
+            // Функция для обновления текста и звезд
+            function updateProductRating($productRate, $ratingStars, averageRate) {
+                $productRate.text("Рейтинг продукта: " + averageRate + '★');
+
+            }
         });
     </script>
 
@@ -560,7 +657,7 @@
     <script>
         $(document).ready(function () {
             $(".info-button1").on("click", function () {
-                var productId = $(this).data("idd");
+                var productId = $(this).data('idproduct');
                 var $productRate = $("#productrate");
                 var $productRate2 = $("#productrate2");
                 var $ratingStars = $("#rating-stars");
@@ -605,7 +702,7 @@
     </script>
     <script>
         $('.info-button1').on('click', function () {
-            var productId = $(this).data('idd');
+            var productId = $(this).data('idproduct');
 
             $.ajax({
                 url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
@@ -636,7 +733,7 @@
 
     <script>
         $('.info-button1').on('click', function () {
-            var productId = $(this).data('idd');
+            var productId = $(this).data('idproduct');
 
             $.ajax({
                 url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
@@ -863,7 +960,7 @@
         $(document).ready(function () {
             $('.fav-button1').click(function () {
                 // Получаем айди продукта из атрибута data-idd кнопки
-                var productId = $(this).data('idd');
+                var productId = $(this).data('idproduct');
 
                 // Отправляем запрос на удаление товара из избранного
                 $.ajax({
@@ -908,7 +1005,7 @@
             // Обработчик события клика для кнопки info-button1
             $('.info-button1').click(function () {
                 // Получаем айди продукта из атрибута data-idd кнопки
-                productId = $(this).data('idd');
+                var productId = $(this).data('idproduct');
             });
 
             // Обработчик события клика для кнопки fav-button2
@@ -1021,7 +1118,7 @@
     <script>
         $(document).ready(function () {
             $('.info-button1').on('click', function () {
-                var productId = $(this).data('idd'); // Получаем айди товара из кнопки
+                var productId = $(this).data('idproduct'); // Получаем айди товара из кнопки
 
                 // Отправляем запрос на сервер для проверки наличия товара в избранном
                 $.ajax({
@@ -1055,7 +1152,7 @@
             // Обработчик события клика для кнопки info-button1
             $('.info-button1').click(function () {
                 // Получаем айди продукта из атрибута data-idd кнопки
-                productId = $(this).data('idd');
+                productId = $(this).data('idproduct');
             });
 
             // Обработчик события клика для кнопки senddd

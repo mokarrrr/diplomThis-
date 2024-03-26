@@ -178,7 +178,7 @@
                                                 </li>
                                             </ul>
 
-                                            <button class="fav-button5" id="mybut" title="Оставить отзыв" data-idd="@product.IdProduct">
+                                            <button class="fav-button5" title="Оставить отзыв" data-idd="@product.IdProduct">
                                                 <i class="fa-regular fa-star"></i>
                                             </button>
                                         </div>
@@ -326,7 +326,7 @@
             </div>
 
             <center>
-                <textarea id="commentTextarea" style="background-color:white;width:600px;height:100px;margin-top: 5px; resize: none;" maxlength="116"></textarea>
+                <textarea id="commentTextarea" style="background-color:white;width:600px;height:100px;margin-top: 5px; resize: none;font-size:20px" maxlength="116"></textarea>
             </center>
 
             <center style="margin-top:20px">
@@ -383,26 +383,7 @@
     </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            // Обработчик нажатия на кнопку с классом "fav-button5"
-            $('.fav-button5').click(function () {
-                $('#modalсomm').show(); // Показать модальное окно
-            });
-
-            // Обработчик для закрытия модального окна
-            $('.close').click(function () {
-                $('#modalсomm').hide(); // Скрыть модальное окно
-            });
-
-            // Обработчик для закрытия модального окна при клике вне его области
-            $(window).click(function (event) {
-                if (event.target == $('#modalсomm')[0]) {
-                    $('#modalсomm').hide(); // Скрыть модальное окно
-                }
-            });
-        });
-    </script>
+   
     <script>
         // Функция для обновления счетчика символов
         function updateCharCount() {
@@ -425,23 +406,55 @@
             });
         });
     </script>
-    <script>
+        <script>
         $(document).ready(function () {
-            // Обработчик события клика для кнопки "Сохранить"
-            $('#savebuttoncom').click(function () {
-                // Получаем ID товара
-                var productId = $('#mybut').data('idd');
+            var productId;
+
+            $('.fav-button5').click(function () {
+                productId = $(this).data('idd');
                 console.log('ID товара:', productId);
 
-                // Получаем комментарий из textarea
+                // Отправляем AJAX запрос на сервер для проверки наличия комментария
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/CheckComment',
+                    data: { productId: productId },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            // Если комментарий уже существует, заполняем поле комментария в модальном окне
+                            $('#commentTextarea').val(response.comment);
+                        } else {
+                            // Если комментарий отсутствует, оставляем поле комментария пустым
+                            $('#commentTextarea').val('');
+                        }
+                        $('#modalсomm').show();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Ошибка при проверке комментария:', error);
+                        // Произошла ошибка при проверке комментария, отображаем модальное окно без изменений
+                        $('#modalсomm').show();
+                    }
+                });
+            });
+
+            $('.close').click(function () {
+                $('#modalсomm').hide();
+            });
+
+            $(window).click(function (event) {
+                if (event.target == $('#modalсomm')[0]) {
+                    $('#modalсomm').hide();
+                }
+            });
+
+            $('#savebuttoncom').click(function () {
                 var comment = $('#commentTextarea').val();
                 console.log('Комментарий:', comment);
 
-                // Получаем оценку рейтинга
                 var rating = $('input[name="rating"]:checked').val();
                 console.log('Рейтинг:', rating);
 
-                // Создаем объект данных для отправки на сервер
                 var data = {
                     productId: productId,
                     comment: comment,
@@ -449,25 +462,22 @@
                 };
                 console.log('Данные для отправки на сервер:', data);
 
-                // Отправляем AJAX запрос на сервер
                 $.ajax({
                     type: 'POST',
-                    url: '/Home/SaveComment', // Путь к методу, обрабатывающему сохранение комментария и рейтинга на сервере
-                    data: JSON.stringify(data),
-                    contentType: 'application/json',
+                    url: '/Home/SaveComment',
+                    data: { productId: productId, comment: comment, rating: rating },
+                    dataType: 'json',
                     success: function (response) {
                         console.log('Комментарий и рейтинг успешно сохранены!');
                         console.log('Ответ сервера:', response);
-
-                        // Дополнительные действия после успешного сохранения комментария и рейтинга
                     },
                     error: function (xhr, status, error) {
                         console.error('Ошибка при сохранении комментария и рейтинга:', error);
-
-                        // Дополнительные действия при возникновении ошибки
                     }
                 });
             });
         });
     </script>
+
+
 </body>
