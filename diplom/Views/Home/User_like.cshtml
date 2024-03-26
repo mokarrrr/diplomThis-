@@ -429,25 +429,25 @@
                     url: "/Home/GetProduct", // Замените на ваш реальный URL
                     data: { Id: productId },
                     success: function (Product) {
-                        if (Product["productSale"]) {
+                        if (Product["product_sale"]) {
                             // Рассчитываем цену с учетом скидки и округляем до целого числа
-                            var discountedPrice = Math.round((1 - Product["productSale"] / 100) * Product["productPrice"]);
+                            var discountedPrice = Math.round((1 - Product["product_sale"] / 100) * Product["product_price"]);
 
                             // Обновляем значения в таблице
-                            $('#productPrice').html('<del>' + Product["productPrice"] + ' руб.</del> ' + discountedPrice + ' руб. за');
+                            $('#productPrice').html('<del>' + Product["product_price"] + ' руб.</del> ' + discountedPrice + ' руб. за');
 
                             // Обновляем значение скидки в div и отображаем его, если скидка больше 0
-                            $('.sale1').text('-' + Product["productSale"] + '%');
-                            $('.sale1').toggle(Product["productSale"] > 0);
+                            $('.sale1').text('-' + Product["product_sale"] + '%');
+                            $('.sale1').toggle(Product["product_sale"] > 0);
                         } else {
                             // Если скидки нет, просто обновляем цену и скрываем div
-                            $('#productPrice').text(Product["productPrice"] + ' руб. за');
+                            $('#productPrice').text(Product["product_price"] + " рублей за");
                             $('.sale1').hide();
                         }
 
                         $('#productNameLabel').text(Product["name_product"]);
+                        /*$('#productPrice').text(Product["product_price"] + " рублей за");*/
                         $('#description').text(Product["product_description_"]);
-                        $('#productPrice').text(Product["product_price"] + " рублей за");
                         $('#productImage').attr('src', '' + Product["product_img"]);
                         $('#productWeight').text(Product["product_weight"] + ' гр.');
                         $('#productMassPerFat').text('Массовая доля жира:' + Product["product_mass_per_fat"] + '%');
