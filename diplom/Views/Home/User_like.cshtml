@@ -27,94 +27,123 @@
     </div>
 </header>
 
- <div id="modaluserr" class="modal" style="overflow-y:hidden">
-            <!-- Модальный контент -->
-            <div class="modal-content4" style="height:700px; border: 3px solid black;border-radius: 25px;">
-                <span class="close" style="margin-top:-5px">&times;</span>
-                <center>
-                    <h5 class="modal-title" style="margin-top:-5px">
-                        Личный кабинет
-                    </h5>
-                </center>
-                <hr style="color: black;background: black;border: black;height: 1px;">
-                <div style="display:flex;width:100%;height:100%;gap:250px">
-                    <div>
-                        <div id="myTabsuser" style="gap:20px;width: 207px;">
-                            <div style="display:flex;gap:10px;cursor: pointer;" data-tab="tab-information">
-                                <i class="fas fa-home"></i>
-                                <div>Личная информация</div>
-                            </div>
-                            <div style="display:flex;gap:10px;cursor: pointer;" data-tab="tab-password">
-                                <i class="fas fa-lock"></i>
-                                <div>Безопасность</div>
-                            </div>
-                            <div style="display:flex;gap:10px;cursor: pointer;" data-tab="tab-history">
-                                <i class="fas fa-history"></i>
-                                <div>История покупок</div>
-                            </div>
+    <div id="modaluserr" class="modal" style="overflow-y:hidden">
+        <!-- Модальный контент -->
+        <div class="modal-content4" style="height:700px; border: 3px solid black;border-radius: 25px;">
+            <span class="close" style="margin-top:-5px">&times;</span>
+            <center>
+                <h5 class="modal-title" style="margin-top:-5px">
+                    Личный кабинет
+                </h5>
+            </center>
+            <hr style="color: black;background: black;border: black;height: 1px;">
+            <div style="display:flex;width:100%;height:100%;gap:250px">
+                <div>
+                    <div id="myTabsuser" style="gap:20px;width: 207px;">
+                        <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-information">
+                            <i class="fas fa-home"></i>
+                            <div>Личная информация</div>
+                        </div>
+                        <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-password">
+                            <i class="fas fa-lock"></i>
+                            <div>Безопасность</div>
+                        </div>
+                        <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-history">
+                            <i class="fas fa-history"></i>
+                            <a href="/Home/UserOrders" style="color:black">История покупок</a>
+                        </div>
+                        <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-history">
+                            <center>
+                                <button id="logoutButton"> Выход</button>
+                            </center>
                         </div>
                     </div>
-                    <div>
-                        <button id="logoutButton" class="fas fa-sign-out-alt"></button>                     
-                        <div style="width:100%;gap:50px;display:inline-grid;margin-top:40px">
+                </div>
+                <div>
 
-                            <!-- Содержимое вкладки "Личная информация" -->
-                            <div id="tab-information" class="tab-content">
-                                @* <form id="userForm"> *@
-                                <center style="padding:1%;margin-top:9%;margin-bottom: 15%;margin-left: 7%;">
-                                    <div class="userimg" style="height: 150px; width: 150px;">
+                    <div style="width:100%;gap:50px;display:inline-grid;margin-top:40px">
 
-                                        <p id="nameuserphoto" style="margin-top:66px">Абоба</p>
+                        <!-- Содержимое вкладки "Личная информация" -->
+                        <div id="tab-information" class="tab-content">
+                            @* <form id="userForm"> *@
 
-                                    </div>
-                                </center>
-                                <div style="display:inline-grid;gap:20px;margin-left: 11%;">
-                                    @Html.TextBox("Emailuser", "", new { placeholder = "Email",@class ="userinf" })
+                            <center style="padding:1%;margin-top:9%;margin-bottom: 15%;margin-left: 7%;">
+                                <div class="userimg" style="height: 150px; width: 150px;">
 
-                                    @Html.TextBox("Nameuser", "", new { placeholder = "Ваше имя",@class ="userinf" })
-                                    @Html.TextBox("lastNameuser", "", new { placeholder = "Ваша фамилия",@class ="userinf" })
+                                    <p id="nameuserphoto" style="margin-top:66px">Абоба</p>
 
-                                    <div style="display:flex;gap:10px;margin-left:auto;margin-right:auto" class="userinf">
-                                        @* <p style="margin-left:-30px">+7</p> *@
-                                        @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
+                                </div>
+                            </center>
+                            <div style="display:inline-grid;gap:20px;margin-left: 11%;">
+                                @Html.TextBox("Emailuser", "", new { placeholder = "Email",@class ="userinf" })
+                                <p id="phoneMail10" style="z-index:100;color:red;margin-top: 2.2%;;display:none;position:absolute">Пользвоатель с такой почтой уже существует</p>
+                                <p id="phoneMailMessage20" style="z-index:1;color:red;margin-top: 2.2%;display:none;position:absolute">Неверный формат почты</p>
+                                @Html.TextBox("Nameuser", "", new { placeholder = "Ваше имя",@class ="userinf" })
+                                @Html.TextBox("lastNameuser", "", new { placeholder = "Ваша фамилия",@class ="userinf" })
+
+                                <div style="display:flex;gap:10px;margin-left:auto;margin-right:auto" class="userinf">
+                                    @* <p style="margin-left:-30px">+7</p> *@
+                                    @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
+                                    <div style="display:block">
                                         @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
+                                        <p id="phoneErrorMessage10" style="z-index:1;color:red;margin-top: 1%;display:none;width: 118%;">Пользвоатель с таким номером телефона уже существует</p>
+                                        <p id="phoneErrorMessage20" style="z-index:1;color:red;margin-top: 1%;display:none;width: 118%">Неверный формат номера телефона</p>
                                     </div>
                                 </div>
-                                @* </form> *@
-                                <center style="margin-top: 14%;">
-                                    <button id="savebutton" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
-                                        <center style="">
-                                            <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>
-                                            <p style="margin-top:4px">Сохранить</p>
-                                        </center>
-                                    </button>
-                                </center>
                             </div>
-                            <!-- Содержимое вкладки "Безопасность" -->
-                            <div id="tab-password" class="tab-content" style="display:none;">
-                                <!-- Ваше содержимое здесь -->
-                                <input id="password" type="password" placeholder="Старый пароль">
-                                <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
-                                    &#128065;
+                            <p id="errorMessage5" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
+                            @* </form> *@
+                            <center style="margin-top: 14%;caret-color: transparent">
+                                <button id="savebutton" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
+                                    <center style="">
+                                        <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>
+                                        <p style="margin-top:4px">Сохранить</p>
+                                    </center>
                                 </button>
-                                <input id="password22" type="password" placeholder="Новый пароль">
-                                <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
-                                    &#128065;
-                                </button>
-                                <input id="password33" type="password" placeholder="Повторите новый пароль">
-                                <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
-                                    &#128065;
-                                </button>
-                            </div>
-                            <!-- Содержимое вкладки "История покупок" -->
-                            <div id="tab-history" class="tab-content" style="display:none;">
-                                <!-- Ваше содержимое здесь -->
-                            </div>
+                            </center>
                         </div>
+                        <!-- Содержимое вкладки "Безопасность" -->
+                        <div id="tab-password" class="tab-content" style="display:none;margin-top:85%;">
+                            <!-- Ваше содержимое здесь -->
+
+                            <div style="display:flex; margin-bottom: 20px;">
+                                <input class="userinf" id="passwordregistersend" type="password" placeholder="Введите старый пароль">
+                                <button id="showPasswordButton4" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                    &#128065;
+                                </button>
+                            </div>
+                            <p id="errorMessagepastab1" style="color:red;z-index:1;display:none;position:absolute;margin-top: -1%;margin-left: 1.2%;">Проверьте пароль</p>
+                            <div style="display:flex; margin-bottom: 20px;">
+                                <input class="userinf" id="passwordregisterveryf" type="password" placeholder="Новый пароль">
+                                <button id="showPasswordButton5" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                    &#128065;
+                                </button>
+                            </div>
+                            <div style="display:flex; margin-bottom: 20px;">
+                                <input class="userinf" id="passwordregisteveryf2r" type="password" placeholder="Повторите новый пароль">
+                                <button id="showPasswordButton6" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                    &#128065;
+                                </button>
+                            </div>
+                            <p id="errorMessagepastab" style="color:red;z-index:1;display:none;margin-left: 10.2%">Пароли не совпадают</p>
+                            <p id="errorMessage6" style="color:red;z-index:1;display:none;margin-left: 10.2%;">⚠️ Не все поля заполнены</p>
+                            <center style="margin-top: 14%;">
+                                <button id="savebuttonpas" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
+                                    <center style="">
+                                        <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>
+                                        <p style="margin-top:4px">Сохранить</p>
+                                    </center>
+                                </button>
+                            </center>
+                        </div>
+
+                        <!-- Содержимое вкладки "История покупок" -->
+
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
 
 <div class="main" style="margin-top:6%">
@@ -902,38 +931,8 @@
                 }
             });
         });
-
-
-
-        $(document).ready(function () {
-            // Отправка данных на сервер при редактировании пользователя
-            $("#savebutton").click(function () {
-                var email = $("#Emailuser").val();
-                var name = $("#Nameuser").val();
-                var lastName = $("#lastNameuser").val();
-                var phone = $("#phoneRegisteruser").val().replace(/\D/g, ''); // Удаление всех нечисловых символов
-                if (phone.startsWith('7')) {
-                    phone = phone.slice(1); // Удаление первого символа "7", если он есть в начале номера
-                }
-
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/SaveUser",
-                    data: { email: email, name: name, lastName: lastName, phone: phone },
-                    success: function (result) {
-                        // Обработка успешного ответа от сервера
-                        $('#modaluserr').hide();
-                    },
-                    error: function () {
-                        // Обработка ошибки
-                        alert("Произошла ошибка при отправке данных");
-                    }
-                });
-            });
-        });
-
-
-
+    </script>
+    <script>
         $(document).ready(function () {
             $('#logoutButton').click(function () {
                 $.ajax({
@@ -952,8 +951,343 @@
                 });
             });
         });
-    
-      
+
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Флаг, указывающий на изменение номера телефона
+            var phoneChanged = false;
+            // Флаг, указывающий на изменение email
+            var emailChanged = false;
+
+            // Вызываем функцию для активации или деактивации кнопки сохранения при первой загрузке модального окна
+            toggleSaveButton();
+
+            // Следим за изменениями в полях ввода email
+            $("#Emailuser").on("input", function () {
+                emailChanged = true; // Установка флага изменения email
+                toggleSaveButton();
+                checkAllFieldsFilled(); // Проверка заполнения всех полей
+            });
+
+            // Следим за изменениями в полях ввода имени и фамилии
+            $("#Nameuser, #lastNameuser").on("input", function () {
+                toggleSaveButton();
+                checkAllFieldsFilled(); // Проверка заполнения всех полей
+            });
+
+            // Следим за изменением номера телефона
+            $("#phoneRegisteruser").on("input", function () {
+                phoneChanged = true;
+                toggleSaveButton();
+                checkAllFieldsFilled(); // Проверка заполнения всех полей
+            });
+
+            // Функция для активации или деактивации кнопки сохранения в зависимости от наличия изменений в полях
+            function toggleSaveButton() {
+                var email = $("#Emailuser").val();
+                var name = $("#Nameuser").val();
+                var lastName = $("#lastNameuser").val();
+                var phone = $('#phoneRegisteruser').val().replace(/_/g, '').replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
+
+                // Проверяем, есть ли в полях ввода изменения, кроме email
+                var hasChanges = phoneChanged || emailChanged || name.trim() !== "" || lastName.trim() !== "";
+
+                // Активируем или деактивируем кнопку сохранения
+                $("#savebutton").prop("disabled", !hasChanges);
+            }
+
+            // Функция для проверки заполнения всех полей и отображения сообщения об ошибке при необходимости
+            function checkAllFieldsFilled() {
+                var email = $("#Emailuser").val();
+                var name = $("#Nameuser").val();
+                var lastName = $("#lastNameuser").val();
+                var phone = $("#phoneRegisteruser").val();
+
+                // Проверка наличия пустых полей
+                if (email.trim() === "" || name.trim() === "" || lastName.trim() === "" || phone.trim() === "") {
+                    $("#errorMessage5").show();
+                } else {
+                    $("#errorMessage5").hide();
+                }
+            }
+
+            // Отправка данных на сервер при редактировании пользователя
+            $("#savebutton").click(function () {
+                var email = $("#Emailuser").val();
+                var name = $("#Nameuser").val();
+                var lastName = $("#lastNameuser").val();
+                var phone = $('#phoneRegisteruser').val().replace(/_/g, '').replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
+
+                // Показываем сообщение об ошибке
+                $("#phoneErrorMessage").hide();
+                $("#phoneMail10").hide();
+
+                // Если номер телефона не изменился и не было изменений в email, отправляем данные без проверки на сервер
+                if (!phoneChanged && !emailChanged) {
+                    updateUser(email, name, lastName, phone);
+                } else {
+                    // Проверяем длину номера телефона
+                    if (phone.trim() !== "") {
+                        // Проверяем, изменился ли номер телефона
+                        if (phoneChanged) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/Home/CheckPhoneNumber",
+                                data: { phone: phone },
+                                success: function (result) {
+                                    if (result.exists) {
+                                        $("#phoneErrorMessage10").text("Номер телефона уже используется").show();
+                                    } else {
+                                        // Проверяем, изменился ли email
+                                        if (emailChanged) {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/Home/CheckEmail",
+                                                data: { email: email },
+                                                success: function (emailResult) {
+                                                    if (emailResult.exists) {
+                                                        $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                                    } else {
+                                                        updateUser(email, name, lastName, phone);
+                                                    }
+                                                },
+                                                error: function () {
+                                                    // Обработка ошибки
+                                                    alert("Произошла ошибка при проверке email");
+                                                }
+                                            });
+                                        } else {
+                                            updateUser(email, name, lastName, phone);
+                                        }
+                                    }
+                                },
+                                error: function () {
+                                    // Обработка ошибки
+                                    alert("Произошла ошибка при проверке номера телефона");
+                                }
+                            });
+                        } else {
+                            // Номер телефона не изменился, отправляем данные без проверки на сервер
+                            // Проверяем, изменился ли email
+                            if (emailChanged) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Home/CheckEmail",
+                                    data: { email: email },
+                                    success: function (emailResult) {
+                                        if (emailResult.exists) {
+                                            $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                        } else {
+                                            updateUser(email, name, lastName, phone);
+                                        }
+                                    },
+                                    error: function () {
+                                        // Обработка ошибки
+                                        alert("Произошла ошибка при проверке email");
+                                    }
+                                });
+                            } else {
+                                updateUser(email, name, lastName, phone);
+                            }
+                        }
+                    } else {
+                        // Если номер телефона не указан, просто отправляем данные без проверки на сервер
+                        // Проверяем, изменился ли email
+                        if (emailChanged) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/Home/CheckEmail",
+                                data: { email: email },
+                                success: function (emailResult) {
+                                    if (emailResult.exists) {
+                                        $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                    } else {
+                                        updateUser(email, name, lastName, phone);
+                                    }
+                                },
+                                error: function () {
+                                    // Обработка ошибки
+                                    alert("Произошла ошибка при проверке email");
+                                }
+                            });
+                        } else {
+                            updateUser(email, name, lastName, phone);
+                        }
+                    }
+                }
+            });
+
+            // Функция для обновления данных пользователя
+            function updateUser(email, name, lastName, phone) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/SaveUser",
+                    data: { email: email, name: name, lastName: lastName, phone: phone },
+                    success: function (result) {
+                        if (result.success) {
+                            // Обработка успешного сохранения данных
+                            $('#modaluserr').hide();
+                        } else {
+                            // Обработка ошибок при сохранении данных
+                            if (result.message === "Номер телефона содержит четыре подряд нуля") {
+                                $('#phoneErrorMessage20').text("Номер телефона содержит четыре подряд нуля").show();
+                            } else if (result.message === "Номер телефона должен содержать не менее 10 символов") {
+                                $('#phoneErrorMessage20').text("Номер телефона должен содержать не менее 10 символов").show();
+                            } else if (result.message === "Номер телефона не может состоять только из нулей") {
+                                $('#phoneErrorMessage20').text("Номер телефона не может состоять только из нулей").show();
+                            } else if (result.message === "Номер телефона должен содержать не более 10 символов") {
+                                $('#phoneErrorMessage20').text("Номер телефона должен содержать не более 10 символов").show();
+                            } else if (result.message === "Некорректный адрес электронной почты") {
+                                $('#phoneMailMessage20').text("Некорректный адрес электронной почты").show();
+                            } else if (result.message === "Пользователь с таким email уже существует") {
+                                $('#phoneMail10').text("Пользователь с таким email уже существует").show();
+                            } else {
+                                alert("Ошибка: " + result.message);
+                            }
+                        }
+                    },
+                    error: function () {
+                        // Обработка ошибки
+                        alert("Произошла ошибка при отправке данных");
+                    }
+                });
+            }
+
+            // Закрытие модального окна при клике на кнопку закрытия ("close")
+            $('#modaluserr .close').click(function () {
+                $('#modaluserr').hide();
+                $("#phoneErrorMessage10").hide();
+                $("#phoneErrorMessage20").hide(); // Скрыть сообщение об ошибке
+                $("#phoneMailMessage20").hide(); // Скрыть сообщение о некорректном адресе электронной почты
+                $("#phoneMail10").hide();
+                $("#errorMessage5").hide();// Скрыть сообщение о существующем email
+                $("#Emailuser, #Nameuser, #lastNameuser, #phoneRegisteruser").val(""); // Сброс значений полей ввода
+                toggleSaveButton(); // Обновить состояние кнопки сохранения
+                phoneChanged = false; // Сбрасываем флаг изменения номера телефона
+                emailChanged = false; // Сбрасываем флаг изменения email
+            });
+
+            // Закрытие модального окна при клике вне его области
+            $(window).click(function (event) {
+                if (event.target == $('#modaluserr')[0]) {
+                    $('#modaluserr').hide();
+                    $("#phoneErrorMessage10").hide();
+                    $("#phoneErrorMessage20").hide(); // Скрыть сообщение об ошибке
+                    $("#phoneMailMessage20").hide(); // Скрыть сообщение о некорректном адресе электронной почты
+                    $("#phoneMail10").hide();
+                    $("#errorMessage5").hide();// Скрыть сообщение о существующем email
+                    $("#Emailuser, #Nameuser, #lastNameuser, #phoneRegisteruser").val(""); // Сброс значений полей ввода
+                    toggleSaveButton(); // Обновить состояние кнопки сохранения
+                    phoneChanged = false; // Сбрасываем флаг изменения номера телефона
+                    emailChanged = false; // Сбрасываем флаг изменения email
+                }
+            });
+        });
+    </script>
+    <script>
+        function updatePassword(oldPassword, newPassword) {
+            // Отправляем AJAX-запрос на сервер
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/Home/UpdatePassword", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Пароль успешно изменен
+                        console.log("Пароль успешно изменен");
+
+                        // Выполняем выход из системы
+                        $.ajax({
+                            url: '/Home/Logout',
+                            type: 'POST',
+                            success: function (response) {
+                                // Успешное выполнение запроса
+                                console.log(response);
+                                localStorage.setItem('AuthenticationSuccess', '0');
+                                window.location.href = '/';
+                            },
+                            error: function (error) {
+                                // Ошибка выполнения запроса
+                                console.error(error);
+                                showError("Произошла ошибка при выходе из системы");
+                            }
+                        });
+                    } else {
+                        // Произошла ошибка при изменении пароля
+                        console.error("Ошибка при изменении пароля");
+                        showError("Проверьте пароль");
+                    }
+                }
+            };
+
+            var data = JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword });
+            xhr.send(data);
+        }
+
+        function showError(errorMessage) {
+            // Показываем сообщение об ошибке на странице
+            $('#errorMessagepastab1').text(errorMessage).show();
+        }
+
+        // Функция для получения и установки нового пароля
+        function getAndSetNewPassword() {
+            var oldPassword = document.getElementById("passwordregistersend").value;
+            var newPassword = document.getElementById("passwordregisterveryf").value;
+            var newPasswordConfirm = document.getElementById("passwordregisteveryf2r").value;
+
+            // Проверяем, что значения не пустые
+            if (!(oldPassword && newPassword && newPasswordConfirm)) {
+                console.error("Пожалуйста, заполните все поля пароля");
+                $("#errorMessage6").show();
+                return;
+            }
+
+            // Проверяем, что значения нового пароля совпадают
+            if (newPassword !== newPasswordConfirm) {
+                console.error("Пароли не совпадают");
+                $("#errorMessagepastab").show();
+                return;
+            }
+
+            // Обновляем пароль
+            updatePassword(oldPassword, newPassword);
+        }
+
+        // Находим кнопку "Сохранить" и назначаем обработчик события на клик
+        var saveButton = document.getElementById("savebuttonpas");
+        saveButton.addEventListener("click", getAndSetNewPassword);
+    </script>
+
+    <script>
+        document.getElementById('showPasswordButton4').addEventListener('click', function () {
+            var passwordField = document.getElementById('passwordregistersend');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+        document.getElementById('showPasswordButton5').addEventListener('click', function () {
+            var passwordField = document.getElementById('passwordregisterveryf');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+        document.getElementById('showPasswordButton6').addEventListener('click', function () {
+            var passwordField = document.getElementById('passwordregisteveryf2r');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
     </script>
 
     <script>
@@ -1117,6 +1451,7 @@
     </script> *@
     <script>
         $(document).ready(function () {
+            // Отслеживаем клик по кнопке "info-button1"
             $('.info-button1').on('click', function () {
                 var productId = $(this).data('idproduct'); // Получаем айди товара из кнопки
 
@@ -1142,6 +1477,14 @@
                         console.error(error);
                     }
                 });
+            });
+
+            // После закрытия модального окна
+            $('#exampleModal').on('hidden.bs.modal', function (e) {
+                // Сбрасываем стили для modalButton
+                var modalButton = $('#exampleModal').find('.fav-button2');
+                modalButton.css('background-color', '');
+                modalButton.css('color', ''); // сброс цвета
             });
         });
     </script>

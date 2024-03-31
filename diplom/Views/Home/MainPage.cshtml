@@ -808,8 +808,7 @@
                         // Получаем userId из ответа
                         var userId = data.userId;
 
-                        if (data.exists) {
-                            console.log('я твой рот ебал');
+                        if (data.exists) {                            
                             $.ajax({
                                 type: 'POST',
                                 url: '/Home/RemoveUserLike',
@@ -968,7 +967,7 @@
 
                             if (data.exists) {
                                 // Запись уже существует, не делаем ничего
-                                console.log('я твой рот ебал');
+                                
                                 $.ajax({
                                     type: 'POST',
                                     url: '/Home/RemoveUserLike',

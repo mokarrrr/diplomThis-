@@ -12,6 +12,7 @@ $(function (maam) {
         }, 300);
     });
 });
+
 /*переключение на регистрацию*/
 //document.getElementById('switchToRegister').addEventListener('click', function () {
 //    document.getElementById('loginContent').style.display = 'none'; // Скрыть контент страницы входа
@@ -211,7 +212,7 @@ $(document).ready(function () {
                     $('.sale1').toggle(Product["product_sale"] > 0);
                 } else {
                     // Если скидки нет, просто обновляем цену и скрываем div
-                    $('#productPrice').text(Product["productPrice"] + ' руб. за');
+                    $('#productPrice').text(Product["product_price"] + ' руб. за');
                     $('.sale1').hide();
                 }
 
@@ -640,7 +641,7 @@ function getPrice(card) {
 
             // Отправляем запрос на сервер с обновленными значениями категорий
             $.ajax({
-                url: '/Home/MainPage',
+                url: '/Home/FilteredProductsPartial',
                 type: 'GET',
                 data: {
                     categoryId: isChecked ? 1 : null,
@@ -656,20 +657,19 @@ function getPrice(card) {
                     $('#modaluserr').css('display', 'none');
 
                     // Обновляем содержимое всей страницы
-                    $('body').html(data);
+                    $('.container3').html(data);
 
                     // Восстанавливаем состояние чекбоксов
-                    $('#softCheeseCheckbox').prop('checked', isChecked);
-                    $('#secondCheckbox').prop('checked', isSecondChecked);
-                    $('#thirdCheckbox').prop('checked', isThirdChecked);
-                    $('#fourthCheckbox').prop('checked', isFourthChecked);
-                    $('#fifthCheckbox').prop('checked', isFifthChecked);
+
+                    AddCardListeners();
+                    
                 },
                 error: function (error) {
                     console.log(error);
                 }
             });
         }
+
     });
 
         // Добавляем обработчик события клика к кнопке
@@ -1395,4 +1395,168 @@ $(document).ready(function () {
             });
         });
     
+
+function AddCardListeners() {
+
+    $('.info-button1').on('click', function () {
+        var productId = $(this).data('idproduct');
+
+        $.ajax({
+            type: "GET",
+            url: "/Home/GetPackageName",
+            data: { packageId: packageId },
+            success: function (packageName) {
+                resolve(packageName);
+            },
+            error: function (xhr, status, error) {
+                reject(error);
+            }
+        });
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "/Home/GetProviderName",
+            data: { providerId: providerId },
+            success: function (providerName) {
+                resolve(providerName);
+            },
+            error: function (xhr, status, error) {
+                reject(error);
+            }
+        });
+
+        $.ajax({
+            url: '/Home/GetProduct',
+            type: 'GET',
+            data: { Id: productId },
+            success: function (Product) {
+                if (Product["product_sale"]) {
+                    var discountedPrice = Math.round((1 - Product["product_sale"] / 100) * Product["product_price"]);
+                    $('#productPrice').html('<del>' + Product["product_price"] + ' руб.</del> ' + discountedPrice + ' руб. за');
+                    $('.sale1').text('-' + Product["product_sale"] + '%');
+                    $('.sale1').toggle(Product["product_sale"] > 0);
+                } else {
+                    $('#productPrice').text(Product["product_price"] + ' руб. за');
+                    $('.sale1').hide();
+                }
+
+                $('#productNameLabel').text(Product["name_product"]);
+                $('#description').text(Product["product_description_"]);
+                $('#productImage').attr('src', '' + Product["product_img"]);
+                $('#productWeight').text(Product["product_weight"] + ' гр.');
+                $('#productMassPerFat').text('Массовая доля жира:' + Product["product_mass_per_fat"] + '%');
+                $('#productfat').text('Жирность:' + Product["product_fat"] + '%');
+                $('#productProtein').text('Белки:' + Product["product_protein"] + 'г.');
+                $('#productFatty').text('Жиры:' + Product["product_fatty"] + 'г.');
+                $('#productCarb').text('Углеводы:' + Product["product_carb"] + 'г.');
+                $('#productEnergyValue').text('Энергетическая ценность:' + Product["product_energy_value"] + 'ккал');
+                $('#productStorageLife').text('Срок хранения:' + Product["product_storage_life"] + ' дней с момента фасовки');
+                $('#productPackageId').text(Product["product_package_id"]);
+                $('#productStorageConditions').text('Условия хранения:' + Product["product_storage_conditions"]);
+                $('#productSale').text(Product["product_sale"]);
+                $('#productRemain').text(Product["product_remain"]);
+                $('#productArticle').text('Артикул:' + Product["product_article"]);
+                $('#productSostav').text('Состав:' + Product["product_sostav"]);
+                $('#prodid').text(Product["idProduct"]);
+
+                Product["rates"].forEach(function (comment) {
+                    var initials = comment["user"]["user_name"].charAt(0) + comment["user"]["surname"].charAt(0);
+                    var starsHTML = '';
+                    var rating = parseInt(comment["_Rate"]);
+                    for (var i = 0; i < rating; i++) {
+                        starsHTML += '★';
+                    }
+                    for (var j = rating; j < 5; j++) {
+                        starsHTML += '<span style=" font-size: 30px;">☆</span>';
+                    }
+
+                    var commentHTML = '<div style="width:97%;border: 3px solid black;margin-bottom:10px; border-radius: 10px;max-height:105px;margin-left:30px">';
+                    commentHTML += '<div style="display: flex; align-items: flex-start; padding: 20px;">';
+                    commentHTML += '<div class="user-initials" style="width: 50px; height: 50px; background-color: gray; border-radius: 50%; text-align: center; line-height: 31px; color: white; font-weight: bold; margin-right: 10px;padding:10px;line-width:20px">' + initials + '</div>';
+                    commentHTML += '<div style="flex-grow: 1;">';
+                    commentHTML += '<p style="margin-top: -0.2%; margin-bottom: 0;font-size:20px">' + comment["user"]["user_name"] + " " + comment["user"]["surname"] + '</p>';
+
+                    commentHTML += '<div style="display: flex; flex-direction: row;">';
+                    if (comment["rate_comment"] !== null) {
+                        commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:850px">' + comment["rate_comment"] + '</p>';
+                    }
+                    commentHTML += '<p style="margin-top: -16px; margin-bottom: 0; font-size: 30px; margin-left: auto;color:#FFD700">' + starsHTML + '</p>';
+                    commentHTML += '</div>';
+
+                    commentHTML += '</div>';
+                    commentHTML += '</div>';
+                    commentHTML += '</div>';
+                    commentHTML += '</div>';
+
+                    $('#rewey').append(commentHTML);
+                });
+
+                $('#exampleModal').on('hidden.bs.modal', function (e) {
+                    $('#rewey').empty();
+                });
+
+                console.log(Product);
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+
+        $.ajax({
+            url: '/Home/CountRatings',
+            type: 'GET',
+            data: { productId: productId },
+            success: function (data) {
+                var count5 = data[5] || 0;
+                var count4 = data[4] || 0;
+                var count3 = data[3] || 0;
+                var count2 = data[2] || 0;
+                var count1 = data[1] || 0;
+
+                $('#five').text(count5);
+                $('#four').text(count4);
+                $('#three').text(count3);
+                $('#two').text(count2);
+                $('#one').text(count1);
+
+                var totalRatings = count5 + count4 + count3 + count2 + count1;
+                var percentage5 = totalRatings > 0 ? (count5 / totalRatings) * 100 : 0;
+                var percentage4 = totalRatings > 0 ? (count4 / totalRatings) * 100 : 0;
+                var percentage3 = totalRatings > 0 ? (count3 / totalRatings) * 100 : 0;
+                var percentage2 = totalRatings > 0 ? (count2 / totalRatings) * 100 : 0;
+                var percentage1 = totalRatings > 0 ? (count1 / totalRatings) * 100 : 0;
+
+                $('#progress-bar').css('width', percentage5 + '%');
+                $('#progress-bar1').css('width', percentage4 + '%');
+                $('#progress-bar2').css('width', percentage3 + '%');
+                $('#progress-bar3').css('width', percentage2 + '%');
+                $('#progress-bar4').css('width', percentage1 + '%');
+            },
+            error: function (error) {
+                console.error('Ошибка при получении количества оценок:', error);
+            }
+        });
+
+        var packageId = $(this).data("package_id");
+        var providerId = $(this).data("provider_id");
+
+        getPackageNameById(packageId)
+            .then(function (packageName) {
+                $('#productSup').text("Упаковка: " + packageName);
+            })
+            .catch(function (error) {
+                console.error("Ошибка при получении имени пакета:", error);
+            });
+
+        getProviderNameById(providerId)
+            .then(function (providerName) {
+                $('#productpa').text("Поставщик: " + providerName);
+            })
+            .catch(function (error) {
+                console.error("Ошибка при получении имени поставщика:", error);
+            });
+    });
+}
 

@@ -159,7 +159,7 @@ namespace diplom.Controllers
 
             return View(viewModel);
         }
-
+        [HttpGet]
         public PartialViewResult FilteredProductsPartial(int? categoryId, int? secondCategoryId, int? thirdCategoryId, int? fourthCategoryId, int? fifthCategoryId)
         {
             IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
@@ -170,11 +170,8 @@ namespace diplom.Controllers
             FilterProductsByCategory(ref productsQuery, fourthCategoryId);
             FilterProductsByCategory(ref productsQuery, fifthCategoryId);
 
-            var model = new ProductViewModel
-            {
-                HasResults = productsQuery.Any(),
-                Products = productsQuery.ToList()
-            };
+            var model = productsQuery.ToList();
+
 
             return PartialView("_ProductPartial", model);
         }
@@ -189,6 +186,7 @@ namespace diplom.Controllers
 
                 productsQuery = productsQuery
                     .Where(p => productIdsInCategory.Contains(p.IdProduct));
+               
             }
         }
 
@@ -302,6 +300,48 @@ namespace diplom.Controllers
                 return Json(new { success = false, message = "Неверный номер телефона или пароль." });
             }
         }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateOrder(string city, string address, string comment, int totalPrice)
+        {
+            try
+            {
+                // Получаем идентификатор пользователя из куки
+                string userIdCookie = Request.Cookies["UserId"];
+
+                if (string.IsNullOrEmpty(userIdCookie))
+                {
+                    return StatusCode(401, new { error = "User ID not found in cookies" });
+                }
+
+                // Создаем новый заказ
+                var order = new _order
+                {
+                    status_id = 1, // Например, устанавливаем начальный статус заказа
+                    order_city = city,
+                    order_date = DateTime.Now,
+                    order_address = address,
+                    order_commentary = comment,
+                    OrderSum = totalPrice,
+                    _user_id = int.Parse(userIdCookie) // Преобразуем строку с идентификатором пользователя в целое число
+                };
+
+                // Добавляем заказ в контекст базы данных
+                db._orders.Add(order);
+
+                // Сохраняем изменения в базе данных
+                await db.SaveChangesAsync();
+
+                // Возвращаем успешный ответ с сообщением о создании заказа
+                return Ok(new { message = "Order created successfully", orderId = order.Idorder });
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем соответствующий статус код и сообщение об ошибке
+                return StatusCode(500, new { error = $"Failed to create order: {ex.Message}" });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> SaveComment(int productId, string comment, int rating)
         {
@@ -348,6 +388,55 @@ namespace diplom.Controllers
             // Возвращаем успешный результат с JSON объектом
             return Ok(response);
         }
+
+
+        [HttpPost]
+        public IActionResult AddItemsToOrderDetails(int orderId)
+        {
+            try
+            {
+                // Получаем UserId из куки
+                string userIdCookie = Request.Cookies["UserId"];
+
+                // Проверяем, существует ли запись в таблице UserLike
+                if (int.TryParse(userIdCookie, out int userId))
+                {
+                    // Получаем товары в корзине пользователя
+                    var userBasketItems = db.User_Baskets
+                        .Where(item => item.UserID == userId)
+                        .ToList();
+
+                    // Добавляем каждый товар из корзины пользователя в таблицу order_detail
+                    foreach (var item in userBasketItems)
+                    {
+                        db.order_detail.Add(new order_detail
+                        {
+                            id_product = item.ProductID,
+                            id_order = orderId, // Используем переданный идентификатор заказа
+                            product_take = 1 // Предположим, что каждый товар взят по одному
+                        });
+                    }
+
+                    db.SaveChanges();
+
+                    // Удаление товаров из корзины пользователя после добавления в заказ
+                    db.User_Baskets.RemoveRange(userBasketItems);
+                    db.SaveChanges();
+
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { error = "UserId не найден в куках" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем сообщение об ошибке
+                return Json(new { error = ex.Message });
+            }
+        }
+
 
         [HttpGet]
         public IActionResult CheckComment(int productId)

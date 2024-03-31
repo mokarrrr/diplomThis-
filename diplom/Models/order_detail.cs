@@ -10,6 +10,9 @@ namespace diplom.Models
         public Product product { get; set; }
         
         public int id_order { get; set; }
+
+        public int product_take { get; set; }
+
         public _order _Order { get; set; }
 
     }
