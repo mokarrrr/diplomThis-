@@ -1694,94 +1694,11 @@
 
 
     <script>
-        function updateTotalPrice() {
-            var totalPrice = 0;
-
-            var priceElements = document.getElementsByClassName('price');
-
-            for (var i = 0; i < priceElements.length; i++) {
-                var priceText = priceElements[i].textContent;
-
-                console.log("Цена товара текст:", priceText);
-
-                // Находим элемент скидки
-                var saleElement = priceElements[i].parentNode.parentNode.querySelector('.sale');
-
-                console.log("Элемент скидки:", saleElement);
-
-                // Инициализируем переменную для хранения размера скидки
-                var discount = 0;
-
-                // Если найден элемент скидки, извлекаем размер скидки
-                if (saleElement) {
-                    var saleText = saleElement.textContent;
-                    console.log("Текст скидки:", saleText);
-                    // Удаляем символы '%' и '-' из строки скидки
-                    saleText = saleText.replace(/[%-]/g, '');
-                    discount = parseFloat(saleText); // Преобразуем текст скидки в число
-                    console.log("Размер скидки:", discount);
-                }
-
-                // Получаем цену до скидки (получаем только число из строки цены)
-                var originalPrice = parseFloat(priceText.replace(' руб.', '').replace('Цена: ', '').replace('-', ''));
-
-                console.log("Оригинальная цена:", originalPrice);
-
-                // Получаем количество товаров из соответствующего поля ввода
-                var productId = priceElements[i].id.split('_')[1];
-                var quantityInput = document.getElementById('quantity_' + productId);
-
-                console.log("Поле ввода количества товара:", quantityInput);
-
-                if (quantityInput) {
-                    if (quantityInput.value.startsWith('0') && quantityInput.value !== '0') {
-                        quantityInput.value = 0;
-                    }
-
-                    var quantity = parseInt(quantityInput.value);
-
-                    console.log("Количество товара:", quantity);
-
-                    if (isNaN(quantity)) {
-                        quantity = 0;
-                    }
-
-                    // Вычисляем цену со скидкой и общую стоимость товара
-                    var discountedPrice = originalPrice - (originalPrice * discount / 100);
-                    var totalProductPrice = discountedPrice * quantity;
-
-                    console.log("Цена со скидкой:", discountedPrice);
-                    console.log("Общая стоимость товара:", totalProductPrice);
-
-                    totalPrice += totalProductPrice;
-                }
-            }
-
-            console.log("Общая сумма:", totalPrice);
-
-            document.getElementById('sumorder').textContent = totalPrice + " руб.";
-        }
-
-        // Получаем все поля ввода количества товаров
-        var quantityInputs = document.querySelectorAll('[id^="quantity_"]');
-
-        quantityInputs.forEach(function (input) {
-            input.value = 1;
-        });
-
-        quantityInputs.forEach(function (input) {
-            input.addEventListener('input', updateTotalPrice);
-        });
-
-        updateTotalPrice(); // Вызываем функцию для первоначального расчета общей суммы
-    </script>
-
-
-    <script>
         $(document).ready(function () {
+            var productQuantities = {}; // Объявляем объект productQuantities
+
             // Обработчик нажатия на кнопку "Заказать"
             $("#orderbutton").click(function () {
-                // Вызываем функцию updateTotalPrice() для получения общей суммы заказа
                 updateTotalPrice();
 
                 // Получаем общую сумму заказа из элемента с id="sumorder"
@@ -1809,6 +1726,14 @@
                     totalPrice: numericTotalPrice
                 };
 
+                // Заполняем объект productQuantities количеством каждого товара
+                var quantityInputs = document.querySelectorAll('[id^="quantity_"]');
+                quantityInputs.forEach(function (input) {
+                    var productId = input.id.split('_')[1];
+                    var quantity = parseInt(input.value);
+                    productQuantities[productId] = quantity;
+                });
+
                 // Отправляем данные на сервер для создания заказа
                 $.ajax({
                     url: "/Home/CreateOrder",
@@ -1825,7 +1750,7 @@
                         $.ajax({
                             url: "/Home/AddItemsToOrderDetails",
                             type: "POST",
-                            data: { orderId: orderId },
+                            data: { orderId: orderId, productQuantities: productQuantities },
                             success: function (addItemResponse) {
                                 // Обработка успешного ответа от сервера при добавлении товаров в заказ
                                 console.log("Товары успешно добавлены в заказ:", addItemResponse);
@@ -1846,7 +1771,89 @@
                     }
                 });
             });
+
+            function updateTotalPrice() {
+                var totalPrice = 0;
+
+                var priceElements = document.getElementsByClassName('price');
+
+                for (var i = 0; i < priceElements.length; i++) {
+                    var priceText = priceElements[i].textContent;
+
+                    console.log("Цена товара текст:", priceText);
+
+                    // Находим элемент скидки
+                    var saleElement = priceElements[i].parentNode.parentNode.querySelector('.sale');
+
+                    console.log("Элемент скидки:", saleElement);
+
+                    // Инициализируем переменную для хранения размера скидки
+                    var discount = 0;
+
+                    // Если найден элемент скидки, извлекаем размер скидки
+                    if (saleElement) {
+                        var saleText = saleElement.textContent;
+                        console.log("Текст скидки:", saleText);
+                        // Удаляем символы '%' и '-' из строки скидки
+                        saleText = saleText.replace(/[%-]/g, '');
+                        discount = parseFloat(saleText); // Преобразуем текст скидки в число
+                        console.log("Размер скидки:", discount);
+                    }
+
+                    // Получаем цену до скидки (получаем только число из строки цены)
+                    var originalPrice = parseFloat(priceText.replace(' руб.', '').replace('Цена: ', '').replace('-', ''));
+
+                    console.log("Оригинальная цена:", originalPrice);
+
+                    // Получаем количество товаров из соответствующего поля ввода
+                    var productId = priceElements[i].id.split('_')[1];
+                    var quantityInput = document.getElementById('quantity_' + productId);
+
+                    console.log("Поле ввода количества товара:", quantityInput);
+
+                    if (quantityInput) {
+                        if (quantityInput.value.startsWith('0') && quantityInput.value !== '0') {
+                            quantityInput.value = 0;
+                        }
+
+                        var quantity = parseInt(quantityInput.value);
+
+                        console.log("Количество товара:", quantity);
+
+                        if (isNaN(quantity)) {
+                            quantity = 0;
+                        }
+
+                        // Вычисляем цену со скидкой и общую стоимость товара
+                        var discountedPrice = originalPrice - (originalPrice * discount / 100);
+                        var totalProductPrice = discountedPrice * quantity;
+
+                        console.log("Цена со скидкой:", discountedPrice);
+                        console.log("Общая стоимость товара:", totalProductPrice);
+
+                        totalPrice += totalProductPrice;
+                    }
+                }
+
+                console.log("Общая сумма:", totalPrice);
+
+                document.getElementById('sumorder').textContent = totalPrice + " руб.";
+            }
+
+            // Получаем все поля ввода количества товаров
+            var quantityInputs = document.querySelectorAll('[id^="quantity_"]');
+
+            quantityInputs.forEach(function (input) {
+                input.value = 1;
+            });
+
+            quantityInputs.forEach(function (input) {
+                input.addEventListener('input', updateTotalPrice);
+            });
+
+            updateTotalPrice(); // Вызываем функцию для первоначального расчета общей суммы
         });
+
     </script>
 
 

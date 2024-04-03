@@ -391,7 +391,7 @@ namespace diplom.Controllers
 
 
         [HttpPost]
-        public IActionResult AddItemsToOrderDetails(int orderId)
+        public IActionResult AddItemsToOrderDetails(int orderId, Dictionary<int, int> productQuantities)
         {
             try
             {
@@ -401,25 +401,51 @@ namespace diplom.Controllers
                 // Проверяем, существует ли запись в таблице UserLike
                 if (int.TryParse(userIdCookie, out int userId))
                 {
-                    // Получаем товары в корзине пользователя
-                    var userBasketItems = db.User_Baskets
-                        .Where(item => item.UserID == userId)
-                        .ToList();
-
                     // Добавляем каждый товар из корзины пользователя в таблицу order_detail
-                    foreach (var item in userBasketItems)
+                    foreach (var kvp in productQuantities)
                     {
-                        db.order_detail.Add(new order_detail
+                        int productId = kvp.Key;
+                        int quantity = kvp.Value;
+
+                        // Получаем продукт по его идентификатору
+                        var product = db.Product.FirstOrDefault(p => p.IdProduct == productId);
+
+                        if (product != null)
                         {
-                            id_product = item.ProductID,
-                            id_order = orderId, // Используем переданный идентификатор заказа
-                            product_take = 1 // Предположим, что каждый товар взят по одному
-                        });
+                            // Проверяем, достаточное ли количество товара на складе
+                            if (product.product_remain >= quantity)
+                            {
+                                // Вычитаем quantity из product_remain
+                                product.product_remain -= quantity;
+
+                                // Создаем запись в таблице order_detail
+                                db.order_detail.Add(new order_detail
+                                {
+                                    id_product = productId,
+                                    id_order = orderId,
+                                    product_take = quantity
+                                });
+                            }
+                            else
+                            {
+                                // Если на складе не достаточно товара, возвращаем ошибку
+                                return Json(new { error = $"Недостаточно товара с идентификатором {productId}" });
+                            }
+                        }
+                        else
+                        {
+                            // Если продукт не найден, возвращаем ошибку
+                            return Json(new { error = $"Продукт с идентификатором {productId} не найден" });
+                        }
                     }
 
                     db.SaveChanges();
 
                     // Удаление товаров из корзины пользователя после добавления в заказ
+                    var productIds = productQuantities.Keys.ToList();
+                    var userBasketItems = db.User_Baskets
+                        .Where(item => item.UserID == userId && productIds.Contains(item.ProductID))
+                        .ToList();
                     db.User_Baskets.RemoveRange(userBasketItems);
                     db.SaveChanges();
 
@@ -436,6 +462,8 @@ namespace diplom.Controllers
                 return Json(new { error = ex.Message });
             }
         }
+
+
 
 
         [HttpGet]
