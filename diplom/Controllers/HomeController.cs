@@ -432,15 +432,16 @@ namespace diplom.Controllers
                                 return Json(new { error = $"Недостаточно товара с идентификатором {productId}" });
                             }
                         }
-                        // Удаление товаров из корзины пользователя после добавления в заказ
-                        var productIds = productQuantities.Keys.ToList();
-                        var userBasketItems = db.User_Baskets
-                            .Where(item => item.UserID == userId && productIds.Contains(item.ProductID))
-                            .ToList();
-                        db.User_Baskets.RemoveRange(userBasketItems);
-                        db.SaveChanges();
                     }
+
+                    // Удаление товаров из корзины пользователя после добавления в заказ
+                    var productIdsToRemove = productQuantities.Where(kvp => kvp.Value >= 1).Select(kvp => kvp.Key).ToList();
+                    var userBasketItems = db.User_Baskets
+                        .Where(item => item.UserID == userId && productIdsToRemove.Contains(item.ProductID))
+                        .ToList();
+                    db.User_Baskets.RemoveRange(userBasketItems);
                     db.SaveChanges();
+
                     return Json(new { success = true });
                 }
                 else
@@ -454,6 +455,7 @@ namespace diplom.Controllers
                 return Json(new { error = ex.Message });
             }
         }
+
 
 
 
