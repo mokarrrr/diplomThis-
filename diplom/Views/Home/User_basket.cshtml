@@ -1838,6 +1838,21 @@
                 console.log("Общая сумма:", totalPrice);
 
                 document.getElementById('sumorder').textContent = totalPrice + " руб.";
+
+                // Проверяем, есть ли товары в корзине
+                var quantityInputs = document.querySelectorAll('[id^="quantity_"]');
+                var totalQuantity = 0;
+                quantityInputs.forEach(function (input) {
+                    var quantity = parseInt(input.value);
+                    totalQuantity += quantity;
+                });
+
+                // Если в корзине только один товар и его количество равно 0, отключаем кнопку "Заказать"
+                if (totalQuantity === 0 && quantityInputs.length === 1) {
+                    $("#orderbutton").prop("disabled", true);
+                } else {
+                    $("#orderbutton").prop("disabled", false);
+                }
             }
 
             // Получаем все поля ввода количества товаров

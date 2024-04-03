@@ -410,7 +410,7 @@ namespace diplom.Controllers
                         // Получаем продукт по его идентификатору
                         var product = db.Product.FirstOrDefault(p => p.IdProduct == productId);
 
-                        if (product != null)
+                        if (product != null && quantity > 0)
                         {
                             // Проверяем, достаточное ли количество товара на складе
                             if (product.product_remain >= quantity)
@@ -432,23 +432,15 @@ namespace diplom.Controllers
                                 return Json(new { error = $"Недостаточно товара с идентификатором {productId}" });
                             }
                         }
-                        else
-                        {
-                            // Если продукт не найден, возвращаем ошибку
-                            return Json(new { error = $"Продукт с идентификатором {productId} не найден" });
-                        }
+                        // Удаление товаров из корзины пользователя после добавления в заказ
+                        var productIds = productQuantities.Keys.ToList();
+                        var userBasketItems = db.User_Baskets
+                            .Where(item => item.UserID == userId && productIds.Contains(item.ProductID))
+                            .ToList();
+                        db.User_Baskets.RemoveRange(userBasketItems);
+                        db.SaveChanges();
                     }
-
                     db.SaveChanges();
-
-                    // Удаление товаров из корзины пользователя после добавления в заказ
-                    var productIds = productQuantities.Keys.ToList();
-                    var userBasketItems = db.User_Baskets
-                        .Where(item => item.UserID == userId && productIds.Contains(item.ProductID))
-                        .ToList();
-                    db.User_Baskets.RemoveRange(userBasketItems);
-                    db.SaveChanges();
-
                     return Json(new { success = true });
                 }
                 else
@@ -462,6 +454,7 @@ namespace diplom.Controllers
                 return Json(new { error = ex.Message });
             }
         }
+
 
 
 
