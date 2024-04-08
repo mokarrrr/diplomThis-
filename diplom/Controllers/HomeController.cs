@@ -46,6 +46,51 @@ namespace diplom.Controllers
         {
             return View();
         }
+        //public IActionResult AdminPage()
+        //{
+        //    return View();
+        //}
+        public ActionResult AdminPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames, int? categoryId, int? secondCategoryId, int? thirdCategoryId, int? fourthCategoryId, int? fifthCategoryId)
+        {
+            IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
+            bool hasResults = true;
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                productsQuery = productsQuery
+                    .Where(p => p.Name_product.Contains(searchQuery) || p.product_article.Contains(searchQuery));
+                hasResults = productsQuery.Any();
+            }
+            else
+            {
+                hasResults = productsQuery.Any();
+            }
+
+            // Фильтруем продукты по каждой категории, если соответствующий categoryId не равен null
+            FilterProductsByCategory(ref productsQuery, categoryId);
+            FilterProductsByCategory(ref productsQuery, secondCategoryId);
+            FilterProductsByCategory(ref productsQuery, thirdCategoryId);
+            FilterProductsByCategory(ref productsQuery, fourthCategoryId);
+            FilterProductsByCategory(ref productsQuery, fifthCategoryId);
+
+            var productsList = productsQuery.ToList();
+
+            Dictionary<int, double> productAverageRates = productsList
+                .ToDictionary(p => p.IdProduct, p => p.Rates.Any() ? p.Rates.Average(r => r._Rate) : 0);
+            ProductViewModel viewModel = new ProductViewModel
+            {
+                Products = productsList,
+                HasResults = hasResults,
+                ProductCount = productsList.Count,
+                PackageNames = packageNames,
+                ProviderNames = providerNames,
+                SelectedProductId = selectedProductId ?? 0,
+                ProductAverageRates = productAverageRates,
+
+            };
+
+            return View(viewModel);
+        }
 
         public IActionResult UserOrders()
         {
@@ -284,20 +329,57 @@ namespace diplom.Controllers
 
             if (user != null && VerifyPassword(password, user.user_password))
             {
-                // Если учетные данные верны, устанавливаем куку
+                // Если учетные данные верны
                 HttpContext.Response.Cookies.Append("UserId", user.IdUser.ToString(), new CookieOptions
                 {
-                    Expires = DateTime.Now.AddHours(400), // Установите желаемое время жизни куки
+                    Expires = DateTime.Now.AddHours(400),
                     HttpOnly = true,
-                    Secure = false, // Устанавливаем Secure в false, чтобы кука отправлялась в любом случае
-                    Path = "/" // Устанавливаем путь, чтобы куки были доступны на всех страницах сайта
+                    Secure = false,
+                    Path = "/"
                 });
 
-                return Json(new { success = true, message = "Авторизация успешна.", userName = user.User_name });
+                // Включаем информацию о роли пользователя в JSON ответ
+                var responseData = new
+                {
+                    success = true,
+                    message = "Авторизация успешна.",
+                    userName = user.User_name,
+                    role = user.role  // Передаем роль пользователя
+                };
+
+                return Json(responseData);
             }
             else
             {
                 return Json(new { success = false, message = "Неверный номер телефона или пароль." });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult CancelOrder(int id)
+        {
+            try
+            {
+                // Найдите заказ по его идентификатору в базе данных и установите статус 6 (Отменен)
+                var order = db._orders.FirstOrDefault(o => o.Idorder == id);
+
+                if (order != null)
+                {
+                    order.status_id = 6; // Устанавливаем статус "Отменен"
+
+                    // Сохраняем изменения в базе данных
+                    db.SaveChanges();
+
+                    return Ok(); // Возвращаем успешный результат
+                }
+                else
+                {
+                    return NotFound(); // Заказ не найден
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ошибка при отмене заказа: {ex.Message}"); // Возвращаем ошибку сервера
             }
         }
 

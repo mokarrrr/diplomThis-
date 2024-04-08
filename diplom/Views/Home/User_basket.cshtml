@@ -430,10 +430,13 @@
             <hr style="color: black;background: black;border: black;height: 1px;">                   
 
             <center>
-                <input id="cityInput" placeholder="Город назначения" />
-                <input id="addressInput" placeholder="Ваш адрес" />
-                <input id="commentInput" placeholder="Комментарий к заказу" />
-                <p id="suuummorder">Сумма к оплате:</p>
+                <input id="cityInput" placeholder="Город назначения" style="display: block; margin-bottom: 10px;height:38px" />
+                <input id="addressInput" placeholder="Ваш адрес" style="display: block; margin-bottom: 10px;height:38px" />
+                <div style="display: flex; justify-content: flex-end;margin-right:12.5%">
+                    <div id="charCount">0 / 100</div>
+                </div>
+                <textarea id="commentInput" placeholder="Комментарий к заказу" style="background-color:white;width:600px;height:100px;margin-top: 5px; resize: none;font-size:20px" maxlength="100" "></textarea>
+                <p id="suuummorder" style="display: block;">Сумма к оплате:</p>
             </center>
 
             <center style="margin-top:20px">
@@ -444,7 +447,7 @@
                     </center>
 
                 </button>
-                <p id="errorMessage2" style="color:red;z-index:1;display:none">Необходимо поставить оценку</p>
+                <p id="errorMessagenull" style="color:red;z-index:1;display:none">Необходимо поставить оценку</p>
             </center>
 
 
@@ -1708,7 +1711,7 @@
                 var numericTotalPrice = parseInt(totalPrice.replace(/[^\d.-]/g, ''));
 
                 // Передаем общую сумму заказа в модальное окно (только числовую часть)
-                $("#suuummorder").text("Сумма к оплате: " + numericTotalPrice.toFixed(2));
+                $("#suuummorder").text("Сумма к оплате: " + numericTotalPrice+" рублей");
 
                 // Показываем модальное окно
                 $("#modalсomm").show();
@@ -1872,7 +1875,28 @@
     </script>
 
 
+    <script>
+        // Функция для обновления счетчика символов
+        function updateCharCount() {
+            var maxLength = 100; // Максимальное количество символов
+            var currentLength = $('#commentInput').val().length; // Текущее количество символов
+            var charsLeft = maxLength - currentLength; // Сколько осталось символов
 
+            // Обновляем текст в счетчике символов
+            $('#charCount').text(currentLength + ' / ' + maxLength);
+        }
+
+        $(document).ready(function () {
+            // Вызываем функцию обновления счетчика символов при загрузке страницы
+            updateCharCount();
+
+            // Добавляем обработчик события ввода текста в текстовое поле
+            $('#commentInput').on('input', function () {
+                // Вызываем функцию обновления счетчика символов при изменении текста
+                updateCharCount();
+            });
+        });
+    </script>
 
 
 

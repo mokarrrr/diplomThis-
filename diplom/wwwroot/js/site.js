@@ -820,21 +820,33 @@ function getPrice(card) {
                     data: formData,
                     dataType: 'json',
                     success: function (data) {
+                        console.log(data); // Вывод данных, полученных с сервера
                         if (data.success) {
                             // Успешная авторизация
 
-                            // Скрываем модальное окно
-                            $('#modal').hide();
+                            // Закрытие модального окна
+                            $('#modal').modal('hide');
 
-                            // Скрываем сообщение об ошибке (если видимо)
+                            // Скрытие сообщения об ошибке (если видимо)
                             $('#errorMessage').hide();
 
-                            // Устанавливаем значение в Local Storage
+                            // Установка значения в Local Storage
                             localStorage.setItem("AuthenticationSuccess", "1");
-                            location.reload();
+
+                            // Проверка роли пользователя
+                            var role = data.role.trim(); // Удаляем пробелы в значении роли
+                            if (role === "admin") {
+                                console.log("User is an admin. Redirecting to AdminPage...");
+                                // Перенаправление на страницу администратора
+                                window.location.href = '/Home/AdminPage';
+                            } else {
+                                console.log("User is not an admin. Reloading current page...");
+                                // Перезагрузка текущей страницы
+                                location.reload();
+                            }
 
                         } else {
-                            // Показываем сообщение об ошибке
+                            // Показ сообщения об ошибке
                             $('#errorMessage').show();
                         }
                     },

@@ -1,0 +1,1244 @@
+﻿
+
+
+
+
+@model diplom.Models.ViewModels.ProductViewModel;
+<link rel="stylesheet" href="~/css/mainwindow.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+
+<body>
+    <div class="Main">
+
+        <button id="backToTop" title="Go to top" style="display: none;">
+            <i class="fa fa-angle-up"></i>
+        </button>
+
+        <!-- Модальное окно -->
+
+        <div id="modal" class="modal" style="overflow-y:hidden;">
+            <!-- Модальный контент -->
+            <div class="modal-content" style="z-index:2">
+                @using (Html.BeginForm("MainPage", "", FormMethod.Post, new { id = "loginForm" }))
+                {
+                    <div id="loginContent">
+                        <span class="close">&times;</span>
+                        <h2>Авторизация</h2>
+
+                        @Html.TextBox("phoneLogin", "", new { placeholder = "Введите номер телефона",@class = "phoneregister2",style ="width: 98% !important;" })
+
+                        <div style="display:flex">
+                            @* @Html.TextBox("password", "", new { placeholder = "Введите пароль" }) *@
+                            <input id="password" type="password" placeholder="Введите пароль">
+                            <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
+                                &#128065;
+                            </button>
+                        </div>
+                        <p id="errorMessage" style="color:red;z-index:1;display:none">⚠️ Проверьте правильность заполенения полей</p>
+                        <button type="button" id="loginButton">Войти</button>
+                        <button id="switchToRegister">Регистрация</button>
+                    </div>
+                }
+                @using (Html.BeginForm("MainPage", "Home", FormMethod.Post, new { id = "loginForm2" }))
+                {
+                    <div id="registerContent" style="display:none;">
+                        <span class="close">&times;</span>
+                        <h2 style="height:70px">
+                            <button id="returnToLoginButton" style="font-size:16pt;background-color:transparent;color:black">&#8592;</button>
+                            Авторизация
+
+                        </h2>
+
+                        @* <input type="text" placeholder="Email"> *@
+                        @Html.TextBox("Email", "", new { placeholder = "Email", })
+                        <div id="mailExistsErrorMessage" style="display:none;">
+                            <p style="z-index:1;color:red;margin-top: 1%;">Пользователь с такой почтой уже существует</p>
+                        </div>
+                        <div id="mailErrorMessage" style="display:none;">
+                            <p style="z-index:1;color:red;margin-top: 1%;">Проверьте правильность заполнения поля</p>
+                        </div>
+                        @Html.TextBox("Name", "", new { placeholder = "Ваше имя", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')" })
+                        @Html.TextBox("lastName", "", new { placeholder = "Ваша фамилия", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')" })
+                        <div style="display:flex">
+                            <input id="passwordregister" type="password" placeholder="Пароль">
+                            <button id="showPasswordButton2" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
+                                &#128065;
+                            </button>
+                        </div>
+                        @* @Html.TextBox("passwordregister", "", new { placeholder = "Пароль" }) *@
+                        <div style="display:flex">
+                            <input id="passwordregistersecond" type="password" placeholder="Повторите пароль" style="width:710px;margin-top:3px">
+                            <button id="showPasswordButton3" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -10px;">
+                                &#128065;
+                            </button>
+                        </div>
+                        <p id="errorMessage3" style="color:red;z-index:1;display:none">Пароли не совпадают</p>
+                        @* @Html.TextBox("passwordregistersecond", "", new { placeholder = "Повторите пароль" }) *@
+
+                        @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
+                        @Html.TextBox("phoneRegister", "", new { placeholder = "Номер телефона",@class ="phoneRegister1",style ="width: 98% !important;"})
+                        <p id="phoneErrorMessage" style="z-index:1;color:red;margin-top: 1%;display:none">Неверный формат номера телефона</p>
+                        <div id="phoneExistsErrorMessage" style="display:none;">
+                            <p style="z-index:1;color:red;margin-top: 1%;margin-left: 5%;">Пользователь с таким номером телефона уже существует</p>
+                        </div>
+                        <div style="display:flex;height:70px;align-items: center;gap:10px;">
+                            <input id="givetrue" type="checkbox" />
+                            <a id="consentLink" style="color: black">Даю согласие на обработку персональных данных</a>
+                        </div>
+
+                        <p id="errorMessage2" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
+
+
+                        <center> <button id="registerButton" style="height:50px;color:black" type="button">Зарегистрироваться</button> </center>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div id="modaluserr" class="modal" style="overflow-y:hidden">
+            <!-- Модальный контент -->
+            <div class="modal-content4" style="height:700px; border: 3px solid black;border-radius: 25px;">
+                <span class="close" style="margin-top:-5px">&times;</span>
+                <center>
+                    <h5 class="modal-title" style="margin-top:-5px">
+                        Личный кабинет
+                    </h5>
+                </center>
+                <hr style="color: black;background: black;border: black;height: 1px;">
+                <div style="display:flex;width:100%;height:100%;gap:250px">
+                    <div>
+                        <div id="myTabsuser" style="gap:20px;width: 207px;">
+                            <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-information">
+                                <i class="fas fa-home"></i>
+                                <div>Личная информация</div>
+                            </div>
+                            <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-password">
+                                <i class="fas fa-lock"></i>
+                                <div>Безопасность</div>
+                            </div>
+                            <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-history">
+                                <i class="fas fa-history"></i>
+                                <a href="/Home/UserOrders" style="color:black">История покупок</a>
+                            </div>
+                            <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-history">
+                                <center>
+                                    <button id="logoutButton"> Выход</button>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+
+                        <div style="width:100%;gap:50px;display:inline-grid;margin-top:40px">
+
+                            <!-- Содержимое вкладки "Личная информация" -->
+                            <div id="tab-information" class="tab-content">
+                                @* <form id="userForm"> *@
+
+                                <center style="padding:1%;margin-top:9%;margin-bottom: 15%;margin-left: 7%;">
+                                    <div class="userimg" style="height: 150px; width: 150px;">
+
+                                        <p id="nameuserphoto" style="margin-top:66px">Абоба</p>
+
+                                    </div>
+                                </center>
+                                <div style="display:inline-grid;gap:20px;margin-left: 11%;">
+                                    @Html.TextBox("Emailuser", "", new { placeholder = "Email",@class ="userinf" })
+                                    <p id="phoneMail10" style="z-index:100;color:red;margin-top: 2.2%;;display:none;position:absolute">Пользвоатель с такой почтой уже существует</p>
+                                    <p id="phoneMailMessage20" style="z-index:1;color:red;margin-top: 2.2%;display:none;position:absolute">Неверный формат почты</p>
+                                    @Html.TextBox("Nameuser", "", new { placeholder = "Ваше имя",@class ="userinf" })
+                                    @Html.TextBox("lastNameuser", "", new { placeholder = "Ваша фамилия",@class ="userinf" })
+
+                                    <div style="display:flex;gap:10px;margin-left:auto;margin-right:auto" class="userinf">
+                                        @* <p style="margin-left:-30px">+7</p> *@
+                                        @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
+                                        <div style="display:block">
+                                            @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
+                                            <p id="phoneErrorMessage10" style="z-index:1;color:red;margin-top: 1%;display:none;width: 118%;">Пользвоатель с таким номером телефона уже существует</p>
+                                            <p id="phoneErrorMessage20" style="z-index:1;color:red;margin-top: 1%;display:none;width: 118%">Неверный формат номера телефона</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p id="errorMessage5" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
+                                @* </form> *@
+                                <center style="margin-top: 14%;caret-color: transparent">
+                                    <button id="savebutton" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
+                                        <center style="">
+                                            <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>
+                                            <p style="margin-top:4px">Сохранить</p>
+                                        </center>
+                                    </button>
+                                </center>
+                            </div>
+                            <!-- Содержимое вкладки "Безопасность" -->
+                            <div id="tab-password" class="tab-content" style="display:none;margin-top:85%;">
+                                <!-- Ваше содержимое здесь -->
+
+                                <div style="display:flex; margin-bottom: 20px;">
+                                    <input class="userinf" id="passwordregistersend" type="password" placeholder="Введите старый пароль">
+                                    <button id="showPasswordButton4" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                        &#128065;
+                                    </button>
+                                </div>
+                                <p id="errorMessagepastab1" style="color:red;z-index:1;display:none;position:absolute;margin-top: -1%;margin-left: 1.2%;">Проверьте пароль</p>
+                                <div style="display:flex; margin-bottom: 20px;">
+                                    <input class="userinf" id="passwordregisterveryf" type="password" placeholder="Новый пароль">
+                                    <button id="showPasswordButton5" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                        &#128065;
+                                    </button>
+                                </div>
+                                <div style="display:flex; margin-bottom: 20px;">
+                                    <input class="userinf" id="passwordregisteveryf2r" type="password" placeholder="Повторите новый пароль">
+                                    <button id="showPasswordButton6" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                        &#128065;
+                                    </button>
+                                </div>
+                                <p id="errorMessagepastab" style="color:red;z-index:1;display:none;margin-left: 10.2%">Пароли не совпадают</p>
+                                <p id="errorMessage6" style="color:red;z-index:1;display:none;margin-left: 10.2%;">⚠️ Не все поля заполнены</p>
+                                <center style="margin-top: 14%;">
+                                    <button id="savebuttonpas" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
+                                        <center style="">
+                                            <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>
+                                            <p style="margin-top:4px">Сохранить</p>
+                                        </center>
+                                    </button>
+                                </center>
+                            </div>
+
+                            <!-- Содержимое вкладки "История покупок" -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="myModal1" class="modal1" style="overflow-x:hidden">
+            <div class="modal-content1">
+                <span class="close">&times;</span>
+                <h1>Политика Конфиденциальности Интернет-Магазина "Dairy Delights Emporium"</h1>
+                <p>Дата вступления в силу: 13.05.2004</p>
+                <h1>1. Общие положения</h1>
+                <p>Настоящая Политика конфиденциальности (далее – «Политика») действует в отношении всей информации, которую интернет-магазин "Dairy Delights Emporium", расположенный на доменном имени https://localhost:44330/, может получить о Пользователе во время использования сайта, программ и продуктов интернет-магазина.</p>
+                <h1>2. Основные понятия</h1>
+                <ul>
+                    <li>"Оператор" – интернет-магазин "Dairy Delights Emporium", осуществляющий обработку персональных данных, а также определяющий цели обработки персональных данных, состав персональных данных, подлежащих обработке, действия или операции, совершаемые с персональными данными.</li>
+                    <li>"Персональные данные" – любая информация, относящаяся прямо или косвенно к определенному или определяемому физическому лицу (субъекту персональных данных).</li>
+                    <li>"Пользователь" – любой посетитель веб-сайта интернет-магазина "Dairy Delights Emporium".</li>
+                </ul>
+                <h1>3. Принципы и цели обработки персональных данных</h1>
+                <p>1.Обработка персональных данных в "Dairy Delights Emporium" осуществляется на основе принципов:</p>
+                <ul>
+                    <li>законности и справедливых оснований;</li>
+                    <li>целесообразности обработки;</li>
+                    <li>соответствия целей обработки персональных данных.</li>
+                </ul>
+                <p>2.Цели обработки персональных данных:</p>
+                <ul>
+                    <li>осуществление деятельности, предусмотренной действующим законодательством Российской Федерации;</li>
+                    <li>выполнение обязательств "Dairy Delights Emporium" перед Пользователями относительно предоставления товаров и услуг.</li>
+                </ul>
+                <h1>4. Права субъекта персональных данных</h1>
+                <p>Пользователь имеет право на получение информации касательно обработки его персональных данных. В соответствии с законодательством РФ Пользователь вправе требовать уточнения своих персональных данных, их блокирования или уничтожения в случае, если такие данные являются неполными, устаревшими, неточными, незаконно полученными или не являются необходимыми для заявленной цели обработки.</p>
+                <hi>5. Меры по защите персональных данных</hi>
+                <p>"Dairy Delights Emporium" принимает необходимые и достаточные организационные и технические меры для защиты персональных данных от неправомерного или случайного доступа, уничтожения, изменения, блокирования, копирования, распространения, а также от иных неправомерных действий с ними.</p>
+                <h1>6. Изменения в Политике конфиденциальности</h1>
+                <p>Оператор имеет право вносить изменения в настоящую Политику. Новая редакция Политики вступает в силу с момента ее размещения на Сайте, если иное не предусмотрено новой редакцией Политики.</p>
+                <h1>7. Обратная связь. Вопросы и предложения</h1>
+                <p>Все предложения, вопросы, запросы и иные обращения по поводу настоящей Политики и использования своих персональных данных Пользователи вправе направлять по адресу: DairyDelightsEmporium@mail.ru.</p>
+            </div>
+        </div>
+
+
+        <header class="_header">
+            <div class="logo">
+                <a href="/Home/MainPage" class="company-name">Dairy Delights Emporium</a>
+            </div>
+            <div class="mogo">
+                <a href="/Home/AboutUsPage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
+            </div>
+            <div class="header-buttons">               
+                <button class="btn user-button" style="border: 2px solid black;" type="button" id="openAuthModalButton">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </header>
+        <div>
+            <img class="img1" src="/img/istockphoto-1471815457-1024x1024(2)(1).png" style="height: 1100px;width: 132%;margin-left: -290px;margin-top: -260px;z-index:-2;" />
+        </div>
+        <div class="main_body">
+            <form method="get">
+                <div class="container1">
+                    <div class="search_bar">
+                        <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
+                    </div>                 
+
+                </div>
+            </form>
+            <div class="container2">
+                <p id="userNameDisplay"></p>
+                <select name="filter" id="filter">
+                    <option value="by_popularity">Сортировка</option>
+                    <option value="by_alphabet">По алфавиту</option>
+                    <option value="cheaper">Дешевле</option>
+                    <option value="expensive">Дороже</option>
+                </select>
+                <label class="count_product">@Model.ProductCount товар</label>
+            </div>
+
+            <div class="container3" id="container3">
+                @if (Model.HasResults)
+                {
+                    @await Html.PartialAsync("_ProductPartial", Model.Products)
+                }
+                else
+                {
+                    <p class="error">К сожалению, по вашему запросу ничего не найдено.</p>
+                }
+            </div>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="">
+                <div class="modal-dialog">
+                    <div class="modal-content2">
+                        <div class="modal-header" style="font-family: 'Dancing Script', cursive;font-weight:bold;font-size:20px">
+                            <h5 class="modal-title" id="exampleModalLabel" style="margin-top:-5px">
+                                Информация о товаре
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background-color: transparent;border: none;margin-top:-55px">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row" style="margin-top:-15px;">
+                                <div class="col-sm-3 tovarimg"></div>
+                                <div class="col-sm-9 tovarinfo"></div>
+                            </div>
+                            <hr style="color: black;background: black;border: black;height: 1px;">
+                            <form class="formmy">
+                                <div class="form-groupimg">
+                                    <img id="productImage" class="img-responsive" style="width:580px;height:420px;" />
+                                </div>
+                                <div class="sale1"></div>
+
+                                <div style="display:block;padding-left:20px;grid-column:2;grid-row:1">
+                                    <div class="ihih">
+                                        <div class="form-groupdesc">
+                                            <center><label id="productNameLabel" for="exampleFormControlInput1"></label></center>
+                                        </div>
+
+                                        <div class="aboba">
+                                            <div class="form-groupprice">
+                                                <center><label id="productNameLabel" for="exampleFormControlInput1"></label></center>
+                                                <textarea id="description" class="form-control"> </textarea>
+                                                    <div style="display:flex;gap:20px;margin-top:-25px">
+                                                        <P>Цена:</P>
+                                                        <textarea id="productPrice" class="form-control" ></textarea>
+                                                        <textarea id="productWeight" class="form-control" ></textarea>
+                                                    </div>
+                                                <textarea id="productSostav" style="margin-top:-10px" class="form-control" ></textarea>
+                                                <textarea id="productArticle" class="form-control" ></textarea>
+                                                <div style="display:block;gap:10px">
+                                                        @* для поставщика и упаковки  *@
+                                                    <textarea id="productSupplier"> </textarea>
+                                                    <textarea id="productpa"></textarea>
+                                                    <p id="productrate"></p>
+                                                        @* <div id="rating-stars"></div> *@
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="gf" style="display:flex">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="myTabs">
+                                    <div class="tab" data-tab="tab-info">Подробная информация</div>
+                                    <div class="tab" data-tab="tab-reviews">Отзывы</div>
+                                </div>
+                                <div id="myTabsContent">
+                                    <div class="tab-content" id="tab-info-content" style="height:260px;margin-top:60px">
+                                        <div class="gav">
+                                            <div style="margin-top:30px">
+                                                <div class="form-groupart">
+                                                    <textarea id="productMassPerFat" class="form-control" ></textarea>
+                                                    <textarea id="productfat" class="form-control" ></textarea>
+                                                </div>
+                                                <div class="form-groupfat" style="display:flex;gap:5px;margin-top:-20px">
+                                                    <p>Пищевая ценность: </p>
+                                                    <textarea id="productProtein" class="form-control" ></textarea>
+                                                    <textarea id="productFatty" class="form-control"></textarea>
+                                                    <textarea id="productCarb" class="form-control"></textarea>
+                                                    
+                                                </div>
+                                                <div class="form-groupfat" style="margin-top:-20px">
+                                                    <textarea id="productEnergyValue" class="form-control"></textarea>
+                                                    <textarea id="productStorageLife" class="form-control"></textarea>
+                                                    <textarea id="productStorageConditions" class="form-control"></textarea>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="tab-content pagination" style="display:flex!important;gap:70px;overflow-y: auto;" id="tab-reviews-content">
+                                        <!-- Ваши отзывы и элементы для пагинации здесь -->
+                                        <div id="ratingcont" style="display:flex;gap:40px;width:100%">
+                                            <div class="ratesss">
+                                                <center>
+                                                    <p id="productrate2" style=" align-self: center;font-size: 25px;margin-top: 30px;"></p>
+
+                                                </center>
+                                                <center>
+                                                    <p style="grid-row:2;margin-top:-1px;font-size: 20px;font-weight:bold;">Общий рейтинг</p>
+                                                </center>
+                                            </div>
+                                            <div class="ratesss2">
+                                                <div class="taiting-starsss">
+                                                    <p style="margin-top: 9px;margin-left:20px">Класс</p>
+                                                    <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;&#9733;&#9733;&#9733;</p>
+                                                    <div style="display:flex">
+                                                        <p id="five" style="grid-column:3;margin-top:12px;z-index:1;margin-left:10px">апапав</p>
+                                                        <div class="progress-container" style="grid-column:3">
+                                                            <div class="progress-bar" id="progress-bar"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="taiting-starsss">
+                                                    <p style="margin-top: 9px;margin-left:20px">Хорошо</p>
+                                                    <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;&#9733;&#9733;</p>
+                                                    <p style="color: white;font-size: 25px;grid-column:2;margin-top: -65px;margin-left: 84px;">&#9734;</p>
+                                                    <div style="display:flex">
+                                                        <p id="four" style="grid-column:3;z-index: 1;margin-top: -53px; margin-left: 10px;">gfdfgdfgfd</p>
+                                                        <div class="progress-container" style="grid-column:3;margin-top: -55px;margin-left: -20px;">
+                                                            <div class="progress-bar" id="progress-bar1"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="taiting-starsss" style="margin-top: -30px;">
+                                                    <p style="margin-top: 9px;margin-left:20px;">Приемлемо</p>
+                                                    <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;&#9733;</p>
+                                                    <p style="color: white;font-size: 25px;grid-column:2;margin-top: -65px;margin-left: 63px;">&#9734;&#9734;</p>
+                                                    <div style="display:flex">
+                                                        <p id="three" style="grid-column:3;margin-top:-53px;z-index:1;margin-left: 10px;">gfdfgdfgfd</p>
+                                                        <div class="progress-container" style="grid-column:3;margin-top: -55px;margin-left: -20px;">
+                                                            <div class="progress-bar" id="progress-bar2"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="taiting-starsss" style="margin-top: -30px;">
+                                                    <center><p style="margin-top: 9px;margin-left:20px;">Плохо</p></center>
+                                                    <p style="color: #FFD700;font-size: 25px;"> &#9733;&#9733;</p>
+                                                    <p style="color: white;font-size: 25px;grid-column:2;margin-top: -64px;margin-left: 40px;">&#9734;&#9734;&#9734;</p>
+                                                    <div style="display:flex">
+                                                        <p id="two" style="grid-column:3;margin-top:-53px;z-index:1;margin-left: 10px;">gfdfgdfgfd</p>
+                                                        <div class="progress-container" style="grid-column:3;margin-top: -55px;margin-left: -20px;">
+                                                            <div class="progress-bar" id="progress-bar3"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="taiting-starsss" style="margin-top: -30px;">
+                                                    <p style="margin-top: 9px;margin-left:20px">Ужасно</p>
+                                                    <p style="color: #FFD700;font-size: 25px;"> &#9733</p>
+                                                    <p style="color: white;font-size: 25px;grid-column:2;margin-top: -65px; margin-left: 20px;">&#9734;&#9734;&#9734;&#9734;</p>
+                                                    <div style="display:flex">
+                                                        <p id="one" style="grid-column:3;margin-top:-53px;z-index:1;margin-left: 10px;">gfdfgdfgfd</p>
+                                                        <div class="progress-container" style="grid-column:3;margin-top: -55px;margin-left: -20px;">
+                                                            <div class="progress-bar" id="progress-bar4"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div id="rewey" style=" margin-top: 250px;margin-left: -1100px;width:97%;">
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="container4">
+                <footer class="footer">
+                    <div class="footer-left col-md-4 col-sm-6">
+                        <p class="about">
+                            <span> О нашей компании</span> "Dairy Delights Emporium - это гурманский рай для любителей сыра. С особой страстью к мастерству и качеству, мы предлагаем эксклюзивный ассортимент сыров, от классических французских бри и камамберов до редких и экзотических вариаций со всего мира. Наша миссия — дарить неповторимый вкус и наслаждение каждому клиенту, подбирая идеальные сыры для их стола, будь то повседневный ужин или особый праздничный приём. В Cheese Delight вы найдете сыр, который удовлетворит ваш гурманский вкус и превратит каждое блюдо в произведение искусства."
+                        </p>
+                        <div class="icons">
+                            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                            <a href="#"><i class="fa-brands fa-vk"></i></a>
+                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-center col-md-4 col-sm-6">
+                        <div>
+                            <i class="fa fa-map-marker"></i>
+                            <p><span> Наш адресс</span> Смоляной переулок,2</p>
+                        </div>
+                        <div>
+                            <i class="fa fa-phone"></i>
+                            <p> +7 9881 761 084</p> |
+                            <p> Ежедневно с 8 до 20</p>
+                        </div>
+                        <div>
+                            <i class="fa fa-envelope"></i>
+                            <p><a href="#"> DairyDelightsEmporium@mail.ru</a></p>
+                        </div>
+                    </div>
+                    <div class="footer-right col-md-4 col-sm-6">
+                        <h2> Dairy Delights <span> Emporium</span></h2>
+                        <p class="menu">
+                            <a href="#"> Каталог</a> |
+                            <a href="@Url.Action("AboutUsPage", "Home")" onclick="scrollToElement('mya')"> О нас</a> |
+                            <a href="@Url.Action("AboutUsPage", "Home")#contacts"> Контакты</a> |
+                            <a href="#myModal1" id="modalOpen"> Политика конфиденциальности</a>
+                        </p>
+                        <p class="name"> Dairy Delights Emporium; 2004</p>
+                    </div>
+                </footer>
+            </div>
+        </div>
+
+        @*         <svg width="0" height="0" style="display:none;">
+        <!-- Определение символа (звезды) -->
+        <symbol id="star" viewBox="0 0 24 24">
+        <path fill="#FFD700" d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6" />
+        </symbol>
+
+        <!-- Определение маски для отображения половины звезды -->
+        <mask id="half" maskContentUnits="objectBoundingBox">
+        <rect width="0.5" height="1" fill="white" />
+        <rect x="0.5" width="0.5" height="1" fill="black" />
+        </mask>
+        </svg> *@
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $(window).scroll(function () {
+                var scroll = $(window).scrollTop();
+                var mainBodyOffset = $('.main_body').offset().top;
+
+                if (scroll >= mainBodyOffset) {
+                    $('header').addClass('header-scrolled');
+                } else {
+                    $('header').removeClass('header-scrolled');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 50) {
+                    $('#backToTop').fadeIn();
+                } else {
+                    $('#backToTop').fadeOut();
+                }
+            });
+
+            $('#backToTop').click(function () {
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 400);
+                return false;
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var inputs = document.querySelectorAll('.phoneregister2');
+
+            inputs.forEach(function (input) {
+                input.addEventListener("input", function (event) {
+                    var keyCode = event.keyCode || event.which;
+                    var pos = this.selectionStart;
+
+                    // Remember the cursor position before any changes
+                    var prevPos = pos;
+
+                    // Only proceed if the key pressed is not a backspace
+                    if (keyCode !== 8) {
+                        var matrix = "+7 (___) ___-__-__",
+                            val = this.value.replace(/\D/g, ""),
+                            newValue = matrix,
+                            j = 0;
+
+                        // Remove leading 7 if present
+                        if (val.startsWith("7")) {
+                            val = val.slice(1);
+                        }
+
+                        // Iterate over each character in the mask and fill it with the input value
+                        for (var i = 0; i < matrix.length; i++) {
+                            if (matrix[i] === "_") {
+                                if (val[j]) {
+                                    newValue = newValue.replace("_", val[j]);
+                                    j++;
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Set the value with the formatted version
+                        this.value = newValue;
+
+                        // Adjust position to prevent digit displacement
+                        while (pos < newValue.length && newValue[pos] && newValue[pos] !== '_') {
+                            pos++;
+                        }
+                    } else {
+                        // If backspace is pressed, move the cursor to the previous position
+                        pos = Math.max(0, pos - 1);
+                    }
+
+                    // Move cursor to the next position if available
+                    if (pos >= 15 && newValue[14] !== "_") {
+                        pos++;
+                    }
+
+                    // Set cursor position
+                    this.setSelectionRange(pos, pos);
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var input = document.querySelector('.phoneRegister1');
+
+            input.addEventListener("input", function (event) {
+                var keyCode = event.keyCode || event.which;
+                var pos = this.selectionStart;
+
+                // Remember the cursor position before any changes
+                var prevPos = pos;
+
+                // Only proceed if the key pressed is not a backspace
+                if (keyCode !== 8) {
+                    var matrix = "+7 (___) ___-__-__",
+                        val = this.value.replace(/\D/g, ""),
+                        newValue = matrix,
+                        j = 0;
+
+                    // Remove leading 7 if present
+                    if (val.startsWith("7")) {
+                        val = val.slice(1);
+                    }
+
+                    // Iterate over each character in the mask and fill it with the input value
+                    for (var i = 0; i < matrix.length; i++) {
+                        if (matrix[i] === "_") {
+                            if (val[j]) {
+                                newValue = newValue.replace("_", val[j]);
+                                j++;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+
+                    // Set the value with the formatted version
+                    this.value = newValue;
+
+                    // Adjust position to prevent digit displacement
+                    while (pos < newValue.length && newValue[pos] && newValue[pos] !== '_') {
+                        pos++;
+                    }
+                } else {
+                    // If backspace is pressed, move the cursor to the previous position
+                    pos = prevPos;
+                }
+
+                // Set cursor position
+                this.setSelectionRange(pos, pos);
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('.fav-button').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                var productId = $(this).data('idproduct');
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    return;
+                }
+
+                // Проверяем наличие записи в таблице UserLike
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/CheckUserLike',
+                    data: { productId: productId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Получаем userId из ответа
+                        var userId = data.userId;
+
+                        if (data.exists) {
+                            // Запись уже существует, не делаем ничего
+                            console.log('Запись уже существует');
+                        } else {
+                            // Записи нет, добавляем новую запись
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/AddUserLike',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    console.log('Запись успешно добавлена');
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при добавлении записи');
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.log('Произошла ошибка при проверке наличия записи');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.fav-button1').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                var productId = $(this).data('idproduct');
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    return;
+                }
+                // Проверяем наличие записи в таблице UserLike
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/CheckUserLike',
+                    data: { productId: productId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Получаем userId из ответа
+                        var userId = data.userId;
+
+                        if (data.exists) {
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/RemoveUserLike',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    if (response.success) {
+                                        console.log('Товар успешно удален из избранного');
+                                    } else {
+                                        console.log('Произошла ошибка: ' + response.message);
+                                    }
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при удалении товара из избранного');
+                                }
+                            });
+                            return;
+                        } else {
+                            // Записи нет, добавляем новую запись
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/AddUserLike',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    console.log('Запись успешно добавлена');
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при добавлении записи');
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.log('Произошла ошибка при проверке наличия записи');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.send').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                var productId = $(this).data('idd');
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    return;
+                }
+                // Проверяем наличие записи в таблице UserLike
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/CheckUserBasket',
+                    data: { productId: productId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Получаем userId из ответа
+                        var userId = data.userId;
+
+                        if (data.exists) {
+                            console.log('я твой рот ебал');
+                        } else {
+                            // Записи нет, добавляем новую запись
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/AddUserBasket',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    console.log('Запись успешно добавлена');
+                                    console.log('ID пользователя:', userId);
+                                    console.log('ID товара:', productId);
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при добавлении записи');
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.log('Произошла ошибка при проверке наличия записи');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Добавляем обработчик события для кнопки с классом "btn fav-button"
+            $('.btn.fav-button').click(function () {
+                // Проверяем значение в Local Storage перед открытием модального окна
+                if (localStorage.getItem("AuthenticationSuccess") === "0") {
+                    $('#modal').show(); // Открываем модальное окно для входа
+                } else {
+                    // Если аутентификация успешна, переходим на страницу User_like
+                    window.location.href = '/Home/User_like';
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Добавляем обработчик события для кнопки с классом "btn user-button"
+            $('#cartButton').click(function () {
+                // Проверяем значение в Local Storage перед открытием модального окна
+                if (localStorage.getItem("AuthenticationSuccess") === "0") {
+                    $('#modal').show(); // Открываем модальное окно для входа
+                } else {
+                    // Если аутентификация успешна, переходим на страницу User_like
+                    window.location.href = '/Home/User_basket';
+                }
+            });
+        });
+    </script>
+    @*   для добавления из карточки продукта в избранное *@
+    <script>
+        $(document).ready(function () {
+            var productId; // Переменная для хранения айди продукта
+
+            // Обработчик события клика для кнопки info-button1
+            $('.info-button1').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                productId = $(this).data('idproduct');
+            });
+
+
+            // Обработчик события клика для кнопки fav-button2
+            $('#cardfav').click(function (event) {
+                event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
+
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
+                    $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
+                    return;
+                }
+
+                // Проверяем, был ли установлен productId
+                if (productId !== undefined) {
+                    // productId был установлен, можем его использовать
+                    // Проверяем наличие записи в таблице UserLike
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Home/CheckUserLike',
+                        data: { productId: productId },
+                        dataType: 'json',
+                        success: function (data) {
+                            // Получаем userId из ответа
+                            var userId = data.userId;
+
+                            if (data.exists) {
+                                // Запись уже существует, не делаем ничего
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Home/RemoveUserLike',
+                                    data: { userId: userId, productId: productId },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        if (response.success) {
+                                            console.log('Товар успешно удален из избранного');
+                                        } else {
+                                            console.log('Произошла ошибка: ' + response.message);
+                                        }
+                                    },
+                                    error: function () {
+                                        console.log('Произошла ошибка при удалении товара из избранного');
+                                    }
+                                });
+                                return;
+                            } else {
+                                // Записи нет, добавляем новую запись
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Home/AddUserLike',
+                                    data: { userId: userId, productId: productId },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        console.log('Запись успешно добавлена');
+                                        // Скрываем модальное окно
+                                    },
+                                    error: function () {
+                                        console.log('Произошла ошибка при добавлении записи');
+
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            console.log('Произошла ошибка при проверке наличия записи');
+                        }
+                    });
+                } else {
+                    console.log('Айди продукта не определено');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var productId; // Переменная для хранения айди продукта
+
+            // Обработчик события клика для кнопки info-button1
+            $('.info-button1').click(function () {
+                // Получаем айди продукта из атрибута data-idd кнопки
+                productId = $(this).data('idproduct');
+            });
+
+            // Обработчик события клика для кнопки senddd
+            $('#senddd').click(function (event) {
+                event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
+
+                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                if (authenticationSuccess === null || authenticationSuccess === "0") {
+                    $('#modal').show();
+                    $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
+                    $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
+                    return;
+                }
+
+                // Проверяем, был ли установлен productId
+                if (productId !== undefined) {
+                    // productId был установлен, можем его использовать
+                    // Проверяем наличие записи в таблице UserLike
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Home/CheckUserBasket',
+                        data: { productId: productId },
+                        dataType: 'json',
+                        success: function (data) {
+                            // Получаем userId из ответа
+                            var userId = data.userId;
+
+                            if (data.exists) {
+                                // Запись уже существует, не делаем ничего
+                                console.log('я твой рот ебал');
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Home/RemoveUserBasket',
+                                    data: { userId: userId, productId: productId },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        if (response.success) {
+                                            console.log('Товар успешно удален из избранного');
+                                        } else {
+                                            console.log('Произошла ошибка: ' + response.message);
+                                        }
+                                    },
+                                    error: function () {
+                                        console.log('Произошла ошибка при удалении товара из избранного');
+                                    }
+                                });
+                                return;
+                            } else {
+                                // Записи нет, добавляем новую запись
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Home/AddUserBasket',
+                                    data: { userId: userId, productId: productId },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        console.log('Запись успешно добавлена');
+                                        // Скрываем модальное окно
+                                    },
+                                    error: function () {
+                                        console.log('Произошла ошибка при добавлении записи');
+
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            console.log('Произошла ошибка при проверке наличия записи');
+                        }
+                    });
+                } else {
+                    console.log('Айди продукта не определено');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function checkUserLike(productId, button) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/CheckUserLike",
+                data: { productId: productId },
+                success: function (response) {
+                    if (response.exists) {
+                        // Если товар в избранном, добавляем красный фон кнопке
+                        button.css('background-color', 'red');
+                        button.css('color', 'white');
+                    } else {
+                        // Если товар не в избранном, убираем красный фон кнопки
+                        button.css('background-color', 'transparent');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Обработка ошибки, если не удалось выполнить запрос
+                    console.error(error);
+                }
+            });
+        }
+
+        // При загрузке страницы выполним проверку наличия товара в избранном для каждой кнопки
+        $(document).ready(function () {
+            $('.fav-button1').each(function () {
+                var button = $(this);
+                var productId = button.data('idproduct');
+                checkUserLike(productId, button);
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Отслеживаем клик по кнопке "info-button1"
+            $('.info-button1').on('click', function () {
+                var productId = $(this).data('idproduct'); // Получаем айди товара из кнопки
+
+                // Отправляем запрос на сервер для проверки наличия товара в избранном
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/CheckUserLike",
+                    data: { productId: productId },
+                    success: function (response) {
+                        var modalButton = $('#exampleModal').find('.fav-button2');
+
+                        // Если товар в избранном, добавляем красный фон кнопке в модальном окне
+                        if (response.exists) {
+                            modalButton.css('background-color', 'red');
+                            modalButton.css('color', 'white');
+                        } else {
+                            // Если товар не в избранном, убираем красный фон кнопки в модальном окне
+                            modalButton.css('background-color', 'transparent');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Обработка ошибки, если запрос не удался
+                        console.error(error);
+                    }
+                });
+            });
+
+            // После закрытия модального окна
+            $('#exampleModal').on('hidden.bs.modal', function (e) {
+                // Сбрасываем стили для modalButton
+                var modalButton = $('#exampleModal').find('.fav-button2');
+                modalButton.css('background-color', '');
+                modalButton.css('color', ''); // сброс цвета
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('#myTabsuser [data-tab]');
+            const tabContents = document.querySelectorAll('#tab-information, #tab-password');
+
+            tabs.forEach(function (tab, index) {
+                tab.addEventListener('click', function () {
+                    tabs.forEach(function (t) {
+                        t.classList.remove('active');
+                    });
+
+                    tabContents.forEach(function (content) {
+                        content.style.display = 'none';
+                    });
+
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    const tabContent = document.getElementById(tabId);
+                    tabContent.style.display = 'block';
+                });
+            });
+
+            // Активировать первую вкладку
+            tabs[0].click();
+        });
+    </script>
+    <script>
+        function updatePassword(oldPassword, newPassword) {
+            // Отправляем AJAX-запрос на сервер
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/Home/UpdatePassword", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Пароль успешно изменен
+                        console.log("Пароль успешно изменен");
+
+                        // Выполняем выход из системы
+                        $.ajax({
+                            url: '/Home/Logout',
+                            type: 'POST',
+                            success: function (response) {
+                                // Успешное выполнение запроса
+                                console.log(response);
+                                localStorage.setItem('AuthenticationSuccess', '0');
+                                window.location.reload(); // Пример обновления страницы
+                            },
+                            error: function (error) {
+                                // Ошибка выполнения запроса
+                                console.error(error);
+                                showError("Произошла ошибка при выходе из системы");
+                            }
+                        });
+                    } else {
+                        // Произошла ошибка при изменении пароля
+                        console.error("Ошибка при изменении пароля");
+                        showError("Проверьте пароль");
+                    }
+                }
+            };
+
+            var data = JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword });
+            xhr.send(data);
+        }
+
+        function showError(errorMessage) {
+            // Показываем сообщение об ошибке на странице
+            $('#errorMessagepastab1').text(errorMessage).show();
+        }
+
+        // Функция для получения и установки нового пароля
+        function getAndSetNewPassword() {
+            var oldPassword = document.getElementById("passwordregistersend").value;
+            var newPassword = document.getElementById("passwordregisterveryf").value;
+            var newPasswordConfirm = document.getElementById("passwordregisteveryf2r").value;
+
+            // Проверяем, что значения не пустые
+            if (!(oldPassword && newPassword && newPasswordConfirm)) {
+                console.error("Пожалуйста, заполните все поля пароля");
+                $("#errorMessage6").show();
+                return;
+            }
+
+            // Проверяем, что значения нового пароля совпадают
+            if (newPassword !== newPasswordConfirm) {
+                console.error("Пароли не совпадают");
+                $("#errorMessagepastab").show();
+                return;
+            }
+
+            // Обновляем пароль
+            updatePassword(oldPassword, newPassword);
+        }
+
+        // Находим кнопку "Сохранить" и назначаем обработчик события на клик
+        var saveButton = document.getElementById("savebuttonpas");
+        saveButton.addEventListener("click", getAndSetNewPassword);
+    </script>
+
+    <script>
+        document.getElementById('showPasswordButton4').addEventListener('click', function () {
+            var passwordField = document.getElementById('passwordregistersend');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+        document.getElementById('showPasswordButton5').addEventListener('click', function () {
+            var passwordField = document.getElementById('passwordregisterveryf');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+        document.getElementById('showPasswordButton6').addEventListener('click', function () {
+            var passwordField = document.getElementById('passwordregisteveryf2r');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+    </script>
+
+</body>
+
