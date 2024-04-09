@@ -262,10 +262,9 @@
             <div class="mogo">
                 <a href="/Home/AboutUsPage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
             </div>
-            <div class="header-buttons">               
-                <button class="btn user-button" style="border: 2px solid black;" type="button" id="openAuthModalButton">
-                    <i class="fas fa-user"></i>
-                </button>
+            <div class="header-buttons"> 
+                <button id="goaway"> На главную </button>
+                
             </div>
         </header>
         <div>
@@ -294,7 +293,7 @@
             <div class="container3" id="container3">
                 @if (Model.HasResults)
                 {
-                    @await Html.PartialAsync("_ProductPartial", Model.Products)
+                    @await Html.PartialAsync("_ProductPartialAdmin", Model.Products)
                 }
                 else
                 {
@@ -1237,6 +1236,19 @@
             } else {
                 passwordField.type = 'password';
             }
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Находим кнопку по её id
+            var adminButton = document.getElementById('goaway');
+
+            // Добавляем обработчик события клика на кнопку
+            adminButton.addEventListener('click', function () {
+                // Переходим на страницу AdminPage
+                window.location.href = '/Home/MainPage'; // Укажите здесь путь к странице AdminPage
+            });
         });
     </script>
 

@@ -19,6 +19,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
+using System.Data;
 
 namespace diplom.Controllers
 {
@@ -312,20 +313,10 @@ namespace diplom.Controllers
 
             return Content(packageName);
         }
-        [HttpGet]
-        public ActionResult GetProviderName(int providerId)
-        {
-            var providerName = db._Provider
-                .Where(p => p.IdProvider == providerId)
-                .Select(p => p.provider_name)
-                .FirstOrDefault();
-
-            return Content(providerName);
-        }
         public ActionResult Login(string phoneLogin, string password)
         {
             // Поиск пользователя по номеру телефона
-            var user = FindUserByPhone(phoneLogin);
+           var user = FindUserByPhone(phoneLogin);
 
             if (user != null && VerifyPassword(password, user.user_password))
             {
@@ -338,13 +329,29 @@ namespace diplom.Controllers
                     Path = "/"
                 });
 
+                // Удаляем лишние пробелы из строк "admin" и роли пользователя
+                string adminRole = "admin".Trim();
+                string userRole = user.role.Trim();
+
                 // Включаем информацию о роли пользователя в JSON ответ
+                if (userRole == adminRole)
+                {
+                    // Установка куки с ролью администратора
+                    HttpContext.Response.Cookies.Append("UserRole", userRole, new CookieOptions
+                    {
+                        Expires = DateTime.Now.AddHours(400),
+                        HttpOnly = false,
+                        Secure = false,
+                        Path = "/"
+                    });
+                }
+
                 var responseData = new
                 {
                     success = true,
                     message = "Авторизация успешна.",
                     userName = user.User_name,
-                    role = user.role  // Передаем роль пользователя
+                    role = userRole
                 };
 
                 return Json(responseData);
@@ -353,6 +360,17 @@ namespace diplom.Controllers
             {
                 return Json(new { success = false, message = "Неверный номер телефона или пароль." });
             }
+        }
+
+        [HttpGet]
+        public IActionResult CheckUserRoleCookie()
+        {
+            if (HttpContext.Request.Cookies.TryGetValue("UserRole", out string userRole) )
+            {
+                return Ok(new { isAdmin = true });
+            }
+
+            return Ok(new { isAdmin = false });
         }
 
         [HttpPost]
@@ -384,16 +402,59 @@ namespace diplom.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateOrder(string city, string address, string comment, int totalPrice)
+        public async Task<ActionResult> CreateOrder(string city, string address, string comment, int totalPrice, Dictionary<int, int> productQuantities)
         {
             try
             {
-                // Получаем идентификатор пользователя из куки
                 string userIdCookie = Request.Cookies["UserId"];
 
                 if (string.IsNullOrEmpty(userIdCookie))
                 {
                     return StatusCode(401, new { error = "User ID not found in cookies" });
+                }
+
+                List<int> insufficientProducts = new List<int>();
+
+                // Проверка наличия достаточного количества товаров
+                foreach (var kvp in productQuantities)
+                {
+                    int productId = kvp.Key;
+                    int quantity = kvp.Value;
+
+                    // Получаем продукт из базы данных
+                    var product = await db.Product.FirstOrDefaultAsync(p => p.IdProduct == productId);
+
+                    if (product == null || quantity <= 0)
+                    {
+                        return StatusCode(400, new { error = $"Invalid product ID or quantity: {productId}" });
+                    }
+
+                    // Проверяем, достаточное ли количество товара на складе
+                    if (product.product_remain < quantity)
+                    {
+                        insufficientProducts.Add(productId);
+                    }
+                }
+
+                if (insufficientProducts.Any())
+                {
+                    var insufficientProductsInfo = insufficientProducts.Select(id =>
+                    {
+                        var product = db.Product.FirstOrDefault(p => p.IdProduct == id);
+                        return new
+                        {
+                            ProductId = id,
+                            ProductName = product.Name_product ?? "Unknown Product",
+                            AvailableQuantity = product.product_remain ?? 0
+                        };
+                    }).ToList();
+
+                    // Возвращаем ответ с информацией о недостающих товарах
+                    return StatusCode(400, new
+                    {
+                        error = "Insufficient stock for some products",
+                        insufficientProducts = insufficientProductsInfo
+                    });
                 }
 
                 // Создаем новый заказ
@@ -423,6 +484,7 @@ namespace diplom.Controllers
                 return StatusCode(500, new { error = $"Failed to create order: {ex.Message}" });
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> SaveComment(int productId, string comment, int rating)
@@ -751,7 +813,7 @@ namespace diplom.Controllers
         {
             // Ваш код для поиска пользователя по номеру телефона в базе данных
             // Пример:
-            return db.User.FirstOrDefault(u => u.PhoneNumber == phoneLogin);
+            return db.User.FirstOrDefault(u => u.PhoneNumber.Equals(phoneLogin) );
         }
 
         private bool VerifyPassword(string enteredPassword, string hashedPassword)
@@ -921,7 +983,9 @@ namespace diplom.Controllers
                 Email = Email,
                 User_name = Name,
                 Surname = lastName,
-                user_password = HashPassword(passwordregister), // Хеширование пароля
+                user_password = HashPassword(passwordregister),
+                role = "user"
+                // Хеширование пароля
 
                 // Дополнительные поля, если есть
             };
@@ -969,6 +1033,7 @@ namespace diplom.Controllers
         {
             // Удаление куки 'UserId'
             Response.Cookies.Delete("UserId");
+            Response.Cookies.Delete("UserRole");
             return Ok(); // Пример возвращения успешного ответа
         }
 

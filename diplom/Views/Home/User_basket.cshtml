@@ -447,7 +447,7 @@
                     </center>
 
                 </button>
-                <p id="errorMessagenull" style="color:red;z-index:1;display:none">Необходимо поставить оценку</p>
+                <p id="errorMessageproduct" style="color:red;z-index:1;display:none">Недопустимое кол-во товара</p>
             </center>
 
 
@@ -1713,10 +1713,15 @@
                 // Передаем общую сумму заказа в модальное окно (только числовую часть)
                 $("#suuummorder").text("Сумма к оплате: " + numericTotalPrice+" рублей");
 
-                // Показываем модальное окно
+                // Показываем модальное окно    
                 $("#modalсomm").show();
             });
+            $('#modalсomm .close').click(function () {
+                $('#modalсomm').hide();
 
+                // Устанавливаем значение "AuthenticationSuccess" в "0" при закрытии окна
+                localStorage.setItem("AuthenticationSuccess", "0");
+            });
             // Обработчик нажатия на кнопку "Оформить"
             $("#savebuttonorder").click(function () {
                 var totalPriceText = $("#sumorder").text(); // Получаем текст общей суммы заказа
@@ -1726,7 +1731,8 @@
                     city: $("#cityInput").val(),
                     address: $("#addressInput").val(),
                     comment: $("#commentInput").val(),
-                    totalPrice: numericTotalPrice
+                    totalPrice: numericTotalPrice,
+                    productQuantities: productQuantities
                 };
 
                 // Заполняем объект productQuantities количеством каждого товара
@@ -1746,35 +1752,61 @@
                         // Обработка успешного ответа от сервера при создании заказа
                         console.log("Заказ успешно создан:", response);
 
-                        // Получаем идентификатор только что созданного заказа
-                        var orderId = response.orderId;
+                        // Проверяем наличие orderId в ответе
+                        if (response && response.orderId) {
+                            var orderId = response.orderId;
 
-                        // После успешного создания заказа отправляем товары из корзины пользователя на сервер
-                        $.ajax({
-                            url: "/Home/AddItemsToOrderDetails",
-                            type: "POST",
-                            data: { orderId: orderId, productQuantities: productQuantities },
-                            success: function (addItemResponse) {
-                                // Обработка успешного ответа от сервера при добавлении товаров в заказ
-                                console.log("Товары успешно добавлены в заказ:", addItemResponse);
+                            // Отправляем товары из корзины пользователя на сервер для добавления в заказ
+                            $.ajax({
+                                url: "/Home/AddItemsToOrderDetails",
+                                type: "POST",
+                                data: { orderId: orderId, productQuantities: orderData.productQuantities },
+                                success: function (addItemResponse) {
+                                    // Обработка успешного ответа от сервера при добавлении товаров в заказ
+                                    console.log("Товары успешно добавлены в заказ:", addItemResponse);
 
-                                // Здесь вы можете добавить логику для отображения сообщения об успешном добавлении товаров или других действий
-                            },
-                            error: function (xhr, status, error) {
-                                // Обработка ошибки при отправке запроса на добавление товаров в заказ
-                                console.error("Ошибка при добавлении товаров в заказ:", error);
-                                // Здесь вы можете добавить логику для отображения сообщения об ошибке или других действий
-                            }
-                        });
+                                    // Здесь можно добавить логику для отображения сообщения об успешном добавлении товаров
+                                },
+                                error: function (xhr, status, error) {
+                                    // Обработка ошибки при добавлении товаров в заказ
+                                    console.error("Ошибка при добавлении товаров в заказ:", error);
+                                    // Здесь можно добавить логику для отображения сообщения об ошибке при добавлении товаров
+                                }
+                            });
+                        }
                     },
                     error: function (xhr, status, error) {
-                        // Обработка ошибки при отправке запроса на создание заказа
+                        // Логируем ошибку при создании заказа
                         console.error("Ошибка при создании заказа:", error);
-                        // Здесь вы можете добавить логику для отображения сообщения об ошибке или других действий
-                    }
-                });
-            });
 
+                        // Проверяем тип ошибки и наличие информации о недостающих товарах
+                        if (xhr && xhr.responseJSON && xhr.responseJSON.error === "Insufficient stock for some products") {
+                            // Получаем список недостающих товаров из ответа сервера
+                            var insufficientProducts = xhr.responseJSON.insufficientProducts;
+
+                            // Формируем сообщение об ошибке о недостающих товарах
+                            var errorMessage = "Недостаточное количество товара. Не хватает:\n";
+
+                            // Перебираем каждый недостающий товар и добавляем информацию в сообщение об ошибке
+                            insufficientProducts.forEach(function (product) {
+                                // Используем имена свойств как они определены в объекте product
+                                errorMessage += `- ${product.productName} (Доступное количество: ${product.availableQuantity})\n`;
+                            });
+
+                            // Отображаем сообщение об ошибке на странице
+                            displayErrorMessage(errorMessage);
+                        } else {
+                            // Отображаем стандартное сообщение об ошибке на странице
+                            displayErrorMessage("Произошла ошибка при создании заказа");
+                        }
+                    }
+
+                });
+                
+            });
+            function displayErrorMessage(message) {
+                $("#errorMessageproduct").css("display", "block").text(message);
+            }
             function updateTotalPrice() {
                 var totalPrice = 0;
 
@@ -1897,6 +1929,95 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var cityInput = document.getElementById('cityInput');
+            var suggestionsContainer;
+
+            // Функция для загрузки файла с городами и инициализации Autocomplete
+            function initializeAutocomplete() {
+                // Асинхронная загрузка файла с городами
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/goroda.txt', true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var data = xhr.responseText;
+                        var cities = data.split('\n').map(function (city) {
+                            return city.trim(); // Удаляем лишние пробелы
+                        });
+
+                        // Инициализация Autocomplete
+                        cityInput.addEventListener('input', function () {
+                            var inputValue = cityInput.value.trim().toLowerCase();
+                            var suggestions = cities.filter(function (city) {
+                                return city.toLowerCase().startsWith(inputValue);
+                            });
+
+                            showSuggestions(suggestions);
+                        });
+                    }
+                };
+                xhr.send();
+            }
+
+            // Функция для отображения предложений автодополнения
+            function showSuggestions(suggestions) {
+                hideSuggestions(); // Скрыть предыдущие предложения
+
+                suggestionsContainer = document.createElement('div');
+                suggestionsContainer.id = 'suggestionsContainer';
+                suggestionsContainer.style.position = 'absolute';
+                suggestionsContainer.style.width = cityInput.offsetWidth + 'px';
+                suggestionsContainer.style.border = '1px solid #ccc';
+                suggestionsContainer.style.backgroundColor = '#fff';
+                suggestionsContainer.style.zIndex = '1000';
+
+                // Добавляем предложения в контейнер
+                suggestions.forEach(function (city) {
+                    var suggestionElement = document.createElement('div');
+                    suggestionElement.textContent = city;
+                    suggestionElement.style.padding = '5px';
+                    suggestionElement.style.cursor = 'pointer';
+                    suggestionElement.addEventListener('click', function () {
+                        cityInput.value = city; // Заполняем поле ввода выбранным городом
+                        hideSuggestions(); // Скрываем контейнер с предложениями
+                    });
+                    suggestionsContainer.appendChild(suggestionElement);
+                });
+
+                // Позиционируем контейнер с предложениями под полем ввода
+                var inputRect = cityInput.getBoundingClientRect();
+                suggestionsContainer.style.top = (inputRect.top + inputRect.height) + 'px';
+                suggestionsContainer.style.left = inputRect.left + 'px';
+
+                // Вставляем контейнер с предложениями в DOM
+                document.body.appendChild(suggestionsContainer);
+
+                // Обработчик клика вне контейнера с предложениями
+                document.addEventListener('click', handleClickOutside);
+            }
+
+            // Функция для скрытия контейнера с предложениями
+            function hideSuggestions() {
+                if (suggestionsContainer) {
+                    suggestionsContainer.remove();
+                    suggestionsContainer = null;
+                    document.removeEventListener('click', handleClickOutside);
+                }
+            }
+
+            // Обработчик клика вне контейнера с предложениями
+            function handleClickOutside(event) {
+                if (suggestionsContainer && !suggestionsContainer.contains(event.target) && event.target !== cityInput) {
+                    hideSuggestions();
+                }
+            }
+
+            // Инициализируем Autocomplete при загрузке документа
+            initializeAutocomplete();
+        });
+
+    </script>
 
 
 
@@ -1907,6 +2028,11 @@
 
 
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <!-- Подключение jQuery UI (Autocomplete) -->
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
 
+    <!-- Стили для jQuery UI Autocomplete (можно добавить в ваш CSS) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 </body>

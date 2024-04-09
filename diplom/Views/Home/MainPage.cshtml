@@ -88,7 +88,13 @@
                         </div>
                         <div style="display:flex;height:70px;align-items: center;gap:10px;">
                         <input id="givetrue" type="checkbox"/>
+                        
                             <a id="consentLink" style="color: black" >Даю согласие на обработку персональных данных</a>
+                            <i class="fa fa-question wqwqwq" title="Даю согласие на обработку моих персональных данных Онлайн-магазином Dairy Delights Emporium для оформления, обработки и доставки заказов продукции, включая сыры и другие товары, предлагаемые магазином. Мои персональные данные могут включать имя, адрес электронной почты, адрес доставки, номер телефона и информацию о моих заказах.
+
+Я понимаю, что мои данные будут обрабатываться для указанных целей, включая сбор, хранение, использование и передачу третьим лицам в соответствии с законодательством. Мои данные будут храниться столько, сколько необходимо для целей обработки, с соблюдением действующего законодательства о защите данных.
+
+Мне известны мои права по отношению к моим персональным данным, включая право на доступ, исправление, удаление или блокирование данных. Подписываясь ниже, я выражаю свое согласие на обработку моих персональных данных Dairy Delights Emporium."></i>
                     </div>
                         
                         <p id="errorMessage2" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
@@ -128,6 +134,7 @@
                             <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-history">
                                 <center>
                                 <button id="logoutButton"> Выход</button>
+                                
                                 </center>
                             </div>
                         </div>
@@ -160,7 +167,7 @@
                                         <div style="display:block">
                                         @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
                                             <p id="phoneErrorMessage10" style="z-index:1;color:red;margin-top: 1%;display:none;width: 118%;">Пользвоатель с таким номером телефона уже существует</p>
-                                            <p id="phoneErrorMessage20" style="z-index:1;color:red;margin-top: 1%;display:none;width: 118%">Неверный формат номера телефона</p>
+                                            <p id="phoneErrorMessage20" style="z-index:1;color:red;MARGIN-LEFT: -13%;margin-top: 3%;display:none;width: 168%">Неверный формат номера телефона</p>
                                         </div>
                                     </div>
                                 </div>
@@ -257,6 +264,7 @@
 
 
         <header class="_header">
+            
             <div class="logo">
                 <a href="/Home/MainPage" class="company-name">Dairy Delights Emporium</a>
             </div>
@@ -264,12 +272,14 @@
                 <a href="/Home/AboutUsPage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
             </div>
             <div class="header-buttons">
+                <button id="adminbutton" style="display:none">Админ-панель</button>
                 <button id="cartButton" class="btn cart-button" style="border: 2px solid black;">
                     <i class="fas fa-shopping-basket"></i>
                 </button>
                 <button  class="btn fav-button" style="border: 2px solid black;">
                     <i class="fas fa-heart" ></i>
                 </button>
+                
                 <button class="btn user-button" style="border: 2px solid black;" type="button" id="openAuthModalButton">
                     <i class="fas fa-user" ></i>
                 </button>
@@ -1270,8 +1280,31 @@
         // Находим кнопку "Сохранить" и назначаем обработчик события на клик
         var saveButton = document.getElementById("savebuttonpas");
         saveButton.addEventListener("click", getAndSetNewPassword);
+        $('#exampleModal').on('hidden.bs.modal', function (e) {
+            $('#rewey').empty(); // Очистка содержимого элемента #rewey
+        });
     </script>
+    <script>
+        // При загрузке документа добавляем обработчик закрытия модального окна
+        $(document).ready(function () {
+            // Находим элемент закрытия модального окна по классу "close"
+            $('.close').on('click', function () {
+                // Скрываем все элементы с классом "userinf" (которые, предположительно, содержат сообщения об ошибках)
+                // Скрываем все элементы с id, начинающимся на "errorMessage" (предполагая, что это сообщения об ошибках)
+                $('[id^="errorMessage"]').hide();
+            });
 
+            // Также добавляем обработчик события для скрытия ошибок при клике вне модального окна
+            $(window).on('click', function (event) {
+                if (event.target.id === 'modaluserr') {
+                    // Скрываем все элементы с классом "userinf"                 
+                    // Скрываем все элементы с id, начинающимся на "errorMessage"
+                    $('[id^="errorMessage"]').hide();
+                }
+            });
+        });
+
+    </script>
     <script>
         document.getElementById('showPasswordButton4').addEventListener('click', function () {
             var passwordField = document.getElementById('passwordregistersend');
@@ -1300,6 +1333,39 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Выполняем AJAX-запрос к методу контроллера при загрузке страницы
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/Home/CheckUserRoleCookie'); // Замените ControllerName на имя вашего контроллера
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.isAdmin) {
+                            // Показываем кнопку, если пользователь является администратором
+                            var adminButton = document.getElementById('adminbutton');
+                            if (adminButton) {
+                                adminButton.style.display = 'inline'; // Показываем кнопку
+                            }
+                        }
+                    }
+                }
+            };
+            xhr.send();
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Находим кнопку по её id
+            var adminButton = document.getElementById('adminbutton');
 
+            // Добавляем обработчик события клика на кнопку
+            adminButton.addEventListener('click', function () {
+                // Переходим на страницу AdminPage
+                window.location.href = '/Home/AdminPage'; // Укажите здесь путь к странице AdminPage
+            });
+        });
+    </script>
 </body>
 

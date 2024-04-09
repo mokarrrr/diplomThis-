@@ -6,6 +6,8 @@ namespace diplom.Models
     
     public class Product
     {
+        internal readonly string? ProductName;
+
         [Key]
         public int IdProduct { get; set; }
         public string Name_product { get; set; }

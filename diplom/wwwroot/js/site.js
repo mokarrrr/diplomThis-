@@ -912,6 +912,7 @@ $(document).ready(function () {
             url: '/Home/Register',
             data: formData,
             dataType: 'json',
+
             success: function (data) {
                 if (data.success) {
                     // Регистрация успешна, теперь пытаемся войти
@@ -919,7 +920,7 @@ $(document).ready(function () {
                         phoneLogin: phoneLogin,
                         password: password
                     };
-
+                    console.log('Номер телефона для входа:', phoneLogin);
                     $.ajax({
                         type: 'POST',
                         url: '/Home/Login',
@@ -934,8 +935,10 @@ $(document).ready(function () {
                                 // Обработка ошибок авторизации
                             }
                         },
+
                         error: function () {
                             alert('Произошла ошибка при выполнении запроса авторизации.');
+                            console.log('Номер телефона для входа:', phoneLogin);
                         }
                     });
                 } else {
