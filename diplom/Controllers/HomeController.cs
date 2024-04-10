@@ -125,13 +125,44 @@ namespace diplom.Controllers
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 // Фильтруем пользователей на основе поискового запроса (имя пользователя или фамилия содержат поисковой запрос)
-                usersQuery = usersQuery.Where(u => u.User_name.ToLower().Contains(searchQuery.ToLower()) || u.Surname.ToLower().Contains(searchQuery.ToLower()));
+                usersQuery = usersQuery.Where(u => u.User_name.ToLower().Contains(searchQuery.ToLower()) || u.Surname.ToLower().Contains(searchQuery.ToLower()) || u.IdUser.ToString().Contains(searchQuery.ToLower()));
             }
 
             // Преобразуем запрос в список (выполняем запрос к базе данных и получаем отфильтрованных пользователей)
             var usersList = usersQuery.ToList();
             return View(usersList);
         }
+
+            [HttpPost]
+    public IActionResult DeleteUser(int userId)
+    {
+        // Находим пользователя по Id
+        var user = db.User.FirstOrDefault(u => u.IdUser == userId);
+
+        if (user == null)
+        {
+            return NotFound(); // Если пользователь не найден, вернуть 404
+        }
+
+        try
+        {
+            // Находим и удаляем все связанные записи в таблице Rate, где client_id равен userId
+            var ratesToDelete = db.Rate.Where(r => r.client_id == userId);
+            db.Rate.RemoveRange(ratesToDelete);
+
+            // Удаляем пользователя
+            db.User.Remove(user);
+
+            // Сохраняем изменения в базе данных
+            db.SaveChanges();
+
+            return Json(new { success = true });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 
         //[HttpGet]
         //public IActionResult GetStatusName(int statusId)

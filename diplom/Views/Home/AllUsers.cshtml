@@ -40,10 +40,32 @@
                     <p><strong>Email:</strong> @user.Email</p>
                     <p><strong>Номер телефона:</strong> @user.PhoneNumber</p>
                     <center>
-                        <button id="deleteuser">Удалить пользователя</button>
+                        <button class="delete-user-btn" data-user-id="@user.IdUser">Удалить пользователя</button>
                     </center>
                 </div>               
             </div>
         }
     </div>
+    <script>
+        $(document).ready(function () {
+            $(".delete-user-btn").click(function () {
+                var userId = $(this).data("user-id");
+
+                // Отправляем AJAX-запрос на сервер
+                $.ajax({
+                    url: "/Home/DeleteUser", // Замените ControllerName на ваш контроллер
+                    type: "POST",
+                    data: { userId: userId },
+                    success: function (result) {
+                        // Обновляем интерфейс или выполняем другие действия по завершении успешного удаления
+                        console.log("Пользователь успешно удален.");
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Ошибка удаления пользователя:", error);
+                    }
+                });
+            });
+        });
+    </script>
+
 </body>
