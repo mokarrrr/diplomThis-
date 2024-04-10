@@ -825,6 +825,19 @@ a:active {
     transition: background-color 0.3s, color 0.3s;
     border: 3px solid black; /* Добавьте border для согласованности стиля */
 }
+.info-button2 {
+    position: absolute;
+    font-size: 20px;
+    bottom: 80px; /* Позиционирование выше fav-button1 */
+    right: 20px;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    width: 50px;
+    transition: background-color 0.3s, color 0.3s;
+    border: 3px solid black; /* Добавьте border для согласованности стиля */
+}
 .modal1 {
     display: none;
     position: fixed;
@@ -960,6 +973,7 @@ a:active {
     grid-column: 2;
     grid-row: 1;
     gap:2px;
+    display:grid;
 }
 .form-grouppost {
     gap:50px;

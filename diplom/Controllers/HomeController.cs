@@ -292,6 +292,16 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
             return View(viewModel);
         }
         [HttpGet]
+        public ActionResult GetProviderName(int providerId)
+        {
+            var providerName = db._Provider
+                .Where(p => p.IdProvider == providerId)
+                .Select(p => p.provider_name)
+                .FirstOrDefault();
+
+            return Content(providerName);
+        }
+        [HttpGet]
         public PartialViewResult FilteredProductsPartial(int? categoryId, int? secondCategoryId, int? thirdCategoryId, int? fourthCategoryId, int? fifthCategoryId)
         {
             IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
