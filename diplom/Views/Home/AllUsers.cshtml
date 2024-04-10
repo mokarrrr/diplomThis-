@@ -33,12 +33,17 @@
         @foreach (var user in Model)
         {
             <div class="col-md-3 mb-4" style="margin-right: 2%;margin-top:1%">
-                <div class="user-info" style="border: 1px solid #ccc; padding: 10px;">
-                    <p><strong>ID:</strong> @user.IdUser</p>
+                <div class="user-info" style="border: 1px solid #ccc; padding: 10px;display: table-caption;">
+@*                     <p><strong>ID:</strong> @user.IdUser</p>
                     <p><strong>Имя:</strong> @user.User_name</p>
                     <p><strong>Фамилия:</strong> @user.Surname</p>
                     <p><strong>Email:</strong> @user.Email</p>
-                    <p><strong>Номер телефона:</strong> @user.PhoneNumber</p>
+                    <p><strong>Номер телефона:</strong> @user.PhoneNumber</p> *@
+                    <textarea> @user.IdUser</textarea>
+                    <textarea> @user.User_name</textarea>
+                    <textarea> @user.Surname</textarea>
+                    <textarea> @user.Email</textarea>
+                    <textarea> @user.PhoneNumber</textarea>
                     <center>
                         <button class="delete-user-btn" data-user-id="@user.IdUser">Удалить пользователя</button>
                     </center>
