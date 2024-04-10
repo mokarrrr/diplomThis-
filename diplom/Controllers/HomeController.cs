@@ -133,6 +133,28 @@ namespace diplom.Controllers
             return View(usersList);
         }
 
+        [HttpPost]
+public async Task<IActionResult> UpdateUser(int userId, string userName, string surname, string email, string phoneNumber)
+{
+    var user = await db.User.FirstOrDefaultAsync(u => u.IdUser == userId);
+
+    if (user == null)
+    {
+        return NotFound(); // Если пользователь не найден, возвращаем ошибку 404
+    }
+
+    // Обновляем данные пользователя
+    user.User_name = userName;
+    user.Surname = surname;
+    user.Email = email;
+    user.PhoneNumber = phoneNumber;
+
+    db.Update(user);
+    await db.SaveChangesAsync();
+
+    return Ok(); // Возвращаем успешный результат
+}
+
             [HttpPost]
     public IActionResult DeleteUser(int userId)
     {

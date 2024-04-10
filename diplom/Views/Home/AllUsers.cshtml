@@ -39,14 +39,20 @@
                     <p><strong>Фамилия:</strong> @user.Surname</p>
                     <p><strong>Email:</strong> @user.Email</p>
                     <p><strong>Номер телефона:</strong> @user.PhoneNumber</p> *@
-                    <textarea> @user.IdUser</textarea>
-                    <textarea> @user.User_name</textarea>
-                    <textarea> @user.Surname</textarea>
-                    <textarea> @user.Email</textarea>
-                    <textarea> @user.PhoneNumber</textarea>
-                    <center>
-                        <button class="delete-user-btn" data-user-id="@user.IdUser">Удалить пользователя</button>
-                    </center>
+                    <div class="user-info">
+                        <p><strong>ID:</strong> @user.IdUser</p>
+                        <textarea name="userName">@user.User_name</textarea>
+                        <textarea name="surname">@user.Surname</textarea>
+                        <textarea name="email">@user.Email</textarea>
+                        <textarea name="phoneNumber">@user.PhoneNumber</textarea>
+                        
+                        <center style="display:flrx">
+                            <button class="edit-user-btn" data-user-id="@user.IdUser">Сохранить</button>
+                            <button class="delete-user-btn" data-user-id="@user.IdUser">Удалить пользователя</button>
+
+                        </center>
+                    </div>
+                   
                 </div>               
             </div>
         }
@@ -69,6 +75,34 @@
                         console.error("Ошибка удаления пользователя:", error);
                     }
                 });
+            });
+        });
+    </script>
+    <script>
+        $(".edit-user-btn").click(function () {
+            var userId = $(this).data("user-id");
+            var userName = $(this).closest(".user-info").find("textarea[name='userName']").val();
+            var surname = $(this).closest(".user-info").find("textarea[name='surname']").val();
+            var email = $(this).closest(".user-info").find("textarea[name='email']").val();
+            var phoneNumber = $(this).closest(".user-info").find("textarea[name='phoneNumber']").val();
+
+            $.ajax({
+                url: "/Home/UpdateUser",
+                method: "POST",
+                data: {
+                    userId: userId,
+                    userName: userName,
+                    surname: surname,
+                    email: email,
+                    phoneNumber: phoneNumber
+                },
+                success: function (response) {
+                    alert("Данные пользователя успешно обновлены!");
+                    // Дополнительные действия после успешного обновления данных
+                },
+                error: function () {
+                    alert("Произошла ошибка при обновлении данных пользователя.");
+                }
             });
         });
     </script>
