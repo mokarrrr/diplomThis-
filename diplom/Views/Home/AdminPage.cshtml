@@ -262,10 +262,13 @@
             <div class="mogo">
                 <a href="/Home/AboutUsPage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
             </div>
-            <div class="header-buttons"> 
+            <div class="header-buttons">
                 <button id="goaway"> На главную </button>
-                
+                <button id="goorder"> Заказы </button>                
+                <button id="gouser"> Пользователи </button>
             </div>
+           
+            
         </header>
         <div>
             <img class="img1" src="/img/istockphoto-1471815457-1024x1024(2)(1).png" style="height: 1100px;width: 132%;margin-left: -290px;margin-top: -260px;z-index:-2;" />
@@ -1252,5 +1255,30 @@
         });
     </script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Находим кнопку по её id
+            var adminButton = document.getElementById('goorder');
+
+            // Добавляем обработчик события клика на кнопку
+            adminButton.addEventListener('click', function () {
+                // Переходим на страницу AdminPage
+                window.location.href = '/Home/AllOrders'; // Укажите здесь путь к странице AdminPage
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Находим кнопку по её id
+            var adminButton = document.getElementById('gouser');
+
+            // Добавляем обработчик события клика на кнопку
+            adminButton.addEventListener('click', function () {
+                // Переходим на страницу AdminPage
+                window.location.href = '/Home/AllUsers'; // Укажите здесь путь к странице AdminPage
+            });
+        });
+    </script>
 </body>
 

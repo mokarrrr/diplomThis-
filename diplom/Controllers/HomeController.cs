@@ -99,6 +99,39 @@ namespace diplom.Controllers
             var _Orders = db._orders.Where(o => o._user_id == userIdCookie).Include(o => o.Products).Include(o=>o.Status).ToList();
             return View(_Orders);
         }
+        public IActionResult AllOrders(string searchQuery)
+        {            
+
+            IQueryable<_order> usersQuery = db._orders.Include(o => o.Products).Include(o => o.Status).Include(o => o.User).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                // Фильтруем пользователей на основе поискового запроса (имя пользователя или фамилия содержат поисковой запрос)
+                usersQuery = usersQuery.Where(u => u.User.Surname.ToLower().Contains(searchQuery.ToLower()) || u.User.IdUser.ToString().Contains(searchQuery.ToLower()));
+            }
+
+            // Преобразуем запрос в список (выполняем запрос к базе данных и получаем отфильтрованных пользователей)
+            var usersList = usersQuery.ToList();
+
+            return View(usersList);
+
+        }
+
+        public IActionResult AllUsers(string searchQuery)
+        {
+            IQueryable<User> usersQuery = db.User.AsQueryable();
+
+            // Проверяем, есть ли поисковый запрос
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                // Фильтруем пользователей на основе поискового запроса (имя пользователя или фамилия содержат поисковой запрос)
+                usersQuery = usersQuery.Where(u => u.User_name.ToLower().Contains(searchQuery.ToLower()) || u.Surname.ToLower().Contains(searchQuery.ToLower()));
+            }
+
+            // Преобразуем запрос в список (выполняем запрос к базе данных и получаем отфильтрованных пользователей)
+            var usersList = usersQuery.ToList();
+            return View(usersList);
+        }
 
         //[HttpGet]
         //public IActionResult GetStatusName(int statusId)

@@ -17,7 +17,8 @@ namespace diplom.Models
         public string order_address { get; set;}
         public string? order_commentary { get; set;}
         public int _user_id { get; set;}
-
+        [ForeignKey("_user_id")]
+        public User User { get; set; }
         public int OrderSum { get; set;}
         public List<Product> Products { get; set; }
         public List<order_detail> order_Details { get; set; }

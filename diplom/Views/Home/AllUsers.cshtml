@@ -1,0 +1,49 @@
+﻿
+
+<link rel="stylesheet" href="~/css/mainwindow.css" />
+<link rel="stylesheet" href="~/css/rate.css" />
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+@model List<User>
+<body style="background-color:#a6a6a6!important;margin-top:10%">
+    <header class="_header" style="background: linear-gradient(to bottom right,#F9D86E,#EDC237);">
+        <div class="logo">
+            <a href="/Home/MainPage" class="company-name">Dairy Delights Emporium</a>
+        </div>
+        <div class="mogo">
+            <a href="/Home/AboutUsPage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
+        </div>
+        <div class="header-buttons">
+            <button id="cartButton" class="btn cart-button" style="border: 2px solid black;">
+                <i class="fas fa-shopping-basket"></i>
+            </button>
+            <a href="/Home/User_like" class="btn fav-button" style="border: 2px solid black;">
+                <i class="fas fa-heart" style="margin-top: 75%;"></i>
+            </a>
+            <button class="btn user-button" style="border: 2px solid black;" type="button" id="openAuthModalButton">
+                <i class="fas fa-user"></i>
+            </button>
+        </div>
+    </header>
+    <form method="get" >
+    <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
+    </form>
+    <div class="row" style="flex-wrap: wrap;display: flex;min-width: fit-content;">
+        @foreach (var user in Model)
+        {
+            <div class="col-md-3 mb-4" style="margin-right: 2%;margin-top:1%">
+                <div class="user-info" style="border: 1px solid #ccc; padding: 10px;">
+                    <p><strong>ID:</strong> @user.IdUser</p>
+                    <p><strong>Имя:</strong> @user.User_name</p>
+                    <p><strong>Фамилия:</strong> @user.Surname</p>
+                    <p><strong>Email:</strong> @user.Email</p>
+                    <p><strong>Номер телефона:</strong> @user.PhoneNumber</p>
+                    <center>
+                        <button id="deleteuser">Удалить пользователя</button>
+                    </center>
+                </div>               
+            </div>
+        }
+    </div>
+</body>

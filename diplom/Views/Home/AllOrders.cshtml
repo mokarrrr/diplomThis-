@@ -1,0 +1,149 @@
+﻿
+<link rel="stylesheet" href="~/css/mainwindow.css" />
+<link rel="stylesheet" href="~/css/rate.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+@model List<_order>
+<body style="background-color:#a6a6a6!important;margin-top:10%">
+    <header class="_header" style="background: linear-gradient(to bottom right,#F9D86E,#EDC237);">
+        <div class="logo">
+            <a href="/Home/MainPage" class="company-name">Dairy Delights Emporium</a>
+        </div>
+        <div class="mogo">
+            <a href="/Home/AboutUsPage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
+        </div>
+        <div class="header-buttons">
+            <button id="cartButton" class="btn cart-button" style="border: 2px solid black;">
+                <i class="fas fa-shopping-basket"></i>
+            </button>
+            <a href="/Home/User_like" class="btn fav-button" style="border: 2px solid black;">
+                <i class="fas fa-heart" style="margin-top: 75%;"></i>
+            </a>
+            <button class="btn user-button" style="border: 2px solid black;" type="button" id="openAuthModalButton">
+                <i class="fas fa-user"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="main" style="">
+        <div class="container3" id="container3" style="margin-left: -4%; background-color: #a6a6a6 !important;">
+            <div style="z-index:1;margin-top:5%">
+            <form method="get" style="">
+                <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
+            </form>
+            </div>
+            <ul style="background-color: #a6a6a6 !important; width: 100% !important;">
+                @foreach (var order in Model)
+                {
+                    <ul style="border: 2px solid black; background-color: white !important; width: 97%; margin-bottom: 1%;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <p style="background-color: white; font-size: 20px;">Заказ №@order.Idorder</p>
+                            <p id="statusidd" style="display: none;">@order.status_id</p>
+                            <p style="font-size: 20px;">Статус заказа: @order.Status.status_name</p>
+                            <p style="display: none;">@order.status_id</p>
+                            <p style="margin-right: 20px; font-size: 20px;">Сумма заказа: @order.OrderSum руб.</p>
+                        </div>
+                        <div style="display:flex">
+                            <p style="margin-right: 5%;">Имя пользователя: @order.User.User_name</p>
+                            <p style="margin-right: 5%;">Отчество пользователя: @order.User.Surname</p>
+                            <p style="margin-right: 5%;">Айди пользователя: @order._user_id</p>
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap;">                          
+                            @foreach (var product in order.Products)
+                            {
+                                <div class="col-sm-4" style="margin-right: 2%;">
+                                    <div class="product-card" style="z-index: 0;">
+                                        <div class="card-thumbnail">
+                                            <img class="img-responsive" src="@product.product_img" style="height: 300px; width: 400px;">
+                                        </div>
+                                        <div class="card-content">
+                                            @if (product.product_sale > 0)
+                                            {
+                                                <div class="sale">-@product.product_sale%</div>
+                                            }
+                                            <h1 class="card-title">
+                                                @product.Name_product
+                                            </h1>
+                                            <h2 class="card-sub-title">
+                                                @product.product_article
+                                            </h2>
+                                            <p class="description">
+                                                @product.product_description_
+                                            </p>
+                                            <div style="display: flex;">
+                                                @if (product.product_sale > 0)
+                                                {
+                                                    <p class="price">
+                                                        <s>@product.product_price руб.</s>
+                                                        @(Math.Round(Convert.ToDecimal(product.product_price - (product.product_price * product.product_sale / 100)))) руб.
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="price" id="price_@product.IdProduct">Цена: @(Math.Round(Convert.ToDecimal(product.product_price))) руб.</p>
+                                                }
+                                                <p class="price1">за @product.product_weight грамм</p>
+                                            </div>
+                                            <ul class="list-inline post-meta">
+                                                <li class="time-stamp">
+                                                    <i class="fa fa-clock-o"></i> Массовая доля жира: @product.product_mass_per_fat%
+                                                </li>
+                                                <li class="time-stamp">
+                                                    <i class="fa fa-clock-o"></i> Энергетическая ценность: @product.product_fatty кДж.
+                                                </li>
+                                            </ul>
+                                            <button class="fav-button5" title="Оставить отзыв" data-idd="@product.IdProduct">
+                                                <i class="fa-regular fa-star"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <!-- Показываем кнопку "Отменить" только если у заказа есть продукты -->
+                        @if (order.status_id == 1)
+                        {
+                            <div style="display: flex; justify-content: center; margin-top: 20px;margin-bottom: 20px;">
+                                <button class="cancelOrderBtn" data-order-id="@order.Idorder">Отменить</button>
+                            </div>
+                        }
+                    </ul>
+                }
+            </ul>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            // Обработчик клика на кнопке "Отменить"
+            $(".cancelOrderBtn").click(function () {
+                // Получаем идентификатор заказа из атрибута data-order-id данной кнопки
+                var orderId = $(this).data("order-id");
+                var btn = $(this); // Сохраняем ссылку на кнопку
+
+                // Отключаем кнопку временно, чтобы избежать множественных запросов
+                btn.prop('disabled', true);
+
+                // Отправляем AJAX запрос на отмену заказа
+                $.ajax({
+                    url: '/Home/CancelOrder/' + orderId, // Путь к методу отмены заказа с передачей orderId
+                    type: "POST", // Метод POST для отправки данных
+                    success: function (response) {
+                        console.log("Заказ успешно отменен:", response);
+                        // Дополнительные действия при успешной отмене заказа
+                        // Например, обновление интерфейса или перенаправление на другую страницу
+
+                        // Восстанавливаем состояние кнопки после выполнения запроса
+                        btn.prop('disabled', false);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Ошибка при отмене заказа:", error);
+                        // Обработка ошибки отмены заказа
+
+                        // Восстанавливаем состояние кнопки в случае ошибки
+                        btn.prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+    </body>
