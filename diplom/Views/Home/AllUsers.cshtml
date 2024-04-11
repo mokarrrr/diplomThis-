@@ -49,27 +49,41 @@
             </div>
         }
     </div>
-    <script>
-        $(document).ready(function () {
-            $(".delete-user-btn").click(function () {
-                var userId = $(this).data("user-id");
 
-                // Отправляем AJAX-запрос на сервер
-                $.ajax({
-                    url: "/Home/DeleteUser", // Замените ControllerName на ваш контроллер
-                    type: "POST",
-                    data: { userId: userId },
-                    success: function (result) {
-                        // Обновляем интерфейс или выполняем другие действия по завершении успешного удаления
-                        console.log("Пользователь успешно удален.");
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Ошибка удаления пользователя:", error);
-                    }
+        <script>
+            $(document).ready(function () {
+                $(".delete-user-btn").click(function () {
+                    var userId = $(this).data("user-id");
+
+                    // Отправляем AJAX-запрос на сервер для удаления пользователя
+                    $.ajax({
+                        url: "/Home/DeleteUser",
+                        type: "POST",
+                        data: { userId: userId },
+                        success: function (result) {
+                            if (result.success) {
+                                // Успешное удаление пользователя
+                                console.log(result.message); // Лог для отладки
+                            alert("Пользователь удален.") // Отобразить сообщение об успешном удалении
+                            } else {
+                                // Не удалось удалить пользователя из-за активных заказов
+                                console.log(result.message); // Лог для отладки
+                                alert(result.message); // Отобразить сообщение об ошибке
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Ошибка удаления пользователя:", error);
+                            if (xhr.status === 500 && xhr.responseText) {
+                                alert(xhr.responseText); // Отобразить текст ошибки 500
+                            } else {
+                                alert("Произошла ошибка при удалении пользователя."); // Отобразить общее сообщение об ошибке
+                            }
+                        }
+                    });
                 });
             });
-        });
     </script>
+
     <script>
         $(".edit-user-btn").click(function () {
             var userId = $(this).data("user-id");

@@ -154,37 +154,46 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
 
     return Ok(); // Возвращаем успешный результат
 }
-
-            [HttpPost]
-    public IActionResult DeleteUser(int userId)
-    {
-        // Находим пользователя по Id
-        var user = db.User.FirstOrDefault(u => u.IdUser == userId);
-
-        if (user == null)
+        [HttpPost]
+        public IActionResult DeleteUser(int userId)
         {
-            return NotFound(); // Если пользователь не найден, вернуть 404
+            // Находим пользователя по Id
+            var user = db.User.FirstOrDefault(u => u.IdUser == userId);
+
+            if (user == null)
+            {
+                return NotFound(); // Если пользователь не найден, вернуть 404
+            }
+
+            try
+            {
+                var ordersCount = db._orders.Count(o => o._user_id == userId);
+
+                if (ordersCount > 0)
+                {
+                    // Если у пользователя есть связанные заказы, возвращаем сообщение об ошибке
+                    return StatusCode(500, "Невозможно удалить пользователя, так как у него есть связанные заказы.");
+                }
+
+                // Находим и удаляем все связанные записи в таблице Rate, где client_id равен userId
+                var ratesToDelete = db.Rate.Where(r => r.client_id == userId);
+                db.Rate.RemoveRange(ratesToDelete);
+
+                // Удаляем пользователя
+                db.User.Remove(user);
+
+                // Сохраняем изменения в базе данных
+                db.SaveChanges();
+
+                // Возвращаем успешный результат клиенту
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Если возникла ошибка при удалении пользователя, возвращаем соответствующий статус код
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
-
-        try
-        {
-            // Находим и удаляем все связанные записи в таблице Rate, где client_id равен userId
-            var ratesToDelete = db.Rate.Where(r => r.client_id == userId);
-            db.Rate.RemoveRange(ratesToDelete);
-
-            // Удаляем пользователя
-            db.User.Remove(user);
-
-            // Сохраняем изменения в базе данных
-            db.SaveChanges();
-
-            return Json(new { success = true });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
 
         //[HttpGet]
         //public IActionResult GetStatusName(int statusId)
