@@ -2,6 +2,11 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+<!-- Подключение скрипта SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @using diplom.Models.ViewModels
 @model Cart
@@ -152,7 +157,7 @@
     <div class="main" style="margin-top:6%; display: grid; grid-template-columns: 1fr auto;">
         <!-- Левая часть с товарами -->
         <div class="container3" id="container3" style="padding-left: 2%;grid-column:1">
-            @foreach (var userLike in Model.Users_Baskets)
+            @foreach (var userLike in Model.Users_Baskets.Where(x => x.Product.Ishidden == false && x.Product.product_remain > 0))
             {
                 <div class="col-sm-4">
                     <div class="product-card" style="z-index:0">
@@ -431,7 +436,7 @@
 
             <center>
                 <input id="cityInput" placeholder="Город назначения" style="display: block; margin-bottom: 10px;height:38px" />
-                <input id="addressInput" placeholder="Ваш адрес" style="display: block; margin-bottom: 10px;height:38px" />
+                <input id="addressInput" placeholder="Ваш адрес" style="display: block; margin-bottom: 10px;height:38px"  />
                 <div style="display: flex; justify-content: flex-end;margin-right:12.5%">
                     <div id="charCount">0 / 100</div>
                 </div>
@@ -1352,26 +1357,26 @@
     <script>
         $(document).ready(function () {
             $('.fav-button1').click(function () {
-                // Получаем айди продукта из атрибута data-idd кнопки
-                var productId = $(this).data('idproduct');
+                var button = $(this); // Сохраняем ссылку на кнопку в переменной
+
+                var productId = button.data('idproduct');
                 var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
 
                 if (authenticationSuccess === null || authenticationSuccess === "0") {
                     $('#modal').show();
                     return;
                 }
-                // Проверяем наличие записи в таблице UserLike
+
                 $.ajax({
                     type: 'POST',
                     url: '/Home/CheckUserLike',
                     data: { productId: productId },
                     dataType: 'json',
                     success: function (data) {
-                        // Получаем userId из ответа
                         var userId = data.userId;
 
                         if (data.exists) {
-                            
+                            // Товар уже в избранном
                             $.ajax({
                                 type: 'POST',
                                 url: '/Home/RemoveUserLike',
@@ -1379,38 +1384,89 @@
                                 dataType: 'json',
                                 success: function (response) {
                                     if (response.success) {
-                                        console.log('Товар успешно удален из избранного');
+                                        // Успешно удален из избранного
+                                        button.css({ 'background-color': 'white', 'color': 'black' });
+
+                                        showNotification('Товар удален из избранного', 'error');
                                     } else {
-                                        console.log('Произошла ошибка: ' + response.message);
+                                        // Ошибка при удалении
+                                        Swal.fire({
+                                            position: 'bottom-end',
+                                            icon: 'error',
+                                            title: 'Произошла ошибка: ' + response.message,
+                                            showConfirmButton: false,
+                                            timer: 5000
+                                        });
                                     }
                                 },
                                 error: function () {
-                                    console.log('Произошла ошибка при удалении товара из избранного');
+                                    // Ошибка при удалении
+                                    Swal.fire({
+                                        position: 'bottom-end',
+                                        icon: 'error',
+                                        title: 'Произошла ошибка при удалении товара из избранного',
+                                        showConfirmButton: false,
+                                        timer: 5000
+                                    });
                                 }
                             });
-                            return;
                         } else {
-                            // Записи нет, добавляем новую запись
+                            // Товар не в избранном, добавляем
                             $.ajax({
                                 type: 'POST',
                                 url: '/Home/AddUserLike',
                                 data: { userId: userId, productId: productId },
                                 dataType: 'json',
                                 success: function (response) {
-                                    console.log('Запись успешно добавлена');
-                                },
-                                error: function () {
-                                    console.log('Произошла ошибка при добавлении записи');
+                                    try {
+                                        // Успешно добавлен в избранное
+                                        button.css({ 'background-color': 'red', 'color': 'white' });
+                                        button.attr('title', 'Удалить из избранного');
+                                        showNotification('Товар добавлен в избранное', 'success');
+                                    } catch (error) {
+                                        console.error('Ошибка при выполнении кода:', error);
+                                    }
                                 }
                             });
                         }
                     },
                     error: function () {
-                        console.log('Произошла ошибка при проверке наличия записи');
+                        // Ошибка при проверке наличия записи
+                        Swal.fire({
+                            position: 'bottom-end',
+                            icon: 'error',
+                            title: 'Произошла ошибка при проверке наличия записи',
+                            showConfirmButton: false,
+                            timer: 5000
+                        });
                     }
                 });
+
             });
         });
+
+    </script>
+    <script>
+        // Функция для отображения неблокирующего уведомления (Toast)
+        function showNotification(message, type) {
+            Swal.fire({
+                position: 'bottom-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 5000, // Закрыть уведомление через 5 секунд
+                toast: true,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    // Убрать закрытие при наведении мыши
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+        }
+
+        // Пример использования функции showNotification для вывода уведомления
+
     </script>
     <script>
         $(document).ready(function () {
@@ -1440,6 +1496,7 @@
 
             // Обработчик события клика для кнопки fav-button2
             $('#cardfav').click(function (event) {
+                var button = $(this);
                 event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
 
                 var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
@@ -1466,7 +1523,7 @@
 
                             if (data.exists) {
                                 // Запись уже существует, не делаем ничего
-                                console.log('я твой рот ебал');
+
                                 $.ajax({
                                     type: 'POST',
                                     url: '/Home/RemoveUserLike',
@@ -1475,6 +1532,13 @@
                                     success: function (response) {
                                         if (response.success) {
                                             console.log('Товар успешно удален из избранного');
+                                            button.css({ 'background-color': 'transparent', 'color': 'black' });
+                                            showNotification('Товар удален из избранного', 'error');
+                                            var favButton = $('.fav-button1[data-idproduct="' + productId + '"]');
+
+                                            // Изменяем стили кнопки .fav-button1
+                                            favButton.css({ 'background-color': 'transparent', 'color': 'black' });
+                                            favButton.attr('title', 'Добавить в избранное');
                                         } else {
                                             console.log('Произошла ошибка: ' + response.message);
                                         }
@@ -1493,6 +1557,14 @@
                                     dataType: 'json',
                                     success: function (response) {
                                         console.log('Запись успешно добавлена');
+                                        button.css({ 'background-color': 'red', 'color': 'white' });
+                                        button.attr('title', 'Удалить из избранного');
+                                        var favButton = $('.fav-button1[data-idproduct="' + productId + '"]');
+
+                                        // Изменяем стили кнопки .fav-button1
+                                        favButton.css({ 'background-color': 'red', 'color': 'white' });
+                                        favButton.attr('title', 'Удалить из избранного');
+                                        showNotification('Товар добавлен в избранное', 'success');
                                         // Скрываем модальное окно
                                     },
                                     error: function () {
@@ -1621,8 +1693,9 @@
                             var userId = data.userId;
 
                             if (data.exists) {
-                                // Запись уже существует, не делаем ничего
-                                console.log('я твой рот ебал');
+                                // Запись уже существует, удаляем из корзины
+                                console.log('Товар успешно удален из корзины');
+                                showNotification('Товар удален из корзины', 'error');
                                 $.ajax({
                                     type: 'POST',
                                     url: '/Home/RemoveUserBasket',
@@ -1630,16 +1703,18 @@
                                     dataType: 'json',
                                     success: function (response) {
                                         if (response.success) {
-                                            console.log('Товар успешно удален из избранного');
+                                            console.log('Товар успешно удален из корзины');
+                                            showNotification('Товар удален из корзины', 'error');
+                                            // Здесь можно выполнить другие действия по успешному удалению
                                         } else {
                                             console.log('Произошла ошибка: ' + response.message);
                                         }
                                     },
                                     error: function () {
-                                        console.log('Произошла ошибка при удалении товара из избранного');
+                                        console.log('Произошла ошибка при удалении товара из корзины');
                                     }
                                 });
-                                return;
+
                             } else {
                                 // Записи нет, добавляем новую запись
                                 $.ajax({
@@ -1649,6 +1724,7 @@
                                     dataType: 'json',
                                     success: function (response) {
                                         console.log('Запись успешно добавлена');
+                                        showNotification('Товар добавлен в корзину', 'success');
                                         // Скрываем модальное окно
                                     },
                                     error: function () {
@@ -1724,15 +1800,29 @@
             });
             // Обработчик нажатия на кнопку "Оформить"
             $("#savebuttonorder").click(function () {
-                var totalPriceText = $("#sumorder").text(); // Получаем текст общей суммы заказа
-                var numericTotalPrice = parseInt(totalPriceText.replace(/[^\d.-]/g, '')); // Преобразуем текст в числовое значение
+                // Получаем текст общей суммы заказа
+                var totalPriceText = $("#sumorder").text();
+                // Преобразуем текст в числовое значение
+                var numericTotalPrice = parseInt(totalPriceText.replace(/[^\d.-]/g, ''));
+
+                // Получаем значения города и адреса из инпутов
+                var city = $("#cityInput").val().trim();
+                var address = $("#addressInput").val().trim();
+
+                // Проверяем заполнение города и адреса
+                if (city === '' || address === '') {
+                    // Если город или адрес не заполнены, выводим сообщение об ошибке
+                    displayErrorMessage("Пожалуйста, укажите город и адрес для доставки.");
+                    return; // Прерываем выполнение функции, если поля не заполнены
+                }
+
                 // Собираем данные для заказа
                 var orderData = {
-                    city: $("#cityInput").val(),
-                    address: $("#addressInput").val(),
+                    city: city,
+                    address: address,
                     comment: $("#commentInput").val(),
                     totalPrice: numericTotalPrice,
-                    productQuantities: productQuantities
+                    productQuantities: {} // Инициализируем объект для количества товаров
                 };
 
                 // Заполняем объект productQuantities количеством каждого товара
@@ -1740,7 +1830,7 @@
                 quantityInputs.forEach(function (input) {
                     var productId = input.id.split('_')[1];
                     var quantity = parseInt(input.value);
-                    productQuantities[productId] = quantity;
+                    orderData.productQuantities[productId] = quantity;
                 });
 
                 // Отправляем данные на сервер для создания заказа
@@ -1752,7 +1842,6 @@
                         // Обработка успешного ответа от сервера при создании заказа
                         console.log("Заказ успешно создан:", response);
 
-                        // Проверяем наличие orderId в ответе
                         if (response && response.orderId) {
                             var orderId = response.orderId;
 
@@ -1762,47 +1851,38 @@
                                 type: "POST",
                                 data: { orderId: orderId, productQuantities: orderData.productQuantities },
                                 success: function (addItemResponse) {
-                                    // Обработка успешного ответа от сервера при добавлении товаров в заказ
                                     console.log("Товары успешно добавлены в заказ:", addItemResponse);
-
-                                    // Здесь можно добавить логику для отображения сообщения об успешном добавлении товаров
+                                    showNotification('Заказ успешно оформлен,страница обновится через 5 секунд', 'warning');                                   
+                                    $("#modalсomm").hide();
+                                    setTimeout(function () {
+                                        // Обновляем страницу
+                                        location.reload();
+                                    }, 6000);
+                                    localStorage.setItem("AuthenticationSuccess", "1");
                                 },
                                 error: function (xhr, status, error) {
-                                    // Обработка ошибки при добавлении товаров в заказ
                                     console.error("Ошибка при добавлении товаров в заказ:", error);
-                                    // Здесь можно добавить логику для отображения сообщения об ошибке при добавлении товаров
                                 }
                             });
                         }
                     },
                     error: function (xhr, status, error) {
-                        // Логируем ошибку при создании заказа
                         console.error("Ошибка при создании заказа:", error);
 
-                        // Проверяем тип ошибки и наличие информации о недостающих товарах
                         if (xhr && xhr.responseJSON && xhr.responseJSON.error === "Insufficient stock for some products") {
-                            // Получаем список недостающих товаров из ответа сервера
                             var insufficientProducts = xhr.responseJSON.insufficientProducts;
-
-                            // Формируем сообщение об ошибке о недостающих товарах
                             var errorMessage = "Недостаточное количество товара. Не хватает:\n";
 
-                            // Перебираем каждый недостающий товар и добавляем информацию в сообщение об ошибке
                             insufficientProducts.forEach(function (product) {
-                                // Используем имена свойств как они определены в объекте product
                                 errorMessage += `- ${product.productName} (Доступное количество: ${product.availableQuantity})\n`;
                             });
 
-                            // Отображаем сообщение об ошибке на странице
                             displayErrorMessage(errorMessage);
                         } else {
-                            // Отображаем стандартное сообщение об ошибке на странице
                             displayErrorMessage("Произошла ошибка при создании заказа");
                         }
                     }
-
                 });
-                
             });
             function displayErrorMessage(message) {
                 $("#errorMessageproduct").css("display", "block").text(message);

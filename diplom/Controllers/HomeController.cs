@@ -47,6 +47,36 @@ namespace diplom.Controllers
         {
             return View();
         }
+        public IActionResult Supplies(string searchQuery)
+        {
+            IQueryable<_Provider> suppliersQuery = db._Provider.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                // Фильтруем поставщиков на основе поискового запроса (например, по имени поставщика)
+                suppliersQuery = suppliersQuery.Where(p => p.provider_name.ToLower().Contains(searchQuery.ToLower()));
+            }
+
+            // Преобразуем запрос в список (выполняем запрос к базе данных и получаем отфильтрованных поставщиков)
+            var suppliersList = suppliersQuery.ToList();
+
+            return View(suppliersList);
+        }
+
+        public IActionResult Package(string searchQuery)
+        {
+            IQueryable<Package> packagesQuery = db.Package.AsQueryable();
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                // Фильтруем пакеты на основе поискового запроса (например, по названию или идентификатору)
+                packagesQuery = packagesQuery.Where(p => p.Package_name.ToLower().Contains(searchQuery.ToLower()) || p.Package_id.ToString().Contains(searchQuery.ToLower()));
+            }
+
+            // Преобразуем запрос в список (выполняем запрос к базе данных и получаем отфильтрованные пакеты)
+            var packagesList = packagesQuery.ToList();
+
+            return View(packagesList);
+        }
         //public IActionResult AdminPage()
         //{
         //    return View();
@@ -282,6 +312,7 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
             FilterProductsByCategory(ref productsQuery, fourthCategoryId);
             FilterProductsByCategory(ref productsQuery, fifthCategoryId);
 
+            productsQuery = productsQuery.Where(p => !p.Ishidden);
             var productsList = productsQuery.ToList();
 
             Dictionary<int, double> productAverageRates = productsList
@@ -404,8 +435,28 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
         [HttpGet]
         public IActionResult GetProduct(int Id)
         {
-            
-            return StatusCode(200,db.Product.Where(p=>p.IdProduct == Id).Include(p => p.Rates).ThenInclude(r=>r.User).FirstOrDefault());
+            try
+            {
+                // Получаем продукт из базы данных с загрузкой связанных сущностей (Rates и User)
+                var product = db.Product
+                    .Include(p => p.Rates)
+                        .ThenInclude(r => r.User)
+                    .FirstOrDefault(p => p.IdProduct == Id);
+
+                if (product == null)
+                {
+                    // Если продукт не найден, возвращаем NotFound
+                    return NotFound();
+                }
+
+                // Возвращаем успешный ответ с кодом 200 и объектом продукта в формате JSON
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем код 500 с сообщением об ошибке
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet]
@@ -529,7 +580,7 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
                     // Получаем продукт из базы данных
                     var product = await db.Product.FirstOrDefaultAsync(p => p.IdProduct == productId);
 
-                    if (product == null || quantity <= 0)
+                    if (product == null || quantity < 0)
                     {
                         return StatusCode(400, new { error = $"Invalid product ID or quantity: {productId}" });
                     }
@@ -1339,6 +1390,367 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
             }
         }
 
+         public IActionResult GetProviders()
+    {
+        var providers = db._Provider.Select(s => new
+        {
+            id = s.IdProvider,
+            name = s.provider_name
+        }).ToList();
+
+        return Json(providers); // Вернуть список поставщиков в формате JSON
+    }
+
+    // Метод для получения списка упаковок в формате JSON
+    public IActionResult GetPackages()
+    {
+        var packages = db.Package.Select(p => new
+        {
+            id = p.Package_id,
+            name = p.Package_name
+        }).ToList();
+
+        return Json(packages); // Вернуть список упаковок в формате JSON
+    }
+        [HttpPost]
+        public IActionResult UpdateProductHiddenStatus(int productId, bool ishidden)
+        {
+            try
+            {
+                // Находим продукт по Id
+                var product = db.Product.FirstOrDefault(p => p.IdProduct == productId);
+
+                if (product == null)
+                {
+                    return NotFound(); // Если продукт не найден, возвращаем 404 Not Found
+                }
+
+                // Обновляем свойство ishidden и сохраняем изменения в базе данных
+                product.Ishidden = ishidden;
+                db.SaveChanges();
+
+                return Ok(); // Возвращаем успешный ответ с кодом 200 OK
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}"); // В случае ошибки возвращаем 500 Internal Server Error
+            }
+        }
+
+        [HttpPost]
+        public IActionResult UpdateProductHiddenStatus2(int productId, bool ishidden)
+        {
+            try
+            {
+                // Находим продукт по Id
+                var product = db.Product.FirstOrDefault(p => p.IdProduct == productId);
+
+                if (product == null)
+                {
+                    return NotFound(); // Если продукт не найден, возвращаем 404 Not Found
+                }
+
+                // Обновляем свойство ishidden и сохраняем изменения в базе данных
+                product.Ishidden = ishidden;
+                db.SaveChanges();
+
+                return Ok(); // Возвращаем успешный ответ с кодом 200 OK
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}"); // В случае ошибки возвращаем 500 Internal Server Error
+            }
+        }
+
+        [HttpPost]
+        public IActionResult UpdateProductData(int idProduct, string storageConditions, int storageLife, int energyValue, int carb, int fatty, int protein, int fat, string massPerFat, string article, string sostav, int sale, int remain, string description, int price, string productName)
+        {
+            try
+            {
+                // Находим продукт по идентификатору
+                var product = db.Product.FirstOrDefault(p => p.IdProduct == idProduct);
+
+                if (product == null)
+                {
+                    return NotFound(); // Если продукт не найден, возвращаем 404 Not Found
+                }
+
+                // Обновляем данные продукта
+                product.product_storage_conditions = storageConditions;
+                product.product_storage_life = storageLife;
+                product.product_energy_value = energyValue;
+                product.product_carb = carb;
+                product.product_fatty = fatty;
+                product.product_protein = protein;
+                product.product_fat = fat;
+                product.product_mass_per_fat = massPerFat;
+                product.product_article = article;
+                product.product_sostav = sostav;
+                product.product_sale = sale;
+                product.product_remain = remain;
+                product.product_weight = 500;
+                product.product_description_ = description;
+                product.product_price = price;
+                product.Name_product = productName;
+
+
+                // Сохраняем изменения в базе данных
+                db.SaveChanges();
+
+                // Возвращаем успешный результат
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем ошибку сервера с сообщением
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult UpdateProductProvider(int idProduct, int providerId)
+        {
+            var product = db.Product.Find(idProduct);
+
+            if (product != null)
+            {
+                product.Provider_id = providerId;
+
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false, error = "Продукт не найден" });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult UpdateProductPackage(int idProduct, int packageId)
+        {
+            var product = db.Product.Find(idProduct);
+
+            if (product != null)
+            {
+                product.product_package_id = packageId;
+
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            else
+            {
+                return Json(new { success = false, error = "Продукт не найден" });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult DeleteComment(int commentId)
+        {
+            // Находим комментарий по его идентификатору
+            var comment = db.Rate.FirstOrDefault(c => c.Rate_id == commentId);
+
+            if (comment == null)
+            {
+                return NotFound(); // Если комментарий не найден, вернуть 404
+            }
+
+            try
+            {
+
+                // Удаляем комментарий из таблицы Comments
+                db.Rate.Remove(comment);
+
+                // Сохраняем изменения в базе данных
+                db.SaveChanges();
+
+                // Возвращаем успешный результат клиенту
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Если возникла ошибка при удалении комментария, возвращаем соответствующий статус код
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(string imageData, int productId)
+        {
+            if (string.IsNullOrEmpty(imageData))
+            {
+                return BadRequest("Пустые данные изображения");
+            }
+
+            try
+            {
+                // Получение продукта по его идентификатору (productId) из базы данных
+                var product = await db.Product.FindAsync(productId);
+
+                if (product != null)
+                {
+                    // Обновление поля product_img у продукта
+                    product.product_img = imageData; // Сохраняем строку Base64 в поле product_img
+
+                    // Сохранение изменений в базе данных
+                    await db.SaveChangesAsync();
+
+                    // Возвращаем успешный результат клиенту
+                    return Ok(new { message = "Изображение успешно сохранено" });
+                }
+                else
+                {
+                    return NotFound("Продукт не найден");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Обработка ошибки при сохранении данных изображения
+                return StatusCode(500, $"Ошибка при сохранении изображения: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult CreateSup(string SupName, string SupPhone)
+        {
+            if (string.IsNullOrWhiteSpace(SupName) || string.IsNullOrWhiteSpace(SupPhone))
+            {
+                return StatusCode(500, "Ошибка: не заполнены все поля");
+            }
+
+            var newSupplier = new _Provider
+            {
+                provider_name = SupName,
+                provider_phone = SupPhone
+            };
+
+            db._Provider.Add(newSupplier);
+            db.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult CreatePack(string PackName)
+        {
+            if (string.IsNullOrWhiteSpace(PackName) )
+            {
+                return StatusCode(500, "Ошибка: не заполнены все поля");
+            }
+
+            var newSupplier = new Package
+            {
+                Package_name = PackName,
+                
+            };
+
+            db.Package.Add(newSupplier);
+            db.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteSup(int userId)
+        {
+            // Находим пользователя по Id
+            var user = db._Provider.FirstOrDefault(u => u.IdProvider == userId);
+
+            if (user == null)
+            {
+                return NotFound(); // Если пользователь не найден, вернуть 404
+            }
+
+            try
+            {
+                // Удаляем пользователя
+                db._Provider.Remove(user);
+
+                // Сохраняем изменения в базе данных
+                db.SaveChanges();
+
+                // Возвращаем успешный результат клиенту
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Если возникла ошибка при удалении пользователя, возвращаем соответствующий статус код
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult DeletePack(int userId)
+        {
+            // Находим пользователя по Id
+            var user = db.Package.FirstOrDefault(u => u.Package_id == userId);
+
+            if (user == null)
+            {
+                return NotFound(); // Если пользователь не найден, вернуть 404
+            }
+
+            try
+            {
+                // Удаляем пользователя
+                db.Package.Remove(user);
+
+                // Сохраняем изменения в базе данных
+                db.SaveChanges();
+
+                // Возвращаем успешный результат клиенту
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Если возникла ошибка при удалении пользователя, возвращаем соответствующий статус код
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddProduct(string img, int packageId,int providerId, string storageConditions, int storageLife, int energyValue, int carb, int fatty, int protein, int fat, string massPerFat, string article, string sostav, int sale, int remain, string description, int price, string productName)
+        {
+            try
+            {
+                // Создаем новый объект Product для добавления в базу данных
+                var newProduct = new Product
+                {
+                    product_storage_conditions = storageConditions,
+                    product_storage_life = storageLife,
+                    product_energy_value = energyValue,
+                    product_carb = carb,
+                    product_fatty = fatty,
+                    product_protein = protein,
+                    product_fat = fat,
+                    product_mass_per_fat = massPerFat,
+                    product_article = article,
+                    product_sostav = sostav,
+                    product_sale = sale,
+                    product_remain = remain,
+                    product_weight = 500, // Пример значения
+                    product_description_ = description,
+                    product_price = price,
+                    Name_product = productName,
+                    product_package_id = packageId,
+                    Provider_id = providerId,
+                    product_img = img,
+                };
+
+                // Добавляем новый продукт в базу данных
+                db.Product.Add(newProduct);
+                db.SaveChanges(); // Сохраняем изменения
+
+                // Возвращаем успешный результат
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // В случае ошибки возвращаем ошибку сервера с сообщением
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

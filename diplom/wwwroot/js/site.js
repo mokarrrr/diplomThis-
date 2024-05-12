@@ -492,21 +492,44 @@ $(document).ready(function () {
  
 
    /* @* фильтры * @*/
-    
+
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Получите изначальные карточки продуктов
+    var productCards = document.querySelectorAll('.product-card');
+
+    // Сохраните изначальный порядок карточек продуктов
+    var initialOrder = Array.from(productCards);
+
+    // Получите контейнер для карточек продуктов
+    var container = document.querySelector('.container3');
+
+    // Функция для очистки и добавления карточек в контейнер
+    function renderProductCards(cards) {
+        // Очистите контейнер
+        container.innerHTML = '';
+
+        // Добавьте карточки в контейнер в нужном порядке
+        cards.forEach(function (card) {
+            container.appendChild(card);
+        });
+    }
+
+    // Обработчик события изменения фильтра
     document.getElementById('filter').addEventListener('change', function () {
         // Получите выбранное значение фильтра
         var selectedFilter = this.value;
 
-        // Получите все карточки продуктов
-        var productCards = document.querySelectorAll('.product-card');
-
-        // Преобразуйте NodeList в Array для удобной манипуляции
-        var productArray = Array.from(productCards);
+        // Создайте копию изначального порядка карточек продуктов
+        var productArray = Array.from(initialOrder);
 
         // Отсортируйте карточки продуктов в зависимости от выбранного фильтра
         switch (selectedFilter) {
             case 'by_popularity':
-                // Реализуйте логику сортировки для популярности
+                // При выборе 'by_popularity' просто отрисуйте изначальный порядок
+                renderProductCards(productArray);
                 break;
             case 'by_alphabet':
                 // Сортируйте карточки продуктов по алфавиту
@@ -515,6 +538,7 @@ $(document).ready(function () {
                     var titleB = b.querySelector('.card-title').innerText.toUpperCase();
                     return titleA.localeCompare(titleB);
                 });
+                renderProductCards(productArray);
                 break;
             case 'cheaper':
                 // Сортируйте карточки продуктов по цене в порядке возрастания
@@ -523,6 +547,7 @@ $(document).ready(function () {
                     var priceB = getPrice(b);
                     return priceA - priceB;
                 });
+                renderProductCards(productArray);
                 break;
             case 'expensive':
                 // Сортируйте карточки продуктов по цене в порядке убывания
@@ -531,10 +556,12 @@ $(document).ready(function () {
                     var priceB = getPrice(b);
                     return priceB - priceA;
                 });
+                renderProductCards(productArray);
                 break;
             default:
                 break;
         }
+    
 
         // Обновите контейнер отсортированными карточками продуктов
         var container = document.querySelector('.container3');
@@ -542,6 +569,7 @@ $(document).ready(function () {
         productArray.forEach(function (card) {
             container.appendChild(card);
         });
+    });
     });
 
 
@@ -1559,7 +1587,7 @@ function AddCardListeners() {
 
         getPackageNameById(packageId)
             .then(function (packageName) {
-                $('#productSup').text("Упаковка: " + packageName);
+                $('#productSupplier').text("Упаковка: " + packageName);
             })
             .catch(function (error) {
                 console.error("Ошибка при получении имени пакета:", error);
@@ -1572,6 +1600,480 @@ function AddCardListeners() {
             .catch(function (error) {
                 console.error("Ошибка при получении имени поставщика:", error);
             });
+    });
+    $(document).ready(function () {
+        $(".info-button1").on("click", function () {
+            var productId = $(this).data('idproduct');
+            var $productRate = $("#productrate");
+            var $productRate2 = $("#productrate2");
+            var $ratingStars = $("#rating-stars");
+
+            getProductRatingById(productId)
+                .then(function (averageRate) {
+                    updateProductRating($productRate, $ratingStars, averageRate);
+
+                    // Добавьте класс для изменения цвета текста, включая звезду
+                    $productRate2.html('<span class="star-rating">' + averageRate + '<span class="star">★</span></span>');
+
+                    // Переопределите цвет только для звезды и добавьте стили
+                    $productRate2.find('.star')
+                        .css('color', '#FFD700');
+                })
+                .catch(function (error) {
+                    console.error("Ошибка при получении рейтинга продукта:", error);
+                });
+        });
+
+        // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
+        function getProductRatingById(productId) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '/Home/GetProductRating',
+                    data: { productId: productId },
+                    type: 'GET',
+                    success: function (result) {
+                        resolve(result);
+                    },
+                    error: function (error) {
+                        reject(error);
+                    }
+                });
+            });
+        }
+    });
+    function updateProductRating($productRate, $ratingStars, averageRate) {
+        $productRate.text("Рейтинг продукта: " + averageRate + '★');
+
+    }
+
+    $(document).ready(function () {
+        $('.fav-button').click(function () {
+            // Получаем айди продукта из атрибута data-idd кнопки
+            var productId = $(this).data('idproduct');
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+            if (authenticationSuccess === null || authenticationSuccess === "0") {
+                $('#modal').show();
+                return;
+            }
+
+            // Проверяем наличие записи в таблице UserLike
+            $.ajax({
+                type: 'POST',
+                url: '/Home/CheckUserLike',
+                data: { productId: productId },
+                dataType: 'json',
+                success: function (data) {
+                    // Получаем userId из ответа
+                    var userId = data.userId;
+
+                    if (data.exists) {
+                        // Запись уже существует, не делаем ничего
+                        console.log('Запись уже существует');
+                    } else {
+                        // Записи нет, добавляем новую запись
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/AddUserLike',
+                            data: { userId: userId, productId: productId },
+                            dataType: 'json',
+                            success: function (response) {
+                                console.log('Запись успешно добавлена');
+                            },
+                            error: function () {
+                                console.log('Произошла ошибка при добавлении записи');
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    console.log('Произошла ошибка при проверке наличия записи');
+                }
+            });
+        });
+    });
+    $(document).ready(function () {
+        $('.fav-button1').click(function () {
+            var button = $(this);
+            // Получаем айди продукта из атрибута data-idd кнопки
+            var productId = $(this).data('idproduct');
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+            if (authenticationSuccess === null || authenticationSuccess === "0") {
+                $('#modal').show();
+                return;
+            }
+            // Проверяем наличие записи в таблице UserLike
+            $.ajax({
+                type: 'POST',
+                url: '/Home/CheckUserLike',
+                data: { productId: productId },
+                dataType: 'json',
+                success: function (data) {
+                    // Получаем userId из ответа
+                    var userId = data.userId;
+
+                    if (data.exists) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/RemoveUserLike',
+                            data: { userId: userId, productId: productId },
+                            dataType: 'json',
+                            success: function (response) {
+                                if (response.success) {
+                                    console.log('Товар успешно удален из избранного');
+                                    button.css({ 'background-color': 'white', 'color': 'black' });
+                                    showNotification('Товар удален из избранного', 'error');
+                                } else {
+                                    console.log('Произошла ошибка: ' + response.message);
+                                }
+                            },
+                            error: function () {
+                                console.log('Произошла ошибка при удалении товара из избранного');
+                            }
+                        });
+                        return;
+                    } else {
+                        // Записи нет, добавляем новую запись
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/AddUserLike',
+                            data: { userId: userId, productId: productId },
+                            dataType: 'json',
+                            success: function (response) {
+                                console.log('Запись успешно добавлена');
+                                button.css({ 'background-color': 'red', 'color': 'white' });
+                                button.attr('title', 'Удалить из избранного');
+                                showNotification('Товар добавлен в избранное', 'success');
+                            },
+                            error: function () {
+                                console.log('Произошла ошибка при добавлении записи');
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    console.log('Произошла ошибка при проверке наличия записи');
+                }
+            });
+        });
+    });
+    $(document).ready(function () {
+        $('.send').click(function () {
+            // Получаем айди продукта из атрибута data-idd кнопки
+            var productId = $(this).data('idd');
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+            if (authenticationSuccess === null || authenticationSuccess === "0") {
+                $('#modal').show();
+                return;
+            }
+            // Проверяем наличие записи в таблице UserLike
+            $.ajax({
+                type: 'POST',
+                url: '/Home/CheckUserBasket',
+                data: { productId: productId },
+                dataType: 'json',
+                success: function (data) {
+                    // Получаем userId из ответа
+                    var userId = data.userId;
+
+                    if (data.exists) {
+                        console.log('я твой рот ебал');
+                        showNotification('Товар уже в корзине', 'error');
+                    } else {
+                        // Записи нет, добавляем новую запись
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/AddUserBasket',
+                            data: { userId: userId, productId: productId },
+                            dataType: 'json',
+                            success: function (response) {
+                                console.log('Запись успешно добавлена');
+                                console.log('ID пользователя:', userId);
+                                console.log('ID товара:', productId);
+                                showNotification('Товар добавлен в корзину', 'success');
+                            },
+                            error: function () {
+                                console.log('Произошла ошибка при добавлении записи');
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    console.log('Произошла ошибка при проверке наличия записи');
+                }
+            });
+        });
+    });
+    $(document).ready(function () {
+        var productId; // Переменная для хранения айди продукта
+
+        // Обработчик события клика для кнопки info-button1
+        $('.info-button1').click(function () {
+            // Получаем айди продукта из атрибута data-idd кнопки
+            productId = $(this).data('idproduct');
+        });
+
+
+        // Обработчик события клика для кнопки fav-button2
+        $('#cardfav').click(function (event) {
+            var button = $(this);
+            event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
+
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+            if (authenticationSuccess === null || authenticationSuccess === "0") {
+                $('#modal').show();
+                $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
+                $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
+                return;
+            }
+
+            // Проверяем, был ли установлен productId
+            if (productId !== undefined) {
+                // productId был установлен, можем его использовать
+                // Проверяем наличие записи в таблице UserLike
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/CheckUserLike',
+                    data: { productId: productId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Получаем userId из ответа
+                        var userId = data.userId;
+
+                        if (data.exists) {
+                            // Запись уже существует, не делаем ничего
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/RemoveUserLike',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    if (response.success) {
+                                        console.log('Товар успешно удален из избранного');
+                                        console.log('Товар успешно удален из избранного');
+                                        button.css({ 'background-color': 'transparent', 'color': 'black' });
+                                        showNotification('Товар удален из избранного', 'error');
+                                        var favButton = $('.fav-button1[data-idproduct="' + productId + '"]');
+
+                                        // Изменяем стили кнопки .fav-button1
+                                        favButton.css({ 'background-color': 'transparent', 'color': 'black' });
+                                        favButton.attr('title', 'Добавить в избранное');
+                                    } else {
+                                        console.log('Произошла ошибка: ' + response.message);
+                                    }
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при удалении товара из избранного');
+                                }
+                            });
+                            return;
+                        } else {
+                            // Записи нет, добавляем новую запись
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/AddUserLike',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    console.log('Запись успешно добавлена');
+                                    button.css({ 'background-color': 'red', 'color': 'white' });
+                                    button.attr('title', 'Удалить из избранного');
+                                    var favButton = $('.fav-button1[data-idproduct="' + productId + '"]');
+
+                                    // Изменяем стили кнопки .fav-button1
+                                    favButton.css({ 'background-color': 'red', 'color': 'white' });
+                                    favButton.attr('title', 'Удалить из избранного');
+                                    showNotification('Товар добавлен в избранное', 'success');
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при добавлении записи');
+
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.log('Произошла ошибка при проверке наличия записи');
+                    }
+                });
+            } else {
+                console.log('Айди продукта не определено');
+            }
+        });
+    });
+    $(document).ready(function () {
+        var productId; // Переменная для хранения айди продукта
+
+        // Обработчик события клика для кнопки info-button1
+        $('.info-button1').click(function () {
+            // Получаем айди продукта из атрибута data-idd кнопки
+            productId = $(this).data('idproduct');
+        });
+
+        // Обработчик события клика для кнопки senddd
+        $('#senddd').click(function (event) {
+            event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
+
+            var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+            if (authenticationSuccess === null || authenticationSuccess === "0") {
+                $('#modal').show();
+                $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
+                $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
+                return;
+            }
+
+            // Проверяем, был ли установлен productId
+            if (productId !== undefined) {
+                // productId был установлен, можем его использовать
+                // Проверяем наличие записи в таблице UserLike
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/CheckUserBasket',
+                    data: { productId: productId },
+                    dataType: 'json',
+                    success: function (data) {
+                        // Получаем userId из ответа
+                        var userId = data.userId;
+
+                        if (data.exists) {
+                            // Запись уже существует, удаляем из корзины
+                            console.log('Товар успешно удален из корзины');
+                            showNotification('Товар удален из корзины', 'error');
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/RemoveUserBasket',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    if (response.success) {
+                                        console.log('Товар успешно удален из корзины');
+                                        showNotification('Товар удален из корзины', 'error');
+                                        // Здесь можно выполнить другие действия по успешному удалению
+                                    } else {
+                                        console.log('Произошла ошибка: ' + response.message);
+                                    }
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при удалении товара из корзины');
+                                }
+                            });
+                            
+                        } else {
+                            // Записи нет, добавляем новую запись
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Home/AddUserBasket',
+                                data: { userId: userId, productId: productId },
+                                dataType: 'json',
+                                success: function (response) {
+                                    console.log('Запись успешно добавлена');
+                                    showNotification('Товар добавлен в корзину', 'success');
+                                    // Скрываем модальное окно
+                                },
+                                error: function () {
+                                    console.log('Произошла ошибка при добавлении записи');
+
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        console.log('Произошла ошибка при проверке наличия записи');
+                    }
+                });
+            } else {
+                console.log('Айди продукта не определено');
+            }
+        });
+    });
+    function checkUserLike(productId, button) {
+        $.ajax({
+            type: "POST",
+            url: "/Home/CheckUserLike",
+            data: { productId: productId },
+            success: function (response) {
+                if (response.exists) {
+                    // Если товар в избранном, добавляем красный фон кнопке
+                    button.css('background-color', 'red');
+                    button.css('color', 'white');
+                    button.attr('title', 'Удалить из избранного');
+                } else {
+                    // Если товар не в избранном, убираем красный фон кнопки
+                    button.css('background-color', 'transparent');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Обработка ошибки, если не удалось выполнить запрос
+                console.error(error);
+            }
+        });
+    }
+
+    // При загрузке страницы выполним проверку наличия товара в избранном для каждой кнопки
+    $(document).ready(function () {
+        $('.fav-button1').each(function () {
+            var button = $(this);
+            var productId = button.data('idproduct');
+            checkUserLike(productId, button);
+        });
+    });
+    function showNotification(message, type) {
+        Swal.fire({
+            position: 'bottom-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 5000, // Закрыть уведомление через 5 секунд
+            toast: true,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                // Убрать закрытие при наведении мыши
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+    }
+    $(document).ready(function () {
+        // Отслеживаем клик по кнопке "info-button1"
+        $('.info-button1').on('click', function () {
+            var productId = $(this).data('idproduct'); // Получаем айди товара из кнопки
+
+            // Отправляем запрос на сервер для проверки наличия товара в избранном
+            $.ajax({
+                type: "POST",
+                url: "/Home/CheckUserLike",
+                data: { productId: productId },
+                success: function (response) {
+                    var modalButton = $('#exampleModal').find('.fav-button2');
+
+                    // Если товар в избранном, добавляем красный фон кнопке в модальном окне
+                    if (response.exists) {
+                        modalButton.css('background-color', 'red');
+                        modalButton.css('color', 'white');
+                    } else {
+                        // Если товар не в избранном, убираем красный фон кнопки в модальном окне
+                        modalButton.css('background-color', 'transparent');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Обработка ошибки, если запрос не удался
+                    console.error(error);
+                }
+            });
+        });
+
+        // После закрытия модального окна
+        $('#exampleModal').on('hidden.bs.modal', function (e) {
+            // Сбрасываем стили для modalButton
+            var modalButton = $('#exampleModal').find('.fav-button2');
+            modalButton.css('background-color', '');
+            modalButton.css('color', ''); // сброс цвета
+        });
     });
 }
 

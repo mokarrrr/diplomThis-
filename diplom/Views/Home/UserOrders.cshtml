@@ -3,8 +3,14 @@
 }
 <link rel="stylesheet" href="~/css/mainwindow.css" />
 <link rel="stylesheet" href="~/css/rate.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+<!-- Подключение скрипта SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @model List<_order>
 <body style="background-color:#a6a6a6!important">
     <header class="_header" style="background: linear-gradient(to bottom right,#F9D86E,#EDC237);">
@@ -147,52 +153,43 @@
 
 
     <div class="main" style="margin-top: 6%;">
+        <select name="filter" id="filter" style="margin-top:200px!important">
+
+            <option value="by_old">Cначала Старые</option>
+            <option value="by_new">Сначала Новые</option>
+
+        </select>
         <div class="container3" id="container3" style="margin-left: -4%; background-color: #a6a6a6 !important;">
-            <ul style="background-color: #a6a6a6 !important; width: 100% !important;">
+            <ul id="list" style="background-color: #a6a6a6 !important; width: 100% !important;">
                 @foreach (var order in Model)
                 {
-                    <ul style="border: 2px solid black; background-color: white !important; width: 97%; margin-bottom: 1%;">
+                    <!-- Карточка заказа -->
+                    <ul class="order-card" style="border: 2px solid black; background-color: white !important; width: 97%; margin-bottom: 1%;">
                         <div style="display: flex; justify-content: space-between;">
                             <p style="background-color: white; font-size: 20px;">Заказ №@order.Idorder</p>
                             <p id="statusidd" style="display: none;">@order.status_id</p>
                             <p style="font-size: 20px;">Статус заказа: @order.Status.status_name</p>
                             <p style="display: none;">@order.status_id</p>
+                            <p id="orderDate" style="font-size: 20px;">Дата: @order.order_date</p>
                             <p style="margin-right: 20px; font-size: 20px;">Сумма заказа: @order.OrderSum руб.</p>
                         </div>
+                        <!-- Продукты в заказе -->
                         <div style="display: flex; flex-wrap: wrap;">
                             @foreach (var product in order.Products)
                             {
                                 <div class="col-sm-4" style="margin-right: 2%;">
+                                    <!-- Карточка продукта -->
                                     <div class="product-card" style="z-index: 0;">
                                         <div class="card-thumbnail">
                                             <img class="img-responsive" src="@product.product_img" style="height: 300px; width: 400px;">
                                         </div>
                                         <div class="card-content">
-                                            @if (product.product_sale > 0)
-                                            {
-                                                <div class="sale">-@product.product_sale%</div>
-                                            }
-                                            <h1 class="card-title">
-                                                @product.Name_product
-                                            </h1>
-                                            <h2 class="card-sub-title">
-                                                @product.product_article
-                                            </h2>
-                                            <p class="description">
-                                                @product.product_description_
-                                            </p>
+                                            <!-- Информация о продукте -->
+                                            <h1 class="card-title">@product.Name_product</h1>
+                                            <h2 class="card-sub-title">@product.product_article</h2>
+                                            <p class="description">@product.product_description_</p>
                                             <div style="display: flex;">
-                                                @if (product.product_sale > 0)
-                                                {
-                                                    <p class="price">
-                                                        <s>@product.product_price руб.</s>
-                                                        @(Math.Round(Convert.ToDecimal(product.product_price - (product.product_price * product.product_sale / 100)))) руб.
-                                                    </p>
-                                                }
-                                                else
-                                                {
-                                                    <p class="price" id="price_@product.IdProduct">Цена: @(Math.Round(Convert.ToDecimal(product.product_price))) руб.</p>
-                                                }
+                                                <p class="price" id="price_@product.IdProduct">Цена: @(Math.Round(Convert.ToDecimal(product.product_price))) руб.</p>
                                                 <p class="price1">за @product.product_weight грамм</p>
                                             </div>
                                             <ul class="list-inline post-meta">
@@ -203,18 +200,21 @@
                                                     <i class="fa fa-clock-o"></i> Энергетическая ценность: @product.product_fatty кДж.
                                                 </li>
                                             </ul>
-                                            <button class="fav-button5" title="Оставить отзыв" data-idd="@product.IdProduct">
-                                                <i class="fa-regular fa-star"></i>
-                                            </button>
+                                            @if (order.status_id != 6)
+                                            {
+                                                <button class="fav-button5" title="Оставить отзыв" data-idd="@product.IdProduct">
+                                                    <i class="fa-regular fa-star"></i>
+                                                </button>
+                                            }
                                         </div>
                                     </div>
                                 </div>
                             }
                         </div>
-                        <!-- Показываем кнопку "Отменить" только если у заказа есть продукты -->
+                        <!-- Показываем кнопку "Отменить" только если у заказа есть продукты и статус "В обработке" -->
                         @if (order.status_id == 1)
                         {
-                        <div style="display: flex; justify-content: center; margin-top: 20px;margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: center; margin-top: 20px;margin-bottom: 20px;">
                                 <button class="cancelOrderBtn" data-order-id="@order.Idorder">Отменить</button>
                             </div>
                         }
@@ -505,7 +505,8 @@
 
                 // Проверяем, заполнен ли рейтинг
                 if (rating === undefined || rating == 0) {
-                    $('#errorMessage2').show(); // Отображаем сообщение об ошибке
+                    
+                    showNotification('Необходимо поставить оценку', 'error');// Отображаем сообщение об ошибке
                     return; // Прекращаем выполнение функции
                 } else {
                     $('#errorMessage2').hide(); // Скрываем сообщение об ошибке, если рейтинг заполнен
@@ -539,6 +540,8 @@
                     success: function (response) {
                         console.log('Комментарий и рейтинг успешно сохранены!');
                         console.log('Ответ сервера:', response);
+                        showNotification('Комментарий успешно сохранен', 'success');
+                        $('#modalсomm').hide();
                     },
                     error: function (xhr, status, error) {
                         console.error('Ошибка при сохранении комментария и рейтинга:', error);
@@ -548,13 +551,26 @@
         });
     </script>
     <script>
-    $.get('/banned_words.txt', function(data) {
-    console.log('Содержимое файла с запрещёнными словами:', data);
-    bannedWords = data.split('\n');
-    console.log('Список запрещённых слов:', bannedWords);
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-    console.error('Ошибка загрузки файла:', textStatus, errorThrown);
-    });
+        // Функция для отображения неблокирующего уведомления (Toast)
+        function showNotification(message, type) {
+            Swal.fire({
+                position: 'bottom-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 5000, // Закрыть уведомление через 5 секунд
+                toast: true,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    // Убрать закрытие при наведении мыши
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+        }
+
+        // Пример использования функции showNotification для вывода уведомления
+
     </script>
     <script>
         $(document).ready(function () {
@@ -1046,7 +1062,7 @@
                         console.log("Заказ успешно отменен:", response);
                         // Дополнительные действия при успешной отмене заказа
                         // Например, обновление интерфейса или перенаправление на другую страницу
-
+                        showNotification('Заказ отменен', 'warning');
                         // Восстанавливаем состояние кнопки после выполнения запроса
                         btn.prop('disabled', false);
                     },
@@ -1075,4 +1091,49 @@
             });
         });
     </script>
+
+
+@*     <script>
+        $(document).ready(function () {
+            $('#filter').on('change', function () {
+                var selectedFilter = $(this).val();
+                var $orderCards = $('.order-card');
+
+                if (selectedFilter === 'by_new') {
+                    // Сначала Новые (самая недавняя дата от сегодня)
+                    $orderCards.sort(function (a, b) {
+                        var dateA = moment($(a).find('#orderDate').text(), 'DD.MM.YY HH:mm:ss');
+                        var dateB = moment($(b).find('#orderDate').text(), 'DD.MM.YY HH:mm:ss');
+                        var today = moment(); // Текущая дата и время
+
+                        // Сортируем по возрастанию разницы во времени с текущей датой (чем дальше от сегодня, тем больше)
+                        return Math.abs(dateA.diff(today)) - Math.abs(dateB.diff(today));
+                    });
+                } else if (selectedFilter === 'by_old') {
+                    // Сначала Старые (самая давняя дата от сегодня)
+                    $orderCards.sort(function (a, b) {
+                        var dateA = moment($(a).find('#orderDate').text(), 'DD.MM.YY HH:mm:ss');
+                        var dateB = moment($(b).find('#orderDate').text(), 'DD.MM.YY HH:mm:ss');
+                        var today = moment(); // Текущая дата и время
+
+                        // Сортируем по убыванию разницы во времени с текущей датой (чем ближе к сегодня, тем ниже в списке)
+                        return Math.abs(dateB.diff(today)) - Math.abs(dateA.diff(today));
+                    });
+                }
+
+                // Очищаем контейнер с карточками
+                $('#list').empty();
+
+                // Добавляем отсортированные карточки обратно в контейнер
+                $orderCards.each(function () {
+                    $(this).appendTo('#list');
+                });
+            });
+
+            // Инициализация сортировки при загрузке страницы (по умолчанию сначала новые)
+            $('#filter').trigger('change');
+        });
+    </script> *@
+
+   
 </body>

@@ -3,6 +3,11 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+<!-- Подключение скрипта SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @using diplom.Models.ViewModels
 @model ULVM
@@ -148,7 +153,7 @@
 
 <div class="main" style="margin-top:6%">
     <div class="container3" id="container3" style="padding-left: 2%;">
-        @foreach (var userLike in Model.User_Likes)
+            @foreach (var userLike in Model.User_Likes.Where(x => x.Product.Ishidden == false && x.Product.product_remain > 0))
         {
             <div class="col-sm-4">
                 <div class="product-card" style="z-index:0">
@@ -1339,11 +1344,13 @@
             // Обработчик события клика для кнопки info-button1
             $('.info-button1').click(function () {
                 // Получаем айди продукта из атрибута data-idd кнопки
-                var productId = $(this).data('idproduct');
+                productId = $(this).data('idproduct');
             });
+
 
             // Обработчик события клика для кнопки fav-button2
             $('#cardfav').click(function (event) {
+                var button = $(this);
                 event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
 
                 var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
@@ -1370,7 +1377,7 @@
 
                             if (data.exists) {
                                 // Запись уже существует, не делаем ничего
-                                console.log('я твой рот ебал');
+
                                 $.ajax({
                                     type: 'POST',
                                     url: '/Home/RemoveUserLike',
@@ -1379,6 +1386,9 @@
                                     success: function (response) {
                                         if (response.success) {
                                             console.log('Товар успешно удален из избранного');
+                                            button.css({ 'background-color': 'transparent', 'color': 'black' });
+                                            showNotification('Товар удален из избранного', 'error');
+                                           
                                         } else {
                                             console.log('Произошла ошибка: ' + response.message);
                                         }
@@ -1397,6 +1407,10 @@
                                     dataType: 'json',
                                     success: function (response) {
                                         console.log('Запись успешно добавлена');
+                                        button.css({ 'background-color': 'red', 'color': 'white' });
+                                        button.attr('title', 'Удалить из избранного');
+                                       
+                                        showNotification('Товар добавлен в избранное', 'success');
                                         // Скрываем модальное окно
                                     },
                                     error: function () {
@@ -1416,7 +1430,28 @@
             });
         });
     </script>
+    <script>
+        // Функция для отображения неблокирующего уведомления (Toast)
+        function showNotification(message, type) {
+            Swal.fire({
+                position: 'bottom-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 5000, // Закрыть уведомление через 5 секунд
+                toast: true,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    // Убрать закрытие при наведении мыши
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+        }
 
+        // Пример использования функции showNotification для вывода уведомления
+
+    </script>
    @*  <script>
         function checkUserLike(productId, button) {
             $.ajax({
@@ -1525,8 +1560,9 @@
                             var userId = data.userId;
 
                             if (data.exists) {
-                                // Запись уже существует, не делаем ничего
-                                console.log('я твой рот ебал');
+                                // Запись уже существует, удаляем из корзины
+                                console.log('Товар успешно удален из корзины');
+                                showNotification('Товар удален из корзины', 'error');
                                 $.ajax({
                                     type: 'POST',
                                     url: '/Home/RemoveUserBasket',
@@ -1534,16 +1570,18 @@
                                     dataType: 'json',
                                     success: function (response) {
                                         if (response.success) {
-                                            console.log('Товар успешно удален из избранного');
+                                            console.log('Товар успешно удален из корзины');
+                                            showNotification('Товар удален из корзины', 'error');
+                                            // Здесь можно выполнить другие действия по успешному удалению
                                         } else {
                                             console.log('Произошла ошибка: ' + response.message);
                                         }
                                     },
                                     error: function () {
-                                        console.log('Произошла ошибка при удалении товара из избранного');
+                                        console.log('Произошла ошибка при удалении товара из корзины');
                                     }
                                 });
-                                return;
+
                             } else {
                                 // Записи нет, добавляем новую запись
                                 $.ajax({
@@ -1553,6 +1591,7 @@
                                     dataType: 'json',
                                     success: function (response) {
                                         console.log('Запись успешно добавлена');
+                                        showNotification('Товар добавлен в корзину', 'success');
                                         // Скрываем модальное окно
                                     },
                                     error: function () {

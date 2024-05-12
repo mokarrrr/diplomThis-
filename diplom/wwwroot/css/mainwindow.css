@@ -321,6 +321,21 @@ a:active {
     align-items: center;
     justify-content: center;
 }
+.sale2 {
+    grid-column: 1;
+    grid-row: 1;
+    left: 10px;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    color: #fff;
+    width: 60px;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .product-card .card-content .card-sub-title {
     margin: 0;
@@ -1114,3 +1129,12 @@ a:active {
     box-sizing: border-box;
 }
 
+.favorite-added {
+    background-color: red;
+    color: white;
+}
+
+.favorite-removed {
+    background-color: transparent;
+    color: black;
+}

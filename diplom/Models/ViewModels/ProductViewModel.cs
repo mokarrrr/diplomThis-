@@ -22,5 +22,8 @@ namespace diplom.Models.ViewModels
 
         public List<UserBasket> Users_Baskets { get; set; }
 
+        public List<_Provider> providers { get; set; }
+
+        public List<Package> packages { get; set; }
     }
 }

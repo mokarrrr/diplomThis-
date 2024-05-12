@@ -1,0 +1,146 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model List<_Provider>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<body>
+    <div>
+        <form method="get">
+            <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
+        </form>
+        <button id="Supnew" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
+            <center style="">
+                <p style="margin-top:4px">Добавить поставщика</p>
+            </center>
+        </button>
+    </div>
+
+    <div id="modal" class="modal" style="overflow-y:hidden;display:none">
+        <!-- Модальный контент -->
+        <div class="modal-content" style="z-index:1">
+            <div style="display:flex">
+                <p>Наименование поставщика</p>
+                <textarea id="SupName" style="margin-top:50px" class="form-control"></textarea>
+            </div>
+            <div style="display:flex">
+                <p>Контактный телефон</p>
+                <textarea id="SupPhone" style="margin-top:50px" class="form-control"></textarea>
+            </div>
+            <button id="Supnew2" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
+                <center style="">
+                    <p style="margin-top:4px">Добавить</p>
+                </center>
+            </button>
+        </div>
+    </div>
+
+    <div style="">
+        @foreach (var provider in Model)
+        {
+            <p>@provider.provider_name</p>
+            <p>@provider.provider_phone</p>
+            <button class="delete-user-btn" data-user-id="@provider.IdProvider">Удалить пользователя</button>
+        }
+    </div>
+    <script>
+        // Находим элементы кнопки и модального окна
+        var button = document.getElementById('Supnew');
+        var modal = document.getElementById('modal');
+
+        // Добавляем обработчик события клика на кнопку
+        button.addEventListener('click', function () {
+            // Показываем модальное окно
+            modal.style.display = 'block';
+        });
+
+        // Добавляем обработчик события клика за пределами модального окна, чтобы закрыть его
+        window.addEventListener('click', function (event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script>
+        // Функция для отправки данных на сервер
+        function addSupplier() {
+            var supName = $('#SupName').val();
+            var supPhone = $('#SupPhone').val();
+
+            // Проверка наличия значений в обязательных полях
+            if (!supName || !supPhone) {
+                console.error('Ошибка: не все поля заполнены');
+                return;
+            }
+
+            // Формирование данных для отправки на сервер
+            var data = {
+                SupName: supName,
+                SupPhone: supPhone
+            };
+
+            // Отладочный вывод данных в консоль перед отправкой
+            console.log('Отправляем на сервер следующие данные:', data);
+
+            // Отправка данных на сервер с помощью AJAX запроса
+            $.ajax({
+                type: 'POST',
+                url: '/Home/CreateSup', // Указываем URL вашего метода контроллера для обработки данных
+                data: data, // Отправляем объект data напрямую, jQuery сам преобразует его в формат JSON
+                success: function (response) {
+                    console.log('Данные успешно отправлены');
+                    closeModal(); // Закрыть модальное окно после успешной отправки данных
+                },
+                error: function (xhr, status, error) {
+                    console.error('Ошибка при отправке данных:', error);
+                }
+            });
+        }
+
+        // Функция для закрытия модального окна
+        function closeModal() {
+            $('#modal').hide();
+        }
+
+        // Добавление обработчика события клика на кнопку "Добавить"
+        $(document).ready(function () {
+            $('#Supnew2').click(function () {
+                addSupplier(); // Вызываем функцию отправки данных при клике на кнопку
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".delete-user-btn").click(function () {
+                var userId = $(this).data("user-id");
+
+                // Отправляем AJAX-запрос на сервер для удаления пользователя
+                $.ajax({
+                    url: "/Home/DeleteSup",
+                    type: "POST",
+                    data: { userId: userId },
+                    success: function (result) {
+                        if (result.success) {
+                            // Успешное удаление пользователя
+                            console.log(result.message); // Лог для отладки
+                            alert("Пользователь удален.") // Отобразить сообщение об успешном удалении
+                        } else {
+                            // Не удалось удалить пользователя из-за активных заказов
+                            console.log(result.message); // Лог для отладки
+                            alert(result.message); // Отобразить сообщение об ошибке
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Ошибка удаления пользователя:", error);
+                        if (xhr.status === 500 && xhr.responseText) {
+                            alert(xhr.responseText); // Отобразить текст ошибки 500
+                        } else {
+                            alert("Произошла ошибка при удалении пользователя."); // Отобразить общее сообщение об ошибке
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>

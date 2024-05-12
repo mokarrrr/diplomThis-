@@ -2,7 +2,9 @@
 <link rel="stylesheet" href="~/css/mainwindow.css" />
 <link rel="stylesheet" href="~/css/rate.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 @model List<_order>
 <body style="background-color:#a6a6a6!important;margin-top:10%">
     <header class="_header" style="background: linear-gradient(to bottom right,#F9D86E,#EDC237);">
@@ -18,20 +20,26 @@
     </header>
 
     <div class="main" style="">
+        <select name="filter" id="filter" style="margin-top:200px!important">
+            <option value="by_old">Cначала Старые</option>
+            <option value="by_new">Сначала Новые</option>
+
+        </select>
         <div class="container3" id="container3" style="margin-left: -4%; background-color: #a6a6a6 !important;">
             <div style="z-index:1;margin-top:5%">
             <form method="get" style="">
                 <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
             </form>
             </div>
-            <ul style="background-color: #a6a6a6 !important; width: 100% !important;">
+            <ul id="list" style="background-color: #a6a6a6 !important; width: 100% !important;">
                 @foreach (var order in Model)
                 {
-                    <ul style="border: 2px solid black; background-color: white !important; width: 97%; margin-bottom: 1%;">
+                    <ul class="order-card" style="border: 2px solid black; background-color: white !important; width: 97%; margin-bottom: 1%;">
                         <div style="display: flex; justify-content: space-between;">
                             <p style="background-color: white; font-size: 20px;">Заказ №@order.Idorder</p>
                             <p id="statusidd" style="display: none;">@order.status_id</p>
                             <p style="font-size: 20px;">Статус заказа: @order.Status.status_name</p>
+                            <p id="orderDate" style="font-size: 20px;">Дата: @order.order_date</p>
                             <p style="display: none;">@order.status_id</p>
                             <p style="margin-right: 20px; font-size: 20px;">Сумма заказа: @order.OrderSum руб.</p>
                         </div>
@@ -136,4 +144,45 @@
             });
         });
     </script>
+    @* <script>
+        $(document).ready(function () {
+            $('#filter').on('change', function () {
+                var selectedFilter = $(this).val();
+                var $orderCards = $('.order-card');
+
+                if (selectedFilter === 'by_new') {
+                    // Сначала Новые (самая недавняя дата от сегодня)
+                    $orderCards.sort(function (a, b) {
+                        var dateA = moment($(a).find('#orderDate').text(), 'DD.MM.YY HH:mm:ss');
+                        var dateB = moment($(b).find('#orderDate').text(), 'DD.MM.YY HH:mm:ss');
+                        var today = moment(); // Текущая дата и время
+
+                        // Сортируем по возрастанию разницы во времени с текущей датой (чем дальше от сегодня, тем больше)
+                        return Math.abs(dateA.diff(today)) - Math.abs(dateB.diff(today));
+                    });
+                } else if (selectedFilter === 'by_old') {
+                    // Сначала Старые (самая давняя дата от сегодня)
+                    $orderCards.sort(function (a, b) {
+                        var dateA = moment($(a).find('#orderDate').text(), 'DD.MM.YY HH:mm:ss');
+                        var dateB = moment($(b).find('#orderDate').text(), 'DD.MM.YY HH:mm:ss');
+                        var today = moment(); // Текущая дата и время
+
+                        // Сортируем по убыванию разницы во времени с текущей датой (чем ближе к сегодня, тем ниже в списке)
+                        return Math.abs(dateB.diff(today)) - Math.abs(dateA.diff(today));
+                    });
+                }
+
+                // Очищаем контейнер с карточками
+                $('#list').empty();
+
+                // Добавляем отсортированные карточки обратно в контейнер
+                $orderCards.each(function () {
+                    $(this).appendTo('#list');
+                });
+            });
+
+            // Инициализация сортировки при загрузке страницы (по умолчанию сначала новые)
+            $('#filter').trigger('change');
+        });
+    </script> *@
     </body>
