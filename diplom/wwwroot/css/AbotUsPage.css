@@ -32,19 +32,19 @@ body {
 
     .pic:before {
         content: '';
-        margin-top: -63px;
-        margin-left: -80px;
+        margin-top: -211px;
+        margin-left: -136px;
         position: absolute;
-        width: 450px;
-        height: 450px;
-        background: url('/img/girl.png') center center;
-        background-size:350px;
+        width: 580px;
+        height: 724px;
+        background: url('/img/k.jpeg') center center;
+        background-size: 350px;
         -ms-transform: rotate(-45deg);
         -webkit-transform: rotate(-45deg);
         transform: rotate(-45deg);
-        padding-left:50px;
-        background-repeat:no-repeat;
-        background-size:430px;
+        padding-left: 0px;
+        background-repeat: no-repeat;
+        background-size: 416px;
     }
 
     .pic:hover, .box1:hover, .box2:hover, .social1:hover, .social2:hover, .social3:hover {
@@ -127,7 +127,7 @@ body {
     }
 
 .content {
-    margin-left:-20px;
+    margin-left:1%;
     grid-column:2;
     height: 100%;
     width: 100%;

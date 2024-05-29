@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 
 
 
@@ -278,8 +278,8 @@
                     </center>
                 </button>
             </div>
-           
-            
+
+
         </header>
         <div>
             <img class="img1" src="/img/istockphoto-1471815457-1024x1024(2)(1).png" style="height: 1100px;width: 132%;margin-left: -290px;margin-top: -260px;z-index:-2;" />
@@ -289,7 +289,7 @@
                 <div class="container1">
                     <div class="search_bar">
                         <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
-                    </div>                 
+                    </div>
 
                 </div>
             </form>
@@ -302,8 +302,8 @@
                     <option value="expensive">Дороже</option>
                 </select>
                 <label class="count_product">@Model.ProductCount товар</label>
-                
-               
+
+
             </div>
             <button id="NewProduct" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;height: 50px;grid-column:1;grid-row:2">
                 <center style="">
@@ -311,7 +311,7 @@
                 </center>
             </button>
             <div class="container3" id="container3">
-                
+
                 @if (Model.HasResults)
                 {
                     @await Html.PartialAsync("_ProductPartialAdmin", Model.Products)
@@ -329,7 +329,7 @@
                             <h5 class="modal-title" id="exampleModalLabel" style="margin-top:-5px">
                                 Информация о товаре
                             </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background-color: transparent;border: none;margin-top:-55px">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModal" style="background-color: transparent;border: none;margin-top:-55px">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -343,73 +343,103 @@
                                 <div class="form-groupimg">
                                     <img id="productImage" class="img-responsive" style="width:580px;height:420px;" />
                                     <button id="savebuttonimg" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:144px">
-                                        <center style="">                          
+                                        <center style="">
                                             <p style="margin-top:4px">Изменить фото</p>
                                         </center>
                                     </button>
                                     <input type="file" id="imageUpload" accept="image/*" style="display: none;">
                                 </div>
-                                
+
 
                                 <div style="display:block;padding-left:20px;grid-column:2;grid-row:1">
                                     <div class="ihih">
                                         <div class="form-groupdesc" style="display:flex">
-                                            
+
                                             <center style="display:flex">
                                                 <p>Название</p>
-                                                <textarea id="productNameLabel" for="exampleFormControlInput1"></textarea>
-                                                <p >Цена</p>
-                                                <textarea id="productPrice"  class="form-control"></textarea>
+                                                <textarea id="productNameLabel" for="exampleFormControlInput1" style="margin-top:9px;max-width:193px;width:193px;max-height:42px;height:42px;margin-left: 20px; border: 2px ; border-radius: 10px; padding: 10px; font-family: 'Arial', sans-serif; font-size: 14px; color: #333; background-color: #f9f9f9; text-align: center; display: flex; align-items: center; justify-content: center;" class="form-control"></textarea>
+
+                                                <p style="margin-left: 20px;">Цена</p>
+                                                <textarea id="productPrice" class="form-control" style="margin-top:9px;max-width:193px;width:193px;max-height:42px;height:42px;margin-left: 20px; border: 2px ; border-radius: 10px; padding: 10px; font-family: 'Arial', sans-serif; font-size: 14px; color: #333; background-color: #f9f9f9; text-align: center; display: flex; align-items: center; justify-content: center;"></textarea>
+
                                             </center>
-                                            
+
                                         </div>
 
-                                        <div class="aboba" >
+                                        <div class="aboba">
                                             <div class="form-groupprice">
-                                                
-                                                <div style="display:flex">
-                                                    <p>Описание</p>
-                                                <textarea id="description" class="form-control"> </textarea>
-                                                </div>
-                                                    <div style="display:flex;gap:20px;margin-top:-25px;">
-                                                    
-                                                    <p style="margin-top:50px">Остаток:</p>
-                                                    <textarea id="productRemain" style="margin-top:50px" class="form-control"></textarea>
-                                                    <p style="margin-top:50px">Cкидка:</p>
-                                                    <textarea id="productsale" style="height: 30px;margin-top:50px;color:black" class="sale2"></textarea>
 
-                                                    </div>
-                                                    
-                                               
-                                                    <div style="display:flex">
+                                                <div style="display:flex;margin-top: 20px;">
+                                                    <p>Описание</p>
+                                                    <textarea id="description" class="form-control" style="width: 600px; height: 90px; margin-left: 20px; max-height: 90px; max-width: 600px; border: 2px ; border-radius: 10px; padding: 10px; font-family: 'Arial', sans-serif; font-size: 14px; color: #333; background-color: #f9f9f9;"></textarea>
+
+                                                </div>
+                                                <div style="display:flex;gap:20px;margin-top:-25px;">
+
+                                                    <p style="margin-top:50px">Остаток:</p>
+                                                    <textarea id="productRemain" style="margin-top: 50px; height: 40px; width: 83px !important; max-height: 40px; max-width: 83px; border: 2px ; border-radius: 10px; padding: 10px; font-family: 'Arial', sans-serif; font-size: 14px; color: #333; background-color: #f9f9f9;" class="form-control"></textarea>
+
+                                                    <p style="margin-top:50px">Cкидка:</p>
+                                                    <textarea id="productsale" style="height: 40px;width:83px!important ;max-height:40px;max-width:83px;margin-top: 50px; color: black; border: 2px ; border-radius: 10px; padding: 10px; font-family: 'Arial', sans-serif; font-size: 14px; background-color: #f9f9f9;" class="sale2"></textarea>
+
+
+                                                </div>
+
+
+                                                <div style="display:flex">
                                                     <p style="margin-top:50px">Cостав:</p>
-                                                <textarea id="productSostav" style="margin-top:50px" style="margin-top:-10px" class="form-control"></textarea>
+                                                    <textarea id="productSostav" style="margin-top: 50px;margin-left: 10px; width: 260px;max-width:260px ;max-height:80px;height: 80px; border: 2px ; border-radius: 10px; padding: 10px; font-family: 'Arial', sans-serif; font-size: 14px; color: #333; background-color: #f9f9f9;" class="form-control"></textarea>
+
+                                                    <p style="display:none" id="productcateeg"> </p>
+                                                    <p style="margin-left:20px;margin-top:50px;">Выберите категорию</p>
+                                                    <select style="margin-left: 20px; margin-top: 0px;" name="cat" id="cat">
+                                                        <option value="soft">Мягкие сыры</option>
+                                                        <option value="semi-solid">Полутвердые сыры</option>
+                                                        <option value="solid">Твердые сыры</option>
+                                                        <option value="moldy">Плесневые сыры</option>
+                                                        <option value="additives">Сыры с добавками</option>
+                                                    </select>
                                                 </div>
-                                                <div style="display:flex">
+                                                <div style="display:flex;margin-top: -5%;">
                                                     <p style="margin-top:50px">Артикул:</p>
-                                                <textarea id="productArticle" style="margin-top:50px" class="form-control"></textarea>
+                                                    <textarea id="productArticle" class="form-control" style="margin-left:20px;height:36px;max-height:36px;width:184px;max-width:184px;margin-top: 50px; border: 2px ; border-radius: 10px; padding: 10px; font-family: 'Arial', sans-serif; font-size: 14px; color: #333; background-color: #f9f9f9; text-align: center; display: flex; align-items: center; justify-content: center;"></textarea>
+
                                                 </div>
                                                 <div style="display:flex">
-                                                    <p style="margin-top:50px">Видимость:</p>
-                                                    <p id="productVisibility" style="margin-top:50px" class="form-control"></p>
+                                                    <p style="">Видимость:</p>
+                                                    <p id="productVisibility" style="" class="form-control"></p>
+                                                    <button id="savebuttonhidden" type="button" style="height: 33px;margin-top: 12px;margin-left: 20px;display:none;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:112px">
+                                                        <center style="">
+                                                            <p style="margin-top:4px">Скрыть товар</p>
+                                                        </center>
+                                                    </button>
+                                                    <button id="savebuttonnothidden" type="button" style="height: 33px;margin-top: 12px;margin-left: 20px;display:none;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:145px">
+                                                        <center style="">
+                                                            <p style="margin-top:4px">Показывать товар</p>
+                                                        </center>
+                                                    </button>
                                                 </div>
                                                 <div style="display:flex;gap:10px">
-                                                        @* для поставщика и упаковки  *@
-                                                        <div style="display:flex">
-                                                        <label for="selectProvider">Выберите поставщика:</label>
+                                                    @* для поставщика и упаковки  *@
+                                                    <div style="display:flex">
+                                                        <label style="margin-top:6px" for="selectProvider">Выберите поставщика:</label>
                                                         <select style="margin-left:0px;margin-top:0px" id="selectProvider"></select>
-                                                        <label for="selectPackage">Выберите упаковку:</label>
-                                                        <select style="margin-left:0px;margin-top:0px" id="selectPackage"></select>
+                                                        
+                                                       
                                                     </div>
+                                                    
+
                                                     <p id="productrate" style="display:none"></p>
-                                                        @* <div id="rating-stars"></div> *@
+                                                    @* <div id="rating-stars"></div> *@
 
                                                 </div>
-                                                <button id="savebuttonhidden" type="button" style="display:none;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:144px">
-                                                    <center style="">
-                                                        <p style="margin-top:4px">Скрыть товар</p>
-                                                    </center>
-                                                </button>
+                                                <div style="display:flex">
+
+                                                    <label style="margin-top:17px" for="selectPackage">Выберите упаковку:</label>
+                                                    <select style="margin-left:0px;margin-top:10px" id="selectPackage"></select>
+
+                                                </div>
+                                               
                                                 <button id="savebuttonnothidden" type="button" style="display:none;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:144px">
                                                     <center style="">
                                                         <p style="margin-top:4px">Показывать товар</p>
@@ -420,7 +450,6 @@
                                         </div>
 
                                         <div class="gf" style="display:flex">
-                                            
                                         </div>
                                     </div>
                                 </div>
@@ -434,18 +463,18 @@
                                             <div style="margin-top:30px">
                                                 <div class="form-groupart" style="display:flex">
                                                     <p>Массовая доля жира</p>
-                                                    <textarea id="productMassPerFat" class="form-control" ></textarea>
+                                                    <textarea id="productMassPerFat" class="form-control"></textarea>
                                                     <p>Жирность</p>
                                                     <textarea style="" id="productfat" class="form-control"></textarea>
                                                 </div>
-                                                <div class="form-groupfat" style="display:flex;gap:5px;margin-top:-20px"> 
+                                                <div class="form-groupfat" style="display:flex;gap:5px;margin-top:-20px">
                                                     <p style="margin-top:50px">Белки</p>
                                                     <textarea style="margin-top:50px" id="productProtein" class="form-control"></textarea>
                                                     <p style="margin-top:50px">Жиры</p>
                                                     <textarea style="margin-top:50px" id="productFatty" class="form-control"></textarea>
                                                     <p style="margin-top:50px">Углеводы</p>
                                                     <textarea style="margin-top:50px" id="productCarb" class="form-control"></textarea>
-                                                    
+
                                                 </div>
                                                 <div class="form-groupfat" style="margin-top:-20px;display:flex">
                                                     <p style="margin-top:50px">Энергетическая ценность</p>
@@ -460,7 +489,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="tab-content pagination" style="display:flex!important;gap:70px;overflow-y: auto;width:180%;margin-top: -25%;" id="tab-reviews-content">
+                                    <div class="tab-content pagination" style="display:flex!important;gap:70px;overflow-y: auto;width:180%;margin-top: -23%;" id="tab-reviews-content">
                                         <!-- Ваши отзывы и элементы для пагинации здесь -->
                                         <div id="ratingcont" style="display:flex;gap:40px;width:100%">
                                             <div class="ratesss">
@@ -591,6 +620,13 @@
                                                 <textarea id="productNameLabel2" for="exampleFormControlInput1"></textarea>
                                                 <p>Цена</p>
                                                 <textarea id="productPrice2" class="form-control"></textarea>
+                                                <select style="margin-left: 0px!important;; margin-top: 0px;" name="cat2" id="cat2">
+                                                    <option value="soft">Мягкие сыры</option>
+                                                    <option value="semi-solid">Полутвердые сыры</option>
+                                                    <option value="solid">Твердые сыры</option>
+                                                    <option value="moldy">Плесневые сыры</option>
+                                                    <option value="additives">Сыры с добавками</option>
+                                                </select>
                                             </center>
 
                                         </div>
@@ -696,99 +732,158 @@
                 </div>
 
 
-            <div class="container4">
-                <footer class="footer">
-                    <div class="footer-left col-md-4 col-sm-6">
-                        <p class="about">
-                            <span> О нашей компании</span> "Dairy Delights Emporium - это гурманский рай для любителей сыра. С особой страстью к мастерству и качеству, мы предлагаем эксклюзивный ассортимент сыров, от классических французских бри и камамберов до редких и экзотических вариаций со всего мира. Наша миссия — дарить неповторимый вкус и наслаждение каждому клиенту, подбирая идеальные сыры для их стола, будь то повседневный ужин или особый праздничный приём. В Cheese Delight вы найдете сыр, который удовлетворит ваш гурманский вкус и превратит каждое блюдо в произведение искусства."
-                        </p>
-                        <div class="icons">
-                            <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                            <a href="#"><i class="fa-brands fa-vk"></i></a>
-                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <div class="container4">
+                    <footer class="footer">
+                        <div class="footer-left col-md-4 col-sm-6">
+                            <p class="about">
+                                <span> О нашей компании</span> "Dairy Delights Emporium - это гурманский рай для любителей сыра. С особой страстью к мастерству и качеству, мы предлагаем эксклюзивный ассортимент сыров, от классических французских бри и камамберов до редких и экзотических вариаций со всего мира. Наша миссия — дарить неповторимый вкус и наслаждение каждому клиенту, подбирая идеальные сыры для их стола, будь то повседневный ужин или особый праздничный приём. В Cheese Delight вы найдете сыр, который удовлетворит ваш гурманский вкус и превратит каждое блюдо в произведение искусства."
+                            </p>
+                            <div class="icons">
+                                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                                <a href="#"><i class="fa-brands fa-vk"></i></a>
+                                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="footer-center col-md-4 col-sm-6">
-                        <div>
-                            <i class="fa fa-map-marker"></i>
-                            <p><span> Наш адресс</span> Смоляной переулок,2</p>
+                        <div class="footer-center col-md-4 col-sm-6">
+                            <div>
+                                <i class="fa fa-map-marker"></i>
+                                <p><span> Наш адресс</span> Смоляной переулок,2</p>
+                            </div>
+                            <div>
+                                <i class="fa fa-phone"></i>
+                                <p> +7 9881 761 084</p> |
+                                <p> Ежедневно с 8 до 20</p>
+                            </div>
+                            <div>
+                                <i class="fa fa-envelope"></i>
+                                <p><a href="#"> DairyDelightsEmporium@mail.ru</a></p>
+                            </div>
                         </div>
-                        <div>
-                            <i class="fa fa-phone"></i>
-                            <p> +7 9881 761 084</p> |
-                            <p> Ежедневно с 8 до 20</p>
+                        <div class="footer-right col-md-4 col-sm-6">
+                            <h2> Dairy Delights <span> Emporium</span></h2>
+                            <p class="menu">
+                                <a href="#"> Каталог</a> |
+                                <a href="@Url.Action("AboutUsPage", "Home")" onclick="scrollToElement('mya')"> О нас</a> |
+                                <a href="@Url.Action("AboutUsPage", "Home")#contacts"> Контакты</a> |
+                                <a href="#myModal1" id="modalOpen"> Политика конфиденциальности</a>
+                            </p>
+                            <p class="name"> Dairy Delights Emporium; 2004</p>
                         </div>
-                        <div>
-                            <i class="fa fa-envelope"></i>
-                            <p><a href="#"> DairyDelightsEmporium@mail.ru</a></p>
-                        </div>
-                    </div>
-                    <div class="footer-right col-md-4 col-sm-6">
-                        <h2> Dairy Delights <span> Emporium</span></h2>
-                        <p class="menu">
-                            <a href="#"> Каталог</a> |
-                            <a href="@Url.Action("AboutUsPage", "Home")" onclick="scrollToElement('mya')"> О нас</a> |
-                            <a href="@Url.Action("AboutUsPage", "Home")#contacts"> Контакты</a> |
-                            <a href="#myModal1" id="modalOpen"> Политика конфиденциальности</a>
-                        </p>
-                        <p class="name"> Dairy Delights Emporium; 2004</p>
-                    </div>
-                </footer>
+                    </footer>
+                </div>
             </div>
+
+            @*         <svg width="0" height="0" style="display:none;">
+            <!-- Определение символа (звезды) -->
+            <symbol id="star" viewBox="0 0 24 24">
+            <path fill="#FFD700" d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6" />
+            </symbol>
+
+            <!-- Определение маски для отображения половины звезды -->
+            <mask id="half" maskContentUnits="objectBoundingBox">
+            <rect width="0.5" height="1" fill="white" />
+            <rect x="0.5" width="0.5" height="1" fill="black" />
+            </mask>
+            </svg> *@
         </div>
 
-        @*         <svg width="0" height="0" style="display:none;">
-        <!-- Определение символа (звезды) -->
-        <symbol id="star" viewBox="0 0 24 24">
-        <path fill="#FFD700" d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6" />
-        </symbol>
+        <script>
+            $(document).ready(function () {
+                $(window).scroll(function () {
+                    var scroll = $(window).scrollTop();
+                    var mainBodyOffset = $('.main_body').offset().top;
 
-        <!-- Определение маски для отображения половины звезды -->
-        <mask id="half" maskContentUnits="objectBoundingBox">
-        <rect width="0.5" height="1" fill="white" />
-        <rect x="0.5" width="0.5" height="1" fill="black" />
-        </mask>
-        </svg> *@
-    </div>
-
-    <script>
-        $(document).ready(function () {
-            $(window).scroll(function () {
-                var scroll = $(window).scrollTop();
-                var mainBodyOffset = $('.main_body').offset().top;
-
-                if (scroll >= mainBodyOffset) {
-                    $('header').addClass('header-scrolled');
-                } else {
-                    $('header').removeClass('header-scrolled');
-                }
+                    if (scroll >= mainBodyOffset) {
+                        $('header').addClass('header-scrolled');
+                    } else {
+                        $('header').removeClass('header-scrolled');
+                    }
+                });
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $(window).scroll(function () {
-                if ($(this).scrollTop() > 50) {
-                    $('#backToTop').fadeIn();
-                } else {
-                    $('#backToTop').fadeOut();
-                }
+        </script>
+        <script>
+            $(document).ready(function () {
+                $(window).scroll(function () {
+                    if ($(this).scrollTop() > 50) {
+                        $('#backToTop').fadeIn();
+                    } else {
+                        $('#backToTop').fadeOut();
+                    }
+                });
+
+                $('#backToTop').click(function () {
+                    $('body, html').animate({
+                        scrollTop: 0
+                    }, 400);
+                    return false;
+                });
             });
+        </script>
 
-            $('#backToTop').click(function () {
-                $('body, html').animate({
-                    scrollTop: 0
-                }, 400);
-                return false;
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var inputs = document.querySelectorAll('.phoneregister2');
+
+                inputs.forEach(function (input) {
+                    input.addEventListener("input", function (event) {
+                        var keyCode = event.keyCode || event.which;
+                        var pos = this.selectionStart;
+
+                        // Remember the cursor position before any changes
+                        var prevPos = pos;
+
+                        // Only proceed if the key pressed is not a backspace
+                        if (keyCode !== 8) {
+                            var matrix = "+7 (___) ___-__-__",
+                                val = this.value.replace(/\D/g, ""),
+                                newValue = matrix,
+                                j = 0;
+
+                            // Remove leading 7 if present
+                            if (val.startsWith("7")) {
+                                val = val.slice(1);
+                            }
+
+                            // Iterate over each character in the mask and fill it with the input value
+                            for (var i = 0; i < matrix.length; i++) {
+                                if (matrix[i] === "_") {
+                                    if (val[j]) {
+                                        newValue = newValue.replace("_", val[j]);
+                                        j++;
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Set the value with the formatted version
+                            this.value = newValue;
+
+                            // Adjust position to prevent digit displacement
+                            while (pos < newValue.length && newValue[pos] && newValue[pos] !== '_') {
+                                pos++;
+                            }
+                        } else {
+                            // If backspace is pressed, move the cursor to the previous position
+                            pos = Math.max(0, pos - 1);
+                        }
+
+                        // Move cursor to the next position if available
+                        if (pos >= 15 && newValue[14] !== "_") {
+                            pos++;
+                        }
+
+                        // Set cursor position
+                        this.setSelectionRange(pos, pos);
+                    });
+                });
             });
-        });
-    </script>
+        </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var inputs = document.querySelectorAll('.phoneregister2');
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var input = document.querySelector('.phoneRegister1');
 
-            inputs.forEach(function (input) {
                 input.addEventListener("input", function (event) {
                     var keyCode = event.keyCode || event.which;
                     var pos = this.selectionStart;
@@ -829,292 +924,28 @@
                         }
                     } else {
                         // If backspace is pressed, move the cursor to the previous position
-                        pos = Math.max(0, pos - 1);
-                    }
-
-                    // Move cursor to the next position if available
-                    if (pos >= 15 && newValue[14] !== "_") {
-                        pos++;
+                        pos = prevPos;
                     }
 
                     // Set cursor position
                     this.setSelectionRange(pos, pos);
                 });
             });
-        });
-    </script>
+        </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var input = document.querySelector('.phoneRegister1');
 
-            input.addEventListener("input", function (event) {
-                var keyCode = event.keyCode || event.which;
-                var pos = this.selectionStart;
+        <script>
+            $(document).ready(function () {
+                $('.fav-button').click(function () {
+                    // Получаем айди продукта из атрибута data-idd кнопки
+                    var productId = $(this).data('idproduct');
+                    var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
 
-                // Remember the cursor position before any changes
-                var prevPos = pos;
-
-                // Only proceed if the key pressed is not a backspace
-                if (keyCode !== 8) {
-                    var matrix = "+7 (___) ___-__-__",
-                        val = this.value.replace(/\D/g, ""),
-                        newValue = matrix,
-                        j = 0;
-
-                    // Remove leading 7 if present
-                    if (val.startsWith("7")) {
-                        val = val.slice(1);
+                    if (authenticationSuccess === null || authenticationSuccess === "0") {
+                        $('#modal').show();
+                        return;
                     }
 
-                    // Iterate over each character in the mask and fill it with the input value
-                    for (var i = 0; i < matrix.length; i++) {
-                        if (matrix[i] === "_") {
-                            if (val[j]) {
-                                newValue = newValue.replace("_", val[j]);
-                                j++;
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-
-                    // Set the value with the formatted version
-                    this.value = newValue;
-
-                    // Adjust position to prevent digit displacement
-                    while (pos < newValue.length && newValue[pos] && newValue[pos] !== '_') {
-                        pos++;
-                    }
-                } else {
-                    // If backspace is pressed, move the cursor to the previous position
-                    pos = prevPos;
-                }
-
-                // Set cursor position
-                this.setSelectionRange(pos, pos);
-            });
-        });
-    </script>
-
-
-    <script>
-        $(document).ready(function () {
-            $('.fav-button').click(function () {
-                // Получаем айди продукта из атрибута data-idd кнопки
-                var productId = $(this).data('idproduct');
-                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
-
-                if (authenticationSuccess === null || authenticationSuccess === "0") {
-                    $('#modal').show();
-                    return;
-                }
-
-                // Проверяем наличие записи в таблице UserLike
-                $.ajax({
-                    type: 'POST',
-                    url: '/Home/CheckUserLike',
-                    data: { productId: productId },
-                    dataType: 'json',
-                    success: function (data) {
-                        // Получаем userId из ответа
-                        var userId = data.userId;
-
-                        if (data.exists) {
-                            // Запись уже существует, не делаем ничего
-                            console.log('Запись уже существует');
-                        } else {
-                            // Записи нет, добавляем новую запись
-                            $.ajax({
-                                type: 'POST',
-                                url: '/Home/AddUserLike',
-                                data: { userId: userId, productId: productId },
-                                dataType: 'json',
-                                success: function (response) {
-                                    console.log('Запись успешно добавлена');
-                                },
-                                error: function () {
-                                    console.log('Произошла ошибка при добавлении записи');
-                                }
-                            });
-                        }
-                    },
-                    error: function () {
-                        console.log('Произошла ошибка при проверке наличия записи');
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('.fav-button1').click(function () {
-                // Получаем айди продукта из атрибута data-idd кнопки
-                var productId = $(this).data('idproduct');
-                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
-
-                if (authenticationSuccess === null || authenticationSuccess === "0") {
-                    $('#modal').show();
-                    return;
-                }
-                // Проверяем наличие записи в таблице UserLike
-                $.ajax({
-                    type: 'POST',
-                    url: '/Home/CheckUserLike',
-                    data: { productId: productId },
-                    dataType: 'json',
-                    success: function (data) {
-                        // Получаем userId из ответа
-                        var userId = data.userId;
-
-                        if (data.exists) {
-                            $.ajax({
-                                type: 'POST',
-                                url: '/Home/RemoveUserLike',
-                                data: { userId: userId, productId: productId },
-                                dataType: 'json',
-                                success: function (response) {
-                                    if (response.success) {
-                                        console.log('Товар успешно удален из избранного');
-                                    } else {
-                                        console.log('Произошла ошибка: ' + response.message);
-                                    }
-                                },
-                                error: function () {
-                                    console.log('Произошла ошибка при удалении товара из избранного');
-                                }
-                            });
-                            return;
-                        } else {
-                            // Записи нет, добавляем новую запись
-                            $.ajax({
-                                type: 'POST',
-                                url: '/Home/AddUserLike',
-                                data: { userId: userId, productId: productId },
-                                dataType: 'json',
-                                success: function (response) {
-                                    console.log('Запись успешно добавлена');
-                                },
-                                error: function () {
-                                    console.log('Произошла ошибка при добавлении записи');
-                                }
-                            });
-                        }
-                    },
-                    error: function () {
-                        console.log('Произошла ошибка при проверке наличия записи');
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('.send').click(function () {
-                // Получаем айди продукта из атрибута data-idd кнопки
-                var productId = $(this).data('idd');
-                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
-
-                if (authenticationSuccess === null || authenticationSuccess === "0") {
-                    $('#modal').show();
-                    return;
-                }
-                // Проверяем наличие записи в таблице UserLike
-                $.ajax({
-                    type: 'POST',
-                    url: '/Home/CheckUserBasket',
-                    data: { productId: productId },
-                    dataType: 'json',
-                    success: function (data) {
-                        // Получаем userId из ответа
-                        var userId = data.userId;
-
-                        if (data.exists) {
-                            console.log('я твой рот ебал');
-                        } else {
-                            // Записи нет, добавляем новую запись
-                            $.ajax({
-                                type: 'POST',
-                                url: '/Home/AddUserBasket',
-                                data: { userId: userId, productId: productId },
-                                dataType: 'json',
-                                success: function (response) {
-                                    console.log('Запись успешно добавлена');
-                                    console.log('ID пользователя:', userId);
-                                    console.log('ID товара:', productId);
-                                },
-                                error: function () {
-                                    console.log('Произошла ошибка при добавлении записи');
-                                }
-                            });
-                        }
-                    },
-                    error: function () {
-                        console.log('Произошла ошибка при проверке наличия записи');
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            // Добавляем обработчик события для кнопки с классом "btn fav-button"
-            $('.btn.fav-button').click(function () {
-                // Проверяем значение в Local Storage перед открытием модального окна
-                if (localStorage.getItem("AuthenticationSuccess") === "0") {
-                    $('#modal').show(); // Открываем модальное окно для входа
-                } else {
-                    // Если аутентификация успешна, переходим на страницу User_like
-                    window.location.href = '/Home/User_like';
-                }
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            // Добавляем обработчик события для кнопки с классом "btn user-button"
-            $('#cartButton').click(function () {
-                // Проверяем значение в Local Storage перед открытием модального окна
-                if (localStorage.getItem("AuthenticationSuccess") === "0") {
-                    $('#modal').show(); // Открываем модальное окно для входа
-                } else {
-                    // Если аутентификация успешна, переходим на страницу User_like
-                    window.location.href = '/Home/User_basket';
-                }
-            });
-        });
-    </script>
-    @*   для добавления из карточки продукта в избранное *@
-    <script>
-        $(document).ready(function () {
-            var productId; // Переменная для хранения айди продукта
-
-            // Обработчик события клика для кнопки info-button1
-            $('.info-button2').click(function () {
-                // Получаем айди продукта из атрибута data-idd кнопки
-                productId = $(this).data('idproduct');
-            });
-
-
-            // Обработчик события клика для кнопки fav-button2
-            $('#cardfav').click(function (event) {
-                event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
-
-                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
-
-                if (authenticationSuccess === null || authenticationSuccess === "0") {
-                    $('#modal').show();
-                    $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
-                    $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
-                    return;
-                }
-
-                // Проверяем, был ли установлен productId
-                if (productId !== undefined) {
-                    // productId был установлен, можем его использовать
                     // Проверяем наличие записи в таблице UserLike
                     $.ajax({
                         type: 'POST',
@@ -1127,7 +958,53 @@
 
                             if (data.exists) {
                                 // Запись уже существует, не делаем ничего
+                                console.log('Запись уже существует');
+                            } else {
+                                // Записи нет, добавляем новую запись
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Home/AddUserLike',
+                                    data: { userId: userId, productId: productId },
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        console.log('Запись успешно добавлена');
+                                    },
+                                    error: function () {
+                                        console.log('Произошла ошибка при добавлении записи');
+                                    }
+                                });
+                            }
+                        },
+                        error: function () {
+                            console.log('Произошла ошибка при проверке наличия записи');
+                        }
+                    });
+                });
+            });
+        </script>
 
+        <script>
+            $(document).ready(function () {
+                $('.fav-button1').click(function () {
+                    // Получаем айди продукта из атрибута data-idd кнопки
+                    var productId = $(this).data('idproduct');
+                    var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                    if (authenticationSuccess === null || authenticationSuccess === "0") {
+                        $('#modal').show();
+                        return;
+                    }
+                    // Проверяем наличие записи в таблице UserLike
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Home/CheckUserLike',
+                        data: { productId: productId },
+                        dataType: 'json',
+                        success: function (data) {
+                            // Получаем userId из ответа
+                            var userId = data.userId;
+
+                            if (data.exists) {
                                 $.ajax({
                                     type: 'POST',
                                     url: '/Home/RemoveUserLike',
@@ -1154,11 +1031,9 @@
                                     dataType: 'json',
                                     success: function (response) {
                                         console.log('Запись успешно добавлена');
-                                        // Скрываем модальное окно
                                     },
                                     error: function () {
                                         console.log('Произошла ошибка при добавлении записи');
-
                                     }
                                 });
                             }
@@ -1167,39 +1042,21 @@
                             console.log('Произошла ошибка при проверке наличия записи');
                         }
                     });
-                } else {
-                    console.log('Айди продукта не определено');
-                }
+                });
             });
-        });
-    </script>
+        </script>
 
-    <script>
-        $(document).ready(function () {
-            var productId; // Переменная для хранения айди продукта
+        <script>
+            $(document).ready(function () {
+                $('.send').click(function () {
+                    // Получаем айди продукта из атрибута data-idd кнопки
+                    var productId = $(this).data('idd');
+                    var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
 
-            // Обработчик события клика для кнопки info-button1
-            $('.info-button2').click(function () {
-                // Получаем айди продукта из атрибута data-idd кнопки
-                productId = $(this).data('idproduct');
-            });
-
-            // Обработчик события клика для кнопки senddd
-            $('#senddd').click(function (event) {
-                event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
-
-                var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
-
-                if (authenticationSuccess === null || authenticationSuccess === "0") {
-                    $('#modal').show();
-                    $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
-                    $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
-                    return;
-                }
-
-                // Проверяем, был ли установлен productId
-                if (productId !== undefined) {
-                    // productId был установлен, можем его использовать
+                    if (authenticationSuccess === null || authenticationSuccess === "0") {
+                        $('#modal').show();
+                        return;
+                    }
                     // Проверяем наличие записи в таблице UserLike
                     $.ajax({
                         type: 'POST',
@@ -1211,25 +1068,7 @@
                             var userId = data.userId;
 
                             if (data.exists) {
-                                // Запись уже существует, не делаем ничего
                                 console.log('я твой рот ебал');
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '/Home/RemoveUserBasket',
-                                    data: { userId: userId, productId: productId },
-                                    dataType: 'json',
-                                    success: function (response) {
-                                        if (response.success) {
-                                            console.log('Товар успешно удален из избранного');
-                                        } else {
-                                            console.log('Произошла ошибка: ' + response.message);
-                                        }
-                                    },
-                                    error: function () {
-                                        console.log('Произошла ошибка при удалении товара из избранного');
-                                    }
-                                });
-                                return;
                             } else {
                                 // Записи нет, добавляем новую запись
                                 $.ajax({
@@ -1239,11 +1078,11 @@
                                     dataType: 'json',
                                     success: function (response) {
                                         console.log('Запись успешно добавлена');
-                                        // Скрываем модальное окно
+                                        console.log('ID пользователя:', userId);
+                                        console.log('ID товара:', productId);
                                     },
                                     error: function () {
                                         console.log('Произошла ошибка при добавлении записи');
-
                                     }
                                 });
                             }
@@ -1252,958 +1091,1485 @@
                             console.log('Произошла ошибка при проверке наличия записи');
                         }
                     });
-                } else {
-                    console.log('Айди продукта не определено');
-                }
+                });
             });
-        });
-    </script>
+        </script>
 
-    <script>
-        function checkUserLike(productId, button) {
-            $.ajax({
-                type: "POST",
-                url: "/Home/CheckUserLike",
-                data: { productId: productId },
-                success: function (response) {
-                    if (response.exists) {
-                        // Если товар в избранном, добавляем красный фон кнопке
-                        button.css('background-color', 'red');
-                        button.css('color', 'white');
+        <script>
+            $(document).ready(function () {
+                // Добавляем обработчик события для кнопки с классом "btn fav-button"
+                $('.btn.fav-button').click(function () {
+                    // Проверяем значение в Local Storage перед открытием модального окна
+                    if (localStorage.getItem("AuthenticationSuccess") === "0") {
+                        $('#modal').show(); // Открываем модальное окно для входа
                     } else {
-                        // Если товар не в избранном, убираем красный фон кнопки
-                        button.css('background-color', 'transparent');
+                        // Если аутентификация успешна, переходим на страницу User_like
+                        window.location.href = '/Home/User_like';
                     }
-                },
-                error: function (xhr, status, error) {
-                    // Обработка ошибки, если не удалось выполнить запрос
-                    console.error(error);
-                }
+                });
             });
-        }
-
-        // При загрузке страницы выполним проверку наличия товара в избранном для каждой кнопки
-        $(document).ready(function () {
-            $('.fav-button1').each(function () {
-                var button = $(this);
-                var productId = button.data('idproduct');
-                checkUserLike(productId, button);
+        </script>
+        <script>
+            $(document).ready(function () {
+                // Добавляем обработчик события для кнопки с классом "btn user-button"
+                $('#cartButton').click(function () {
+                    // Проверяем значение в Local Storage перед открытием модального окна
+                    if (localStorage.getItem("AuthenticationSuccess") === "0") {
+                        $('#modal').show(); // Открываем модальное окно для входа
+                    } else {
+                        // Если аутентификация успешна, переходим на страницу User_like
+                        window.location.href = '/Home/User_basket';
+                    }
+                });
             });
-        });
-    </script>
+        </script>
+        @*   для добавления из карточки продукта в избранное *@
+        <script>
+            $(document).ready(function () {
+                var productId; // Переменная для хранения айди продукта
 
-    <script>
-        $(document).ready(function () {
-            // Отслеживаем клик по кнопке "info-button1"
-            $('.info-button2').on('click', function () {
-                var productId = $(this).data('idproduct'); // Получаем айди товара из кнопки
+                // Обработчик события клика для кнопки info-button1
+                $('.info-button2').click(function () {
+                    // Получаем айди продукта из атрибута data-idd кнопки
+                    productId = $(this).data('idproduct');
+                });
 
-                // Отправляем запрос на сервер для проверки наличия товара в избранном
+
+                // Обработчик события клика для кнопки fav-button2
+                $('#cardfav').click(function (event) {
+                    event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
+
+                    var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                    if (authenticationSuccess === null || authenticationSuccess === "0") {
+                        $('#modal').show();
+                        $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
+                        $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
+                        return;
+                    }
+
+                    // Проверяем, был ли установлен productId
+                    if (productId !== undefined) {
+                        // productId был установлен, можем его использовать
+                        // Проверяем наличие записи в таблице UserLike
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/CheckUserLike',
+                            data: { productId: productId },
+                            dataType: 'json',
+                            success: function (data) {
+                                // Получаем userId из ответа
+                                var userId = data.userId;
+
+                                if (data.exists) {
+                                    // Запись уже существует, не делаем ничего
+
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/Home/RemoveUserLike',
+                                        data: { userId: userId, productId: productId },
+                                        dataType: 'json',
+                                        success: function (response) {
+                                            if (response.success) {
+                                                console.log('Товар успешно удален из избранного');
+                                            } else {
+                                                console.log('Произошла ошибка: ' + response.message);
+                                            }
+                                        },
+                                        error: function () {
+                                            console.log('Произошла ошибка при удалении товара из избранного');
+                                        }
+                                    });
+                                    return;
+                                } else {
+                                    // Записи нет, добавляем новую запись
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/Home/AddUserLike',
+                                        data: { userId: userId, productId: productId },
+                                        dataType: 'json',
+                                        success: function (response) {
+                                            console.log('Запись успешно добавлена');
+                                            // Скрываем модальное окно
+                                        },
+                                        error: function () {
+                                            console.log('Произошла ошибка при добавлении записи');
+
+                                        }
+                                    });
+                                }
+                            },
+                            error: function () {
+                                console.log('Произошла ошибка при проверке наличия записи');
+                            }
+                        });
+                    } else {
+                        console.log('Айди продукта не определено');
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                var productId; // Переменная для хранения айди продукта
+
+                // Обработчик события клика для кнопки info-button1
+                $('.info-button2').click(function () {
+                    // Получаем айди продукта из атрибута data-idd кнопки
+                    productId = $(this).data('idproduct');
+                });
+
+                // Обработчик события клика для кнопки senddd
+                $('#senddd').click(function (event) {
+                    event.preventDefault(); // Предотвращаем стандартное действие кнопки (перенаправление)
+
+                    var authenticationSuccess = localStorage.getItem("AuthenticationSuccess");
+
+                    if (authenticationSuccess === null || authenticationSuccess === "0") {
+                        $('#modal').show();
+                        $('#exampleModal').css('display', 'none');  // Скрыть exampleModal
+                        $('#modal').css('z-index', '1051');  // Устанавливаем z-index для modal выше
+                        return;
+                    }
+
+                    // Проверяем, был ли установлен productId
+                    if (productId !== undefined) {
+                        // productId был установлен, можем его использовать
+                        // Проверяем наличие записи в таблице UserLike
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Home/CheckUserBasket',
+                            data: { productId: productId },
+                            dataType: 'json',
+                            success: function (data) {
+                                // Получаем userId из ответа
+                                var userId = data.userId;
+
+                                if (data.exists) {
+                                    // Запись уже существует, не делаем ничего
+                                    console.log('я твой рот ебал');
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/Home/RemoveUserBasket',
+                                        data: { userId: userId, productId: productId },
+                                        dataType: 'json',
+                                        success: function (response) {
+                                            if (response.success) {
+                                                console.log('Товар успешно удален из избранного');
+                                            } else {
+                                                console.log('Произошла ошибка: ' + response.message);
+                                            }
+                                        },
+                                        error: function () {
+                                            console.log('Произошла ошибка при удалении товара из избранного');
+                                        }
+                                    });
+                                    return;
+                                } else {
+                                    // Записи нет, добавляем новую запись
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/Home/AddUserBasket',
+                                        data: { userId: userId, productId: productId },
+                                        dataType: 'json',
+                                        success: function (response) {
+                                            console.log('Запись успешно добавлена');
+                                            // Скрываем модальное окно
+                                        },
+                                        error: function () {
+                                            console.log('Произошла ошибка при добавлении записи');
+
+                                        }
+                                    });
+                                }
+                            },
+                            error: function () {
+                                console.log('Произошла ошибка при проверке наличия записи');
+                            }
+                        });
+                    } else {
+                        console.log('Айди продукта не определено');
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            function checkUserLike(productId, button) {
                 $.ajax({
                     type: "POST",
                     url: "/Home/CheckUserLike",
                     data: { productId: productId },
                     success: function (response) {
-                        var modalButton = $('#exampleModal').find('.fav-button2');
-
-                        // Если товар в избранном, добавляем красный фон кнопке в модальном окне
                         if (response.exists) {
-                            modalButton.css('background-color', 'red');
-                            modalButton.css('color', 'white');
+                            // Если товар в избранном, добавляем красный фон кнопке
+                            button.css('background-color', 'red');
+                            button.css('color', 'white');
                         } else {
-                            // Если товар не в избранном, убираем красный фон кнопки в модальном окне
-                            modalButton.css('background-color', 'transparent');
+                            // Если товар не в избранном, убираем красный фон кнопки
+                            button.css('background-color', 'transparent');
                         }
                     },
                     error: function (xhr, status, error) {
-                        // Обработка ошибки, если запрос не удался
+                        // Обработка ошибки, если не удалось выполнить запрос
                         console.error(error);
                     }
                 });
-            });
-
-            // После закрытия модального окна
-            $('#exampleModal').on('hidden.bs.modal', function (e) {
-                // Сбрасываем стили для modalButton
-                var modalButton = $('#exampleModal').find('.fav-button2');
-                modalButton.css('background-color', '');
-                modalButton.css('color', ''); // сброс цвета
-            });
-        });
-    </script>
-   
-    <script>
-        function updatePassword(oldPassword, newPassword) {
-            // Отправляем AJAX-запрос на сервер
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/Home/UpdatePassword", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        // Пароль успешно изменен
-                        console.log("Пароль успешно изменен");
-
-                        // Выполняем выход из системы
-                        $.ajax({
-                            url: '/Home/Logout',
-                            type: 'POST',
-                            success: function (response) {
-                                // Успешное выполнение запроса
-                                console.log(response);
-                                localStorage.setItem('AuthenticationSuccess', '0');
-                                window.location.reload(); // Пример обновления страницы
-                            },
-                            error: function (error) {
-                                // Ошибка выполнения запроса
-                                console.error(error);
-                                showError("Произошла ошибка при выходе из системы");
-                            }
-                        });
-                    } else {
-                        // Произошла ошибка при изменении пароля
-                        console.error("Ошибка при изменении пароля");
-                        showError("Проверьте пароль");
-                    }
-                }
-            };
-
-            var data = JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword });
-            xhr.send(data);
-        }
-
-        function showError(errorMessage) {
-            // Показываем сообщение об ошибке на странице
-            $('#errorMessagepastab1').text(errorMessage).show();
-        }
-
-        // Функция для получения и установки нового пароля
-        function getAndSetNewPassword() {
-            var oldPassword = document.getElementById("passwordregistersend").value;
-            var newPassword = document.getElementById("passwordregisterveryf").value;
-            var newPasswordConfirm = document.getElementById("passwordregisteveryf2r").value;
-
-            // Проверяем, что значения не пустые
-            if (!(oldPassword && newPassword && newPasswordConfirm)) {
-                console.error("Пожалуйста, заполните все поля пароля");
-                $("#errorMessage6").show();
-                return;
             }
 
-            // Проверяем, что значения нового пароля совпадают
-            if (newPassword !== newPasswordConfirm) {
-                console.error("Пароли не совпадают");
-                $("#errorMessagepastab").show();
-                return;
-            }
-
-            // Обновляем пароль
-            updatePassword(oldPassword, newPassword);
-        }
-
-        // Находим кнопку "Сохранить" и назначаем обработчик события на клик
-        var saveButton = document.getElementById("savebuttonpas");
-        saveButton.addEventListener("click", getAndSetNewPassword);
-    </script>
-
-    <script>
-        document.getElementById('showPasswordButton4').addEventListener('click', function () {
-            var passwordField = document.getElementById('passwordregistersend');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-            } else {
-                passwordField.type = 'password';
-            }
-        });
-
-        document.getElementById('showPasswordButton5').addEventListener('click', function () {
-            var passwordField = document.getElementById('passwordregisterveryf');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-            } else {
-                passwordField.type = 'password';
-            }
-        });
-
-        document.getElementById('showPasswordButton6').addEventListener('click', function () {
-            var passwordField = document.getElementById('passwordregisteveryf2r');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-            } else {
-                passwordField.type = 'password';
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Находим кнопку по её id
-            var adminButton = document.getElementById('goaway');
-
-            // Добавляем обработчик события клика на кнопку
-            adminButton.addEventListener('click', function () {
-                // Переходим на страницу AdminPage
-                window.location.href = '/Home/MainPage'; // Укажите здесь путь к странице AdminPage
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Находим кнопку по её id
-            var adminButton = document.getElementById('goorder');
-
-            // Добавляем обработчик события клика на кнопку
-            adminButton.addEventListener('click', function () {
-                // Переходим на страницу AdminPage
-                window.location.href = '/Home/AllOrders'; // Укажите здесь путь к странице AdminPage
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Находим кнопку по её id
-            var adminButton = document.getElementById('gouser');
-
-            // Добавляем обработчик события клика на кнопку
-            adminButton.addEventListener('click', function () {
-                // Переходим на страницу AdminPage
-                window.location.href = '/Home/AllUsers'; // Укажите здесь путь к странице AdminPage
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var productId; // Переменная для хранения идентификатора продукта
-
-            // Обработчик события клика для кнопки .info-button2
-            $('.info-button2').on('click', function () {
-                productId = $(this).data('idproduct'); // Получаем идентификатор продукта из атрибута data-idproduct кнопки
-
-                // Отправляем AJAX запрос на сервер для получения информации о продукте по его идентификатору
-                $.ajax({
-                    type: "GET",
-                    url: "/Home/GetProduct",
-                    data: { Id: productId },
-                    success: function (Product) {
-                        // Обновляем значения на странице с информацией о продукте
-                        $('#productNameLabel').text(Product["name_product"]);
-                        $('#productPrice').html(Product["product_price"]);
-                        $('#description').text(Product["product_description_"]);
-                        $('#productImage').attr('src', Product["product_img"]);
-                        $('#productMassPerFat').text(Product["product_mass_per_fat"]);
-                        $('#productfat').text(Product["product_fat"]);
-                        $('#productProtein').text(Product["product_protein"]);
-                        $('#productFatty').text(Product["product_fatty"]);
-                        $('#productCarb').text(Product["product_carb"]);
-                        $('#productEnergyValue').text(Product["product_energy_value"]);
-                        $('#productStorageLife').text(Product["product_storage_life"]);
-                        $('#productPackageId').text(Product["product_package_id"]);
-                        $('#productStorageConditions').text(Product["product_storage_conditions"]);
-                        $('#productsale').text(Product["product_sale"]);
-                        $('#productRemain').text(Product["product_remain"]);
-                        $('#productArticle').text(Product["product_article"]);
-                        $('#productSostav').text(Product["product_sostav"]);
-                        $('#prodid').text(Product["idProduct"]);
-
-                       
-
-
-                        // Обновляем видимость кнопок в зависимости от значения ishidden
-                        if (Product.ishidden === true) {
-                            $('#productVisibility').text(' скрыт');
-                            $('#savebuttonhidden').hide();
-                            $('#savebuttonnothidden').show();
-                        } else {
-                            $('#productVisibility').text(' виден');
-                            $('#savebuttonhidden').show();
-                            $('#savebuttonnothidden').hide();
-                        }
-
-                        // Очищаем содержимое #rewey перед добавлением новых комментариев
-                        $('#rewey').empty();
-
-                        // Добавляем комментарии к продукту
-                        Product["rates"].forEach(function (comment) {
-                            var initials = comment["user"]["user_name"].charAt(0) + comment["user"]["surname"].charAt(0);
-                            var starsHTML = '';
-
-                            // Генерируем звезды в зависимости от оценки
-                            var rating = parseInt(comment["_Rate"]);
-                            for (var i = 0; i < rating; i++) {
-                                starsHTML += '★'; // Звезда
-                            }
-                            for (var j = rating; j < 5; j++) {
-                                starsHTML += '<span style="font-size: 30px;">☆</span>'; // Пустая звезда
-                            }
-
-                            // Формируем HTML для комментария
-                            var commentHTML = '<div class="comment-container" style="width:97%;border: 3px solid black;margin-bottom:10px; border-radius: 10px;max-height:105px;margin-left:30px">';
-                            commentHTML += '<div style="display: flex; align-items: flex-start; padding: 20px;">';
-                            commentHTML += '<div class="user-initials" style="width: 50px; height: 50px; background-color: gray; border-radius: 50%; text-align: center; line-height: 31px; color: white; font-weight: bold; margin-right: 10px;padding:10px;line-width:20px">' + initials + '</div>';
-                            commentHTML += '<div style="flex-grow: 1;">';
-                            commentHTML += '<p style="margin-top: -0.2%; margin-bottom: 0;font-size:20px">' + comment.user.user_name + ' ' + comment.user.surname + '</p>';
-                            commentHTML += '<div style="display: flex; flex-direction: row;">';
-                            if (comment.rate_comment !== null) {
-                                commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:850px">' + comment.rate_comment + '</p>';
-                            }
-                            commentHTML += '<p style="margin-top: -16px; margin-bottom: 0; font-size: 30px; margin-left: auto;color:#FFD700">' + starsHTML + '</p>';
-                            commentHTML += '</div>';
-                            commentHTML += '<div class="delete-comment" data-commentid="' + comment.rate_id + '" style="cursor: pointer; color: red; margin-left: auto; font-size: 20px;">Delete</div>'; // Кнопка удаления
-                            commentHTML += '</div>';
-                            commentHTML += '</div>';
-                            commentHTML += '</div>';
-
-                            // Добавляем HTML комментария в элемент #rewey
-                            $('#rewey').append(commentHTML);
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error);
-                    }
-
+            // При загрузке страницы выполним проверку наличия товара в избранном для каждой кнопки
+            $(document).ready(function () {
+                $('.fav-button1').each(function () {
+                    var button = $(this);
+                    var productId = button.data('idproduct');
+                    checkUserLike(productId, button);
                 });
             });
+        </script>
 
-            // Обработчик клика для кнопки удаления комментария
-            $('#rewey').on('click', '.delete-comment', function () {
-                var commentId = $(this).data('commentid'); // Получаем идентификатор комментария
+        <script>
+            $(document).ready(function () {
+                // Отслеживаем клик по кнопке "info-button1"
+                $('.info-button2').on('click', function () {
+                    var productId = $(this).data('idproduct'); // Получаем айди товара из кнопки
 
-                // Отправляем AJAX запрос на сервер для удаления комментария
+                    // Отправляем запрос на сервер для проверки наличия товара в избранном
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/CheckUserLike",
+                        data: { productId: productId },
+                        success: function (response) {
+                            var modalButton = $('#exampleModal').find('.fav-button2');
+
+                            // Если товар в избранном, добавляем красный фон кнопке в модальном окне
+                            if (response.exists) {
+                                modalButton.css('background-color', 'red');
+                                modalButton.css('color', 'white');
+                            } else {
+                                // Если товар не в избранном, убираем красный фон кнопки в модальном окне
+                                modalButton.css('background-color', 'transparent');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Обработка ошибки, если запрос не удался
+                            console.error(error);
+                        }
+                    });
+                });
+
+                // После закрытия модального окна
+                $('#exampleModal').on('hidden.bs.modal', function (e) {
+                    // Сбрасываем стили для modalButton
+                    var modalButton = $('#exampleModal').find('.fav-button2');
+                    modalButton.css('background-color', '');
+                    modalButton.css('color', ''); // сброс цвета
+                });
+            });
+        </script>
+
+        <script>
+            function updatePassword(oldPassword, newPassword) {
+                // Отправляем AJAX-запрос на сервер
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/Home/UpdatePassword", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            // Пароль успешно изменен
+                            console.log("Пароль успешно изменен");
+
+                            // Выполняем выход из системы
+                            $.ajax({
+                                url: '/Home/Logout',
+                                type: 'POST',
+                                success: function (response) {
+                                    // Успешное выполнение запроса
+                                    console.log(response);
+                                    localStorage.setItem('AuthenticationSuccess', '0');
+                                    window.location.reload(); // Пример обновления страницы
+                                },
+                                error: function (error) {
+                                    // Ошибка выполнения запроса
+                                    console.error(error);
+                                    showError("Произошла ошибка при выходе из системы");
+                                }
+                            });
+                        } else {
+                            // Произошла ошибка при изменении пароля
+                            console.error("Ошибка при изменении пароля");
+                            showError("Проверьте пароль");
+                        }
+                    }
+                };
+
+                var data = JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword });
+                xhr.send(data);
+            }
+
+            function showError(errorMessage) {
+                // Показываем сообщение об ошибке на странице
+                $('#errorMessagepastab1').text(errorMessage).show();
+            }
+
+            // Функция для получения и установки нового пароля
+            function getAndSetNewPassword() {
+                var oldPassword = document.getElementById("passwordregistersend").value;
+                var newPassword = document.getElementById("passwordregisterveryf").value;
+                var newPasswordConfirm = document.getElementById("passwordregisteveryf2r").value;
+
+                // Проверяем, что значения не пустые
+                if (!(oldPassword && newPassword && newPasswordConfirm)) {
+                    console.error("Пожалуйста, заполните все поля пароля");
+                    $("#errorMessage6").show();
+                    return;
+                }
+
+                // Проверяем, что значения нового пароля совпадают
+                if (newPassword !== newPasswordConfirm) {
+                    console.error("Пароли не совпадают");
+                    $("#errorMessagepastab").show();
+                    return;
+                }
+
+                // Обновляем пароль
+                updatePassword(oldPassword, newPassword);
+            }
+
+            // Находим кнопку "Сохранить" и назначаем обработчик события на клик
+            var saveButton = document.getElementById("savebuttonpas");
+            saveButton.addEventListener("click", getAndSetNewPassword);
+        </script>
+
+        <script>
+            document.getElementById('showPasswordButton4').addEventListener('click', function () {
+                var passwordField = document.getElementById('passwordregistersend');
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                } else {
+                    passwordField.type = 'password';
+                }
+            });
+
+            document.getElementById('showPasswordButton5').addEventListener('click', function () {
+                var passwordField = document.getElementById('passwordregisterveryf');
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                } else {
+                    passwordField.type = 'password';
+                }
+            });
+
+            document.getElementById('showPasswordButton6').addEventListener('click', function () {
+                var passwordField = document.getElementById('passwordregisteveryf2r');
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                } else {
+                    passwordField.type = 'password';
+                }
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Находим кнопку по её id
+                var adminButton = document.getElementById('goaway');
+
+                // Добавляем обработчик события клика на кнопку
+                adminButton.addEventListener('click', function () {
+                    // Переходим на страницу AdminPage
+                    window.location.href = '/Home/MainPage'; // Укажите здесь путь к странице AdminPage
+                });
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Находим кнопку по её id
+                var adminButton = document.getElementById('goorder');
+
+                // Добавляем обработчик события клика на кнопку
+                adminButton.addEventListener('click', function () {
+                    // Переходим на страницу AdminPage
+                    window.location.href = '/Home/AllOrders'; // Укажите здесь путь к странице AdminPage
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const tabs = document.querySelectorAll('#myTabs .tab');
+                const tabContents = document.querySelectorAll('#myTabsContent .tab-content');
+
+                tabs.forEach(function (tab, index) {
+                    tab.addEventListener('click', function () {
+                        tabs.forEach(function (t) {
+                            t.classList.remove('active');
+                        });
+
+                        tabContents.forEach(function (content) {
+                            content.classList.remove('active');
+                        });
+
+                        this.classList.add('active');
+                        tabContents[index].classList.add('active');
+
+                        // Добавленный код для скрытия tab-reviews-content
+                        if (tabContents[index].id === 'tab-info-content') {
+                            document.getElementById('tab-reviews-content').style.display = 'none';
+                            document.getElementById('myTabs').style.marginTop = '10px';
+                            document.getElementById('myTabs').style.marginLeft = '34px';
+                        } else {
+                            document.getElementById('tab-reviews-content').style.display = 'flex';
+                            document.getElementById('myTabs').style.marginTop = '-117px';
+                            document.getElementById('myTabs').style.marginLeft = '34px';
+                        }
+                    });
+                });
+
+                // Активировать первую вкладку
+                tabs[0].click();
+            });
+        </script>
+        <script>
+            $('#exampleModal').on('hidden.bs.modal', function () {
+                $('#productStorageConditions2').val('');
+                $('#productStorageLife2').val('');
+                $('#productEnergyValue2').val('');
+                $('#productCarb2').val('');
+                $('#productFatty2').val('');
+                $('#productProtein2').val('');
+                $('#productfat2').val('');
+                $('#productMassPerFat2').val('');
+                $('#productArticle2').val('');
+                $('#productSostav2').val('');
+                $('#productsale2').val('');
+                $('#productRemain2').val('');
+                $('#description2').val('');
+                $('#productPrice2').val('');
+                $('#productNameLabel2').val('');
+
+                $('#productNameLabel').text('');
+                $('#productPrice').html('');
+                $('#description').text('');
+                $('#productImage').attr('src', '');
+                $('#productMassPerFat').text('');
+                $('#productfat').text('');
+                $('#productProtein').text('');
+                $('#productFatty').text('');
+                $('#productCarb').text('');
+                $('#productEnergyValue').text('');
+                $('#productStorageLife').text('');
+                $('#productPackageId').text('');
+                $('#productStorageConditions').text('');
+                $('#productsale').text('');
+                $('#productRemain').text('');
+                $('#productArticle').text('');
+                $('#productSostav').text('');
+                $('#prodid').text('');
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Находим кнопку по её id
+                var adminButton = document.getElementById('gouser');
+
+                // Добавляем обработчик события клика на кнопку
+                adminButton.addEventListener('click', function () {
+                    // Переходим на страницу AdminPage
+                    window.location.href = '/Home/AllUsers'; // Укажите здесь путь к странице AdminPage
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                var productId; // Переменная для хранения идентификатора продукта
+
+                // Обработчик события клика для кнопки .info-button2
+                $('.info-button2').on('click', function () {
+                    productId = $(this).data('idproduct'); // Получаем идентификатор продукта из атрибута data-idproduct кнопки
+
+                    // Отправляем AJAX запрос на сервер для получения информации о продукте по его идентификатору
+                    $.ajax({
+                        type: "GET",
+                        url: "/Home/GetProduct",
+                        data: { Id: productId },
+                        success: function (Product) {
+                            // Обновляем значения на странице с информацией о продукте
+                            $('#productNameLabel').text(Product["name_product"]);
+                            $('#productPrice').html(Product["product_price"]);
+                            $('#description').text(Product["product_description_"]);
+                            $('#productImage').attr('src', Product["product_img"]);
+                            $('#productMassPerFat').text(Product["product_mass_per_fat"]);
+                            $('#productfat').text(Product["product_fat"]);
+                            $('#productProtein').text(Product["product_protein"]);
+                            $('#productFatty').text(Product["product_fatty"]);
+                            $('#productCarb').text(Product["product_carb"]);
+                            $('#productEnergyValue').text(Product["product_energy_value"]);
+                            $('#productStorageLife').text(Product["product_storage_life"]);
+                            $('#productPackageId').text(Product["product_package_id"]);
+                            $('#productStorageConditions').text(Product["product_storage_conditions"]);
+                            $('#productsale').text(Product["product_sale"]);
+                            $('#productRemain').text(Product["product_remain"]);
+                            $('#productArticle').text(Product["product_article"]);
+                            $('#productSostav').text(Product["product_sostav"]);
+                            $('#prodid').text(Product["idProduct"]);
+
+                            // Обновляем видимость кнопок в зависимости от значения ishidden
+                            if (Product.ishidden === true) {
+                                $('#productVisibility').text(' скрыт');
+                                $('#savebuttonhidden').hide();
+                                $('#savebuttonnothidden').show();
+                            } else {
+                                $('#productVisibility').text(' виден');
+                                $('#savebuttonhidden').show();
+                                $('#savebuttonnothidden').hide();
+                            }
+
+                            // Очищаем содержимое #rewey перед добавлением новых комментариев
+                            $('#rewey').empty();
+
+                            // Добавляем комментарии к продукту
+                            Product["rates"].forEach(function (comment) {
+                                var initials = comment["user"]["user_name"].charAt(0) + comment["user"]["surname"].charAt(0);
+                                var starsHTML = '';
+
+                                // Генерируем звезды в зависимости от оценки
+                                var rating = parseInt(comment["_Rate"]);
+                                for (var i = 0; i < rating; i++) {
+                                    starsHTML += '★'; // Звезда
+                                }
+                                for (var j = rating; j < 5; j++) {
+                                    starsHTML += '<span style="font-size: 30px;">☆</span>'; // Пустая звезда
+                                }
+
+                                // Формируем HTML для комментария
+                                var commentHTML = '<div class="comment-container" style="width:97%;border: 3px solid black;margin-bottom:10px; border-radius: 10px;max-height:105px;margin-left:30px">';
+                                commentHTML += '<div style="display: flex; align-items: flex-start; padding: 20px;">';
+                                commentHTML += '<div class="user-initials" style="width: 50px; height: 50px; background-color: gray; border-radius: 50%; text-align: center; line-height: 31px; color: white; font-weight: bold; margin-right: 10px;padding:10px;line-width:20px">' + initials + '</div>';
+                                commentHTML += '<div style="flex-grow: 1;">';
+                                commentHTML += '<p style="margin-top: -0.2%; margin-bottom: 0;font-size:20px">' + comment.user.user_name + ' ' + comment.user.surname + '</p>';
+                                commentHTML += '<div style="display: flex; flex-direction: row;">';
+                                if (comment.rate_comment !== null) {
+                                    commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:850px">' + comment.rate_comment + '</p>';
+                                }
+                                commentHTML += '<p style="margin-top: -16px; margin-bottom: 0; font-size: 30px; margin-left: auto;color:#FFD700">' + starsHTML + '</p>';
+                                commentHTML += '</div>';
+                                commentHTML += '<div class="delete-comment" data-commentid="' + comment.rate_id + '" style="cursor: pointer; color: red; margin-left: auto; font-size: 20px;">Delete</div>'; // Кнопка удаления
+                                commentHTML += '</div>';
+                                commentHTML += '</div>';
+                                commentHTML += '</div>';
+
+                                // Добавляем HTML комментария в элемент #rewey
+                                $('#rewey').append(commentHTML);
+                            });
+
+                            // Дополнительный AJAX запрос для получения категории продукта из таблицы catalog_product
+                            var productId = Product["idProduct"];
+                            $.ajax({
+                                type: "GET",
+                                url: "/Home/GetProductCategory", // Укажите реальный URL для получения категории продукта
+                                data: { idProduct: productId },
+                                success: function (catalogProduct) {
+                                    console.log(catalogProduct);
+
+                                    var selectedCategory = 'soft'; // Значение по умолчанию
+
+                                    if (catalogProduct.id_catalog === 1) {
+                                        selectedCategory = 'soft';
+                                    } else if (catalogProduct.id_catalog === 2) {
+                                        selectedCategory = 'semi-solid';
+                                    } else if (catalogProduct.id_catalog === 3) {
+                                        selectedCategory = 'solid';
+                                    } else if (catalogProduct.id_catalog === 4) {
+                                        selectedCategory = 'moldy';
+                                    } else if (catalogProduct.id_catalog === 5) {
+                                        selectedCategory = 'additives';
+                                    } else {
+                                        selectedCategory = 'soft'; // Значение по умолчанию
+                                    }
+
+                                    // Устанавливаем выбранную категорию в новом селекте
+                                    $('#newCat').val(selectedCategory);
+
+                                    // Удаление старого селекта и замена его новым селектом
+                                    var newSelectHtml = '<select id="cat" style="margin-left:20px;margin-top:50px;">' +
+                                        '<option value="soft">Мягкие сыры</option>' +
+                                        '<option value="semi-solid">Полутвердые сыры</option>' +
+                                        '<option value="solid">Твердые сыры</option>' +
+                                        '<option value="moldy">Плесневые сыры</option>' +
+                                        '<option value="additives">Сыры с добавками</option>' +
+                                        '</select>';
+
+                                    // Заменяем старый селект новым селектом
+                                    $('#cat').replaceWith(newSelectHtml);
+
+                                    // Устанавливаем выбранную категорию в новом селекте
+                                    $('#cat').val(selectedCategory);
+                                    
+                                    $('#cat').on('change', function () {
+                                        var newCategory = $(this).val(); // Получаем выбранную новую категорию
+                                        changeCategory(newCategory); // Вызываем функцию для обновления категории
+                                    });
+
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(error);
+                                }
+
+                            });
+                            var categoryMap = {
+                                'soft': 1,
+                                'semi-solid': 2,
+                                'solid': 3,
+                                'moldy': 4,
+                                'additives': 5
+                            };
+
+                            // Функция для выполнения AJAX-запроса при изменении категории
+                            function changeCategory(newCategory) {
+                                var productId = Product["idProduct"]; // Получаем id продукта
+                                var categoryId = categoryMap[newCategory]; // Получаем числовой идентификатор категории
+
+                                // Отправляем AJAX запрос на сервер для обновления категории продукта
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Home/UpdateProductCategory",
+                                    data: { productId: productId, categoryId: categoryId },
+                                    success: function (response) {
+                                        console.log('Категория продукта обновлена успешно.');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error('Произошла ошибка при обновлении категории продукта:', error);
+                                    }
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(error);
+                        }
+                    });
+                });
+
+                // Обработчик клика для кнопки удаления комментария
+                $('#rewey').on('click', '.delete-comment', function () {
+                    var commentId = $(this).data('commentid'); // Получаем идентификатор комментария
+
+                    // Отправляем AJAX запрос на сервер для удаления комментария
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/DeleteComment", // Замените на ваш реальный URL для удаления комментария
+                        data: { CommentId: commentId },
+                        success: function (response) {
+                            // Если удаление прошло успешно, удаляем комментарий из DOM
+                            $(this).closest('.comment-container').remove();
+                            console.log('Комментарий успешно удален');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Ошибка при удалении комментария:', error);
+                        }
+                    });
+                });
+                $('#savebuttonproduct2').click(function () {
+                    // Получение выбранных значений из селектов
+                    var selectedProviderId = $('#selectProvider2').val();
+                    var selectedPackageId = $('#selectPackage2').val();
+                    var selectedCategory = $('#cat2').val();
+
+                    // Определение categoryId в зависимости от выбранного значения в селекте
+                    var categoryId;
+                    if (selectedCategory === 'soft') {
+                        categoryId = 1;
+                    } else if (selectedCategory === 'semi-solid') {
+                        categoryId = 2;
+                    } else if (selectedCategory === 'solid') {
+                        categoryId = 3;
+                    } else if (selectedCategory === 'moldy') {
+                        categoryId = 4;
+                    } else if (selectedCategory === 'additives') {
+                        categoryId = 5;
+                    }
+
+                    console.log('Selected categoryId:', categoryId); // Для отладки
+
+                    // Сбор данных из полей формы
+                    var storageConditions = $('#productStorageConditions2').val();
+                    var storageLife = $('#productStorageLife2').val();
+                    var energyValue = $('#productEnergyValue2').val();
+                    var carb = $('#productCarb2').val();
+                    var fatty = $('#productFatty2').val();
+                    var protein = $('#productProtein2').val();
+                    var fat = $('#productfat2').val();
+                    var massPerFat = $('#productMassPerFat2').val();
+                    var article = $('#productArticle2').val();
+                    var sostav = $('#productSostav2').val();
+                    var sale = $('#productsale2').val();
+                    var remain = $('#productRemain2').val();
+                    var description = $('#description2').val();
+                    var price = $('#productPrice2').val();
+                    var productName = $('#productNameLabel2').val();
+                    var img = $('#hiddenImage').text();
+
+                    // Проверка на заполнение всех полей
+                    if (storageConditions === '' || storageLife === '' || energyValue === '' || carb === '' ||
+                        fatty === '' || protein === '' || fat === '' || massPerFat === '' || article === '' ||
+                        sostav === '' || sale === '' || remain === '' || description === '' || price === '' || productName === '') {
+                        alert('Пожалуйста, заполните все поля');
+                        return;
+                    }
+
+                    // Формирование объекта с данными для отправки на сервер
+                    var updatedProductData = {
+                        storageConditions: storageConditions,
+                        storageLife: storageLife,
+                        energyValue: energyValue,
+                        carb: carb,
+                        fatty: fatty,
+                        protein: protein,
+                        fat: fat,
+                        massPerFat: massPerFat,
+                        article: article,
+                        sostav: sostav,
+                        sale: sale,
+                        remain: remain,
+                        description: description,
+                        price: price,
+                        productName: productName,
+                        providerId: selectedProviderId,
+                        packageId: selectedPackageId,
+                        categoryId: categoryId, // Добавляем categoryId
+                        img: img
+                    };
+
+                    // Вывод данных в лог перед отправкой на сервер
+                    console.log('Данные перед отправкой:', updatedProductData);
+
+                    // Отправка AJAX запроса на сервер для добавления нового продукта
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/AddProduct",
+                        data: updatedProductData,
+                        success: function (response) {
+                            alert('Продукт успешно добавлен');
+                            location.reload(); // Перезагрузка страницы после успешного добавления продукта
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Ошибка при добавлении продукта:', error);
+                            // Обработка ошибки при добавлении продукта
+                        }
+                    });
+                });
+
+                // Обработчик изменения значения в селекте категорий
+                $('#cat2').change(function () {
+                    var selectedCategory = $(this).val();
+
+                    // Определение categoryId в зависимости от выбранного значения в селекте
+                    var categoryId;
+                    if (selectedCategory === 'soft') {
+                        categoryId = 1;
+                    } else if (selectedCategory === 'semi-solid') {
+                        categoryId = 2;
+                    } else if (selectedCategory === 'solid') {
+                        categoryId = 3;
+                    } else if (selectedCategory === 'moldy') {
+                        categoryId = 4;
+                    } else if (selectedCategory === 'additives') {
+                        categoryId = 5;
+                    }
+
+                    console.log('Selected categoryId on change:', categoryId); // Для отладки
+
+                    // Дальнейшие действия при изменении категории, если нужно
+                });
+            });
+          
+
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                // Объект, связывающий строковые значения категорий с их числовыми идентификаторами
+                var categoryMap = {
+                    'soft': 1,
+                    'semi-solid': 2,
+                    'solid': 3,
+                    'moldy': 4,
+                    'additives': 5
+                };
+
+                // Функция для выполнения AJAX-запроса при изменении категории
+                function changeCategory(newCategory) {
+                    var productId = $('#prodid').text(); // Получаем id продукта
+                    var categoryId = categoryMap[newCategory]; // Получаем числовой идентификатор категории
+
+                    // Отправляем AJAX запрос на сервер для обновления категории продукта
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/UpdateProductCategory",
+                        data: { productId: productId, categoryId: categoryId },
+                        success: function (response) {
+                            console.log('Категория продукта обновлена успешно.');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Произошла ошибка при обновлении категории продукта:', error);
+                        }
+                    });
+                }
+
+                // Обработчик события изменения селекта #cat
+                $('#cat').on('change', function () {
+                    var newCategory = $(this).val(); // Получаем выбранную новую категорию
+                    changeCategory(newCategory); // Вызываем функцию для обновления категории
+                });
+            });
+            function changeCategory(newCategory) {
+                var productId = $('#prodid').text(); // Получаем id продукта
+                var categoryId = categoryMap[newCategory]; // Получаем числовой идентификатор категории
+
+                // Отправляем AJAX запрос на сервер для обновления категории продукта
                 $.ajax({
                     type: "POST",
-                    url: "/Home/DeleteComment", // Замените на ваш реальный URL для удаления комментария
-                    data: { CommentId: commentId },
+                    url: "/Home/UpdateProductCategory",
+                    data: { productId: productId, categoryId: categoryId },
                     success: function (response) {
-                        // Если удаление прошло успешно, удаляем комментарий из DOM
-                        $(this).closest('.comment-container').remove();
-                        console.log('Комментарий успешно удален');
+                        console.log('Категория продукта обновлена успешно.');
                     },
                     error: function (xhr, status, error) {
-                        console.log('Ошибка при удалении комментария:', error);
+                        console.error('Произошла ошибка при обновлении категории продукта:', error);
                     }
                 });
-            });
-            
-        });
-
-    </script>
-    <script>
-        function getPackageNameById(packageId) {
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    type: "GET",
-                    url: "/Home/GetPackageName", // Замените на ваш реальный URL
-                    data: { packageId: packageId },
-                    success: function (packageName) {
-                        resolve(packageName);
-                    },
-                    error: function (xhr, status, error) {
-                        reject(error);
-                    }
+            }
+            var categoryMap = {
+                'soft': 1,
+                'semi-solid': 2,
+                'solid': 3,
+                'moldy': 4,
+                'additives': 5
+            };
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#cat').on('change', function () {
+                    console.log('Выбрана новая категория:', $(this).val());
                 });
             });
-        }
-
-        $(document).ready(function () {
-            $(".info-button2").on("click", function () {
-                var packageId = $(this).data("package_id");
-                var $productSup = $("#productSupplier");
-
-                // Вызов функции с использованием Promise
-                getPackageNameById(packageId)
-                    .then(function (packageName) {
-                        // Обновить текст в элементе <p>
-                        $productSup.text(packageName);
-                    })
-                    .catch(function (error) {
-                        console.error("Ошибка при получении имени пакета:", error);
-                    });
-            });
-        });
-
-        function getProviderNameById(providerId) {
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    type: "GET",
-                    url: "/Home/GetProviderName", // Замените на ваш реальный URL
-                    data: { providerId: providerId },
-                    success: function (providerName) {
-                        resolve(providerName);
-                    },
-                    error: function (xhr, status, error) {
-                        reject(error);
-                    }
-                });
-            });
-        }
-
-        $(document).ready(function () {
-            $(".info-button2").on("click", function () {
-                var providerId = $(this).data("provider_id");
-                var $productPa = $("#productpa");
-
-                // Вызов функции с использованием Promise
-                getProviderNameById(providerId)
-                    .then(function (providerName) {
-                        // Обновить текст в элементе <p>
-                        $productPa.text(providerName);
-                    })
-                    .catch(function (error) {
-                        console.error("Ошибка при получении имени поставщика:", error);
-                    });
-            });
-        });
-    </script>
-    <script>
-        $('.info-button2').on('click', function () {
-            // Получаем ID продукта из атрибута data-idd
-            var productId = $(this).data('idproduct');
-
-            // Выполняем AJAX-запрос для получения количества оценок
-            $.ajax({
-                url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
-                type: 'GET',
-                data: { productId: productId },
-                success: function (data) {
-                    // Обновляем содержимое элементов <p> с id "five", "four", "three", "two", "one"
-                    var count5 = data[5] || 0;
-                    $('#five').text(count5);
-
-                    var count4 = data[4] || 0;
-                    $('#four').text(count4);
-
-                    var count3 = data[3] || 0;
-                    $('#three').text(count3);
-
-                    var count2 = data[2] || 0;
-                    $('#two').text(count2);
-
-                    var count1 = data[1] || 0;
-                    $('#one').text(count1);
-                },
-                error: function (error) {
-                    console.error('Ошибка при получении количества оценок:', error);
-                }
-            });
-        });
-
-        // Добавляем обработчик события клика к кнопке
-        $('.info-button2').on('click', function () {
-            // Получаем ID продукта из атрибута data-idd
-            var productId = $(this).data('idproduct');
-
-            // Выполняем AJAX-запрос для получения количества оценок
-            $.ajax({
-                url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
-                type: 'GET',
-                data: { productId: productId },
-                success: function (data) {
-                    // Обновляем содержимое элементов <p> с id "five", "four", "three", "two", "one"
-                    var count5 = data[5] || 0;
-                    var count4 = data[4] || 0;
-                    var count3 = data[3] || 0;
-                    var count2 = data[2] || 0;
-                    var count1 = data[1] || 0;
-
-                    $('#five').text(count5);
-                    $('#four').text(count4);
-                    $('#three').text(count3);
-                    $('#two').text(count2);
-                    $('#one').text(count1);
-
-                    // Подсчитываем общее количество оценок
-                    var totalRatings = count5 + count4 + count3 + count2 + count1;
-
-                    // Рассчитываем процентные доли для оценок 5, 4, 3, 2 и 1
-                    var percentage5 = totalRatings > 0 ? (count5 / totalRatings) * 100 : 0;
-                    var percentage4 = totalRatings > 0 ? (count4 / totalRatings) * 100 : 0;
-                    var percentage3 = totalRatings > 0 ? (count3 / totalRatings) * 100 : 0;
-                    var percentage2 = totalRatings > 0 ? (count2 / totalRatings) * 100 : 0;
-                    var percentage1 = totalRatings > 0 ? (count1 / totalRatings) * 100 : 0;
-
-                    // Обновляем ширину линий заполнения
-                    $('#progress-bar').css('width', percentage5 + '%');
-                    $('#progress-bar1').css('width', percentage4 + '%');
-                    $('#progress-bar2').css('width', percentage3 + '%');
-                    $('#progress-bar3').css('width', percentage2 + '%');
-                    $('#progress-bar4').css('width', percentage1 + '%');
-                },
-                error: function (error) {
-                    console.error('Ошибка при получении количества оценок:', error);
-                }
-            });
-        });
-
-    </script>
-    <script>
-        $(document).ready(function () {
-            $(".info-button2").on("click", function () {
-                var productId = $(this).data('idproduct');
-                var $productRate = $("#productrate");
-                var $productRate2 = $("#productrate2");
-                var $ratingStars = $("#rating-stars");
-
-                getProductRatingById(productId)
-                    .then(function (averageRate) {
-                        updateProductRating($productRate, $ratingStars, averageRate);
-
-                        // Добавьте класс для изменения цвета текста, включая звезду
-                        $productRate2.html('<span class="star-rating">' + averageRate + '<span class="star">★</span></span>');
-
-                        // Переопределите цвет только для звезды и добавьте стили
-                        $productRate2.find('.star')
-                            .css('color', '#FFD700')
-
-                    })
-                    .catch(function (error) {
-                        console.error("Ошибка при получении рейтинга продукта:", error);
-                    });
-            });
-
-            // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
-            function getProductRatingById(productId) {
+        </script>
+        <script>
+            function getPackageNameById(packageId) {
                 return new Promise(function (resolve, reject) {
                     $.ajax({
-                        url: '/Home/GetProductRating',
-                        data: { productId: productId },
-                        type: 'GET',
-                        success: function (result) {
-                            resolve(result);
+                        type: "GET",
+                        url: "/Home/GetPackageName", // Замените на ваш реальный URL
+                        data: { packageId: packageId },
+                        success: function (packageName) {
+                            resolve(packageName);
                         },
-                        error: function (error) {
+                        error: function (xhr, status, error) {
                             reject(error);
                         }
                     });
                 });
             }
 
-            // Функция для обновления текста и звезд
-            function updateProductRating($productRate, $ratingStars, averageRate) {
-                $productRate.text("Рейтинг продукта: " + averageRate + '★');
+            $(document).ready(function () {
+                $(".info-button2").on("click", function () {
+                    var packageId = $(this).data("package_id");
+                    var $productSup = $("#productSupplier");
 
-            }
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            // Функция для загрузки данных поставщиков
-            function loadProviders() {
-                $.ajax({
-                    url: '/Home/GetProviders', // Замените на URL вашего метода для получения поставщиков
-                    type: 'GET',
-                    success: function (providers) {
-                        var selectProvider = $('#selectProvider');
-                        selectProvider.empty(); // Очищаем список перед добавлением новых элементов
-                        providers.forEach(function (provider) {
-                            // Добавляем варианты выбора поставщиков в выпадающий список
-                            selectProvider.append('<option value="' + provider.id + '">' + provider.name + '</option>');
+                    // Вызов функции с использованием Promise
+                    getPackageNameById(packageId)
+                        .then(function (packageName) {
+                            // Обновить текст в элементе <p>
+                            $productSup.text(packageName);
+                        })
+                        .catch(function (error) {
+                            console.error("Ошибка при получении имени пакета:", error);
                         });
-                    },
-                    error: function (error) {
-                        console.error('Ошибка при загрузке поставщиков:', error);
-                    }
+                });
+            });
+
+            function getProviderNameById(providerId) {
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Home/GetProviderName", // Замените на ваш реальный URL
+                        data: { providerId: providerId },
+                        success: function (providerName) {
+                            resolve(providerName);
+                        },
+                        error: function (xhr, status, error) {
+                            reject(error);
+                        }
+                    });
                 });
             }
 
-            // Функция для загрузки данных упаковок
-            function loadPackages() {
-                $.ajax({
-                    url: '/Home/GetPackages', // Замените на URL вашего метода для получения упаковок
-                    type: 'GET',
-                    success: function (packages) {
-                        var selectPackage = $('#selectPackage');
-                        selectPackage.empty(); // Очищаем список перед добавлением новых элементов
-                        packages.forEach(function (pack) {
-                            // Добавляем варианты выбора упаковок в выпадающий список
-                            selectPackage.append('<option value="' + pack.id + '">' + pack.name + '</option>');
+            $(document).ready(function () {
+                $(".info-button2").on("click", function () {
+                    var providerId = $(this).data("provider_id");
+                    var $productPa = $("#productpa");
+
+                    // Вызов функции с использованием Promise
+                    getProviderNameById(providerId)
+                        .then(function (providerName) {
+                            // Обновить текст в элементе <p>
+                            $productPa.text(providerName);
+                        })
+                        .catch(function (error) {
+                            console.error("Ошибка при получении имени поставщика:", error);
                         });
+                });
+            });
+        </script>
+        <script>
+            $('.info-button2').on('click', function () {
+                // Получаем ID продукта из атрибута data-idd
+                var productId = $(this).data('idproduct');
+
+                // Выполняем AJAX-запрос для получения количества оценок
+                $.ajax({
+                    url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
+                    type: 'GET',
+                    data: { productId: productId },
+                    success: function (data) {
+                        // Обновляем содержимое элементов <p> с id "five", "four", "three", "two", "one"
+                        var count5 = data[5] || 0;
+                        $('#five').text(count5);
+
+                        var count4 = data[4] || 0;
+                        $('#four').text(count4);
+
+                        var count3 = data[3] || 0;
+                        $('#three').text(count3);
+
+                        var count2 = data[2] || 0;
+                        $('#two').text(count2);
+
+                        var count1 = data[1] || 0;
+                        $('#one').text(count1);
                     },
                     error: function (error) {
-                        console.error('Ошибка при загрузке упаковок:', error);
+                        console.error('Ошибка при получении количества оценок:', error);
                     }
                 });
-            }
+            });
 
-            // Обработчик нажатия кнопки для загрузки данных
-            $('#loadDataButton').on('click', function () {
-                // Загрузка данных поставщиков и упаковок
+            // Добавляем обработчик события клика к кнопке
+            $('.info-button2').on('click', function () {
+                // Получаем ID продукта из атрибута data-idd
+                var productId = $(this).data('idproduct');
+
+                // Выполняем AJAX-запрос для получения количества оценок
+                $.ajax({
+                    url: '/Home/CountRatings', // Замените ControllerName на ваш фактический контроллер
+                    type: 'GET',
+                    data: { productId: productId },
+                    success: function (data) {
+                        // Обновляем содержимое элементов <p> с id "five", "four", "three", "two", "one"
+                        var count5 = data[5] || 0;
+                        var count4 = data[4] || 0;
+                        var count3 = data[3] || 0;
+                        var count2 = data[2] || 0;
+                        var count1 = data[1] || 0;
+
+                        $('#five').text(count5);
+                        $('#four').text(count4);
+                        $('#three').text(count3);
+                        $('#two').text(count2);
+                        $('#one').text(count1);
+
+                        // Подсчитываем общее количество оценок
+                        var totalRatings = count5 + count4 + count3 + count2 + count1;
+
+                        // Рассчитываем процентные доли для оценок 5, 4, 3, 2 и 1
+                        var percentage5 = totalRatings > 0 ? (count5 / totalRatings) * 100 : 0;
+                        var percentage4 = totalRatings > 0 ? (count4 / totalRatings) * 100 : 0;
+                        var percentage3 = totalRatings > 0 ? (count3 / totalRatings) * 100 : 0;
+                        var percentage2 = totalRatings > 0 ? (count2 / totalRatings) * 100 : 0;
+                        var percentage1 = totalRatings > 0 ? (count1 / totalRatings) * 100 : 0;
+
+                        // Обновляем ширину линий заполнения
+                        $('#progress-bar').css('width', percentage5 + '%');
+                        $('#progress-bar1').css('width', percentage4 + '%');
+                        $('#progress-bar2').css('width', percentage3 + '%');
+                        $('#progress-bar3').css('width', percentage2 + '%');
+                        $('#progress-bar4').css('width', percentage1 + '%');
+                    },
+                    error: function (error) {
+                        console.error('Ошибка при получении количества оценок:', error);
+                    }
+                });
+            });
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                $(".info-button2").on("click", function () {
+                    var productId = $(this).data('idproduct');
+                    var $productRate = $("#productrate");
+                    var $productRate2 = $("#productrate2");
+                    var $ratingStars = $("#rating-stars");
+
+                    getProductRatingById(productId)
+                        .then(function (averageRate) {
+                            updateProductRating($productRate, $ratingStars, averageRate);
+
+                            // Добавьте класс для изменения цвета текста, включая звезду
+                            $productRate2.html('<span class="star-rating">' + averageRate + '<span class="star">★</span></span>');
+
+                            // Переопределите цвет только для звезды и добавьте стили
+                            $productRate2.find('.star')
+                                .css('color', '#FFD700')
+
+                        })
+                        .catch(function (error) {
+                            console.error("Ошибка при получении рейтинга продукта:", error);
+                        });
+                });
+
+                // Функция для выполнения асинхронного запроса к серверу и получения рейтинга продукта
+                function getProductRatingById(productId) {
+                    return new Promise(function (resolve, reject) {
+                        $.ajax({
+                            url: '/Home/GetProductRating',
+                            data: { productId: productId },
+                            type: 'GET',
+                            success: function (result) {
+                                resolve(result);
+                            },
+                            error: function (error) {
+                                reject(error);
+                            }
+                        });
+                    });
+                }
+
+                // Функция для обновления текста и звезд
+                function updateProductRating($productRate, $ratingStars, averageRate) {
+                    $productRate.text("Рейтинг продукта: " + averageRate + '★');
+
+                }
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                // Функция для загрузки данных поставщиков
+                function loadProviders() {
+                    $.ajax({
+                        url: '/Home/GetProviders', // Замените на URL вашего метода для получения поставщиков
+                        type: 'GET',
+                        success: function (providers) {
+                            var selectProvider = $('#selectProvider');
+                            selectProvider.empty(); // Очищаем список перед добавлением новых элементов
+                            providers.forEach(function (provider) {
+                                // Добавляем варианты выбора поставщиков в выпадающий список
+                                selectProvider.append('<option value="' + provider.id + '">' + provider.name + '</option>');
+                            });
+                        },
+                        error: function (error) {
+                            console.error('Ошибка при загрузке поставщиков:', error);
+                        }
+                    });
+                }
+
+                // Функция для загрузки данных упаковок
+                function loadPackages() {
+                    $.ajax({
+                        url: '/Home/GetPackages', // Замените на URL вашего метода для получения упаковок
+                        type: 'GET',
+                        success: function (packages) {
+                            var selectPackage = $('#selectPackage');
+                            selectPackage.empty(); // Очищаем список перед добавлением новых элементов
+                            packages.forEach(function (pack) {
+                                // Добавляем варианты выбора упаковок в выпадающий список
+                                selectPackage.append('<option value="' + pack.id + '">' + pack.name + '</option>');
+                            });
+                        },
+                        error: function (error) {
+                            console.error('Ошибка при загрузке упаковок:', error);
+                        }
+                    });
+                }
+
+                // Обработчик нажатия кнопки для загрузки данных
+                $('#loadDataButton').on('click', function () {
+                    // Загрузка данных поставщиков и упаковок
+                    loadProviders();
+                    loadPackages();
+                });
+
+                // Инициализация при загрузке страницы (можно вызвать автоматически или по другому событию)
                 loadProviders();
                 loadPackages();
             });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $(".info-button2").on("click", function () {
+                    var packageId = $(this).data("package_id");
+                    var providerId = $(this).data("provider_id");
 
-            // Инициализация при загрузке страницы (можно вызвать автоматически или по другому событию)
-            loadProviders();
-            loadPackages();
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $(".info-button2").on("click", function () {
-                var packageId = $(this).data("package_id");
-                var providerId = $(this).data("provider_id");
+                    // Устанавливаем выбранный поставщик в выпадающем списке
+                    $('#selectProvider').val(providerId);
 
-                // Устанавливаем выбранный поставщик в выпадающем списке
-                $('#selectProvider').val(providerId);
+                    // Находим и выбираем соответствующую упаковку в выпадающем списке
+                    $('#selectPackage').val(packageId);
 
-                // Находим и выбираем соответствующую упаковку в выпадающем списке
-                $('#selectPackage').val(packageId);
+                    // Вызов функции для получения имени упаковки по packageId
+                    getPackageNameById(packageId)
+                        .then(function (packageName) {
+                            // Можете выполнить другие действия с именем упаковки, если нужно
+                            console.log("Имя упаковки:", packageName);
+                        })
+                        .catch(function (error) {
+                            console.error("Ошибка при получении имени пакета:", error);
+                        });
 
-                // Вызов функции для получения имени упаковки по packageId
-                getPackageNameById(packageId)
-                    .then(function (packageName) {
-                        // Можете выполнить другие действия с именем упаковки, если нужно
-                        console.log("Имя упаковки:", packageName);
-                    })
-                    .catch(function (error) {
-                        console.error("Ошибка при получении имени пакета:", error);
-                    });
-
-                // Вызов функции для получения имени поставщика по providerId
-                getProviderNameById(providerId)
-                    .then(function (providerName) {
-                        // Можете выполнить другие действия с именем поставщика, если нужно
-                        console.log("Имя поставщика:", providerName);
-                    })
-                    .catch(function (error) {
-                        console.error("Ошибка при получении имени поставщика:", error);
-                    });
+                    // Вызов функции для получения имени поставщика по providerId
+                    getProviderNameById(providerId)
+                        .then(function (providerName) {
+                            // Можете выполнить другие действия с именем поставщика, если нужно
+                            console.log("Имя поставщика:", providerName);
+                        })
+                        .catch(function (error) {
+                            console.error("Ошибка при получении имени поставщика:", error);
+                        });
+                });
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var productId; // Переменная для хранения айди продукта
+        </script>
+        <script>
+            $(document).ready(function () {
+                var productId; // Переменная для хранения айди продукта
 
-            // Обработчик события клика для кнопки info-button1
-            $('.info-button2').click(function () {
-                // Получаем айди продукта из атрибута data-idproduct кнопки
-                productId = $(this).data('idproduct');
-            });
+                // Обработчик события клика для кнопки info-button1
+                $('.info-button2').click(function () {
+                    // Получаем айди продукта из атрибута data-idproduct кнопки
+                    productId = $(this).data('idproduct');
+                });
 
-            // Обработчик события click для кнопки "Показывать товар"
-            $('#savebuttonnothidden').on('click', function () {
-                if (!productId) {
-                    console.log('ProductId не определен');
-                    return; // Прерываем выполнение, если productId не определен
-                }
-
-                // Отправляем AJAX запрос на сервер для обновления статуса ishidden
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/UpdateProductHiddenStatus", // URL метода контроллера
-                    data: {
-                        productId: productId,
-                        ishidden: false // Устанавливаем значение ishidden в false
-                    },
-                    success: function (response) {
-                       
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error);
-                        // Обработка ошибки при выполнении запроса
+                // Обработчик события click для кнопки "Показывать товар"
+                $('#savebuttonnothidden').on('click', function () {
+                    if (!productId) {
+                        console.log('ProductId не определен');
+                        return; // Прерываем выполнение, если productId не определен
                     }
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var productId; // Переменная для хранения айди продукта
 
-            // Обработчик события клика для кнопки info-button1
-            $('.info-button2').click(function () {
-                // Получаем айди продукта из атрибута data-idproduct кнопки
-                productId = $(this).data('idproduct');
-            });
+                    // Отправляем AJAX запрос на сервер для обновления статуса ishidden
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/UpdateProductHiddenStatus", // URL метода контроллера
+                        data: {
+                            productId: productId,
+                            ishidden: false // Устанавливаем значение ishidden в false
+                        },
+                        success: function (response) {
 
-            // Обработчик события click для кнопки "Показывать товар"
-            $('#savebuttonhidden').on('click', function () {
-                if (!productId) {
-                    console.log('ProductId не определен');
-                    return; // Прерываем выполнение, если productId не определен
-                }
-
-                // Отправляем AJAX запрос на сервер для обновления статуса ishidden
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/UpdateProductHiddenStatus2", // URL метода контроллера
-                    data: {
-                        productId: productId,
-                        ishidden: true // Устанавливаем значение ishidden в false
-                    },
-                    success: function (response) {
-                        // Если запрос выполнен успешно, обновляем интерфейс
-                       
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error);
-                        // Обработка ошибки при выполнении запроса
-                    }
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var productId; // Переменная для хранения идентификатора продукта
-
-            // Обработчик события клика для кнопки .info-button2
-            $('.info-button2').click(function () {
-                // Получаем идентификатор продукта из атрибута data-idproduct кнопки
-                productId = $(this).data('idproduct');
-            });
-
-            // Обработчик события клика для кнопки сохранения данных
-            $('#savebuttonproduct').click(function () {
-                if (!productId) {
-                    console.log('Идентификатор продукта не определен');
-                    return; // Если идентификатор продукта не определен, прерываем выполнение функции
-                }
-
-                // Собираем данные из полей формы
-                var storageConditions = $('#productStorageConditions').val();
-                var storageLife = $('#productStorageLife').val();
-                var energyValue = $('#productEnergyValue').val();
-                var carb = $('#productCarb').val();
-                var fatty = $('#productFatty').val();
-                var protein = $('#productProtein').val();
-                var fat = $('#productfat').val();
-                var massPerFat = $('#productMassPerFat').val();
-                var article = $('#productArticle').val();
-                var sostav = $('#productSostav').val();
-                var sale = $('#productsale').val();
-                var remain = $('#productRemain').val();
-                var description = $('#description').val();
-                var price = $('#productPrice').val();
-                var productName = $('#productNameLabel').val();
-
-                if (storageConditions === '' || storageLife === '' || energyValue === '' || carb === '' ||
-                    fatty === '' || protein === '' || fat === '' || massPerFat === '' || article === '' ||
-                    sostav === '' || sale === '' || remain === '' || description === '' || price === '' || productName === '') {
-                    alert('Пожалуйста, заполните все поля');
-                    return; // Если какое-либо поле не заполнено, прерываем выполнение функции
-                }
-                $('#exampleModal').on('hidden.bs.modal', function () {
-                    // Очищаем значения всех полей формы
-                    $('input[type="text"]').val('');
-                    $('textarea').val('');
-                    productId = null; // Сбрасываем идентификатор продукта
-                });
-                // Формируем объект с обновляемыми данными продукта
-                var updatedProductData = {
-                    idProduct: productId,
-                    StorageConditions: storageConditions,
-                    StorageLife: storageLife,
-                    EnergyValue: energyValue,
-                    Carb: carb,
-                    Fatty: fatty,
-                    Protein: protein,
-                    Fat: fat,
-                    MassPerFat: massPerFat,
-                    Article: article,
-                    Sostav: sostav,
-                    Sale: sale,
-                    Remain: remain,
-                    Description: description,
-                    Price: price,
-                    ProductName: productName
-                };
-
-                // Отправляем AJAX запрос на сервер для обновления данных продукта
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/UpdateProductData", // URL метода контроллера для обновления данных
-                    data: updatedProductData,
-                    success: function (response) {
-                        // Если запрос выполнен успешно, выполните необходимые действия
-                        alert ('Данные продукта успешно обновлены');
-                        location.reload();
-                    },
-                    error: function (xhr, status, error) {
-                        console.log('Ошибка при обновлении данных продукта:', error);
-                        // Обработка ошибки при обновлении данных
-                    }
-                });
-            });
-
-        });
-
-    </script>
-    <script>
-        $(document).ready(function () {
-            var productId; // Переменная для хранения идентификатора продукта
-
-            // Обработчик события клика для кнопки .info-button2
-            $('.info-button2').click(function () {
-                // Получаем идентификатор продукта из атрибута data-idproduct кнопки
-                productId = $(this).data('idproduct');
-            });
-
-            // Обработчик события изменения выбора поставщика
-            $('#selectProvider').change(function () {
-                var selectedProviderId = $(this).val(); // Получаем выбранный provider_id
-
-                if (!productId) {
-                    console.log('Идентификатор продукта не определен');
-                    return;
-                }
-
-                // Отправка AJAX запроса на сервер для обновления провайдера продукта
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/UpdateProductProvider", // URL метода контроллера для обновления провайдера продукта
-                    data: {
-                        idProduct: productId,
-                        providerId: selectedProviderId
-                    },
-                    success: function (response) {
-                        console.log('Провайдер продукта успешно обновлен');
-                        // Дополнительный код после успешного обновления провайдера
-                    },
-                    error: function (xhr, status, error) {
-                        console.log('Ошибка при обновлении провайдера продукта:', error);
-                        // Обработка ошибки при обновлении провайдера
-                    }
-                });
-            });
-        });
-
-    </script>
-    <script>
-        $(document).ready(function () {
-            var productId; // Переменная для хранения идентификатора продукта
-
-            // Обработчик события клика для кнопки .info-button2
-            $('.info-button2').click(function () {
-                // Получаем идентификатор продукта из атрибута data-idproduct кнопки
-                productId = $(this).data('idproduct');
-            });
-
-            // Обработчик события изменения выбора упаковки
-            $('#selectPackage').change(function () {
-                var selectedPackageId = $(this).val(); // Получаем выбранный package_id
-
-                if (!productId) {
-                    console.log('Идентификатор продукта не определен');
-                    return;
-                }
-
-                // Отправка AJAX запроса на сервер для обновления упаковки продукта
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/UpdateProductPackage", // URL метода контроллера для обновления упаковки продукта
-                    data: {
-                        idProduct: productId,
-                        packageId: selectedPackageId
-                    },
-                    success: function (response) {
-                        console.log('Упаковка продукта успешно обновлена');
-                        // Дополнительный код после успешного обновления упаковки
-                    },
-                    error: function (xhr, status, error) {
-                        console.log('Ошибка при обновлении упаковки продукта:', error);
-                        // Обработка ошибки при обновлении упаковки
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            // Обработчик события клика для кнопки "Поставщики"
-            $('#Sup').click(function () {
-                // Перенаправляем пользователя на другую страницу
-                window.location.href = '/Home/Supplies'; // Замените '/path/to/your/suppliers/page' на реальный URL страницы с поставщиками
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            // Обработчик события клика для кнопки "Поставщики"
-            $('#pack').click(function () {
-                // Перенаправляем пользователя на другую страницу
-                window.location.href = '/Home/Package'; // Замените '/path/to/your/suppliers/page' на реальный URL страницы с поставщиками
-            });
-        });
-    </script>
-    <script>
-
-        $(document).ready(function () {
-            var productId; // Переменная для хранения идентификатора продукта
-
-            // Обработчик клика по кнопке ".info-button2" для получения productId
-            $('.info-button2').click(function () {
-                // Получаем идентификатор продукта из атрибута data-idproduct кнопки
-                productId = $(this).data('idproduct');
-                console.log('Выбран идентификатор продукта:', productId);
-            });
-
-            // Обработчик клика по кнопке "Изменить фото" с id="savebuttonimg"
-            $('#savebuttonimg').click(function () {
-                // Создаем input элемент для выбора файла изображения
-                var fileInput = $('<input type="file" accept="image/*" style="display: none;">');
-
-                // Обработчик выбора файла изображения
-                fileInput.on('change', function (e) {
-                    var file = e.target.files[0];
-
-                    if (file) {
-                        // Проверяем тип файла
-                        if (file.type.startsWith('image/')) {
-                            // Создаем объект FileReader для чтения содержимого файла
-                            var reader = new FileReader();
-
-                            // Обработчик события загрузки файла
-                            reader.onload = function (event) {
-                                // Получаем содержимое файла в формате Base64
-                                var base64Image = event.target.result;
-
-                                // Отправляем данные изображения на сервер
-                                uploadImage(base64Image, productId);
-                            };
-
-                            // Читаем содержимое файла как Base64
-                            reader.readAsDataURL(file);
-                        } else {
-                            // Если выбран файл не изображение
-                            alert('Выберите изображение');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(error);
+                            // Обработка ошибки при выполнении запроса
                         }
-                    }
+                    });
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                var productId; // Переменная для хранения айди продукта
+
+                // Обработчик события клика для кнопки info-button1
+                $('.info-button2').click(function () {
+                    // Получаем айди продукта из атрибута data-idproduct кнопки
+                    productId = $(this).data('idproduct');
                 });
 
-                // Кликаем по input для выбора файла
-                fileInput.click();
+                // Обработчик события click для кнопки "Показывать товар"
+                $('#savebuttonhidden').on('click', function () {
+                    if (!productId) {
+                        console.log('ProductId не определен');
+                        return; // Прерываем выполнение, если productId не определен
+                    }
+
+                    // Отправляем AJAX запрос на сервер для обновления статуса ishidden
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/UpdateProductHiddenStatus2", // URL метода контроллера
+                        data: {
+                            productId: productId,
+                            ishidden: true // Устанавливаем значение ishidden в false
+                        },
+                        success: function (response) {
+                            // Если запрос выполнен успешно, обновляем интерфейс
+
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(error);
+                            // Обработка ошибки при выполнении запроса
+                        }
+                    });
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                var productId; // Переменная для хранения идентификатора продукта
+
+                // Обработчик события клика для кнопки .info-button2
+                $('.info-button2').click(function () {
+                    // Получаем идентификатор продукта из атрибута data-idproduct кнопки
+                    productId = $(this).data('idproduct');
+                });
+
+                // Обработчик события клика для кнопки сохранения данных
+                $('#savebuttonproduct').click(function () {
+                    if (!productId) {
+                        console.log('Идентификатор продукта не определен');
+                        return; // Если идентификатор продукта не определен, прерываем выполнение функции
+                    }
+
+                    // Собираем данные из полей формы
+                    var storageConditions = $('#productStorageConditions').val();
+                    var storageLife = $('#productStorageLife').val();
+                    var energyValue = $('#productEnergyValue').val();
+                    var carb = $('#productCarb').val();
+                    var fatty = $('#productFatty').val();
+                    var protein = $('#productProtein').val();
+                    var fat = $('#productfat').val();
+                    var massPerFat = $('#productMassPerFat').val();
+                    var article = $('#productArticle').val();
+                    var sostav = $('#productSostav').val();
+                    var sale = $('#productsale').val();
+                    var remain = $('#productRemain').val();
+                    var description = $('#description').val();
+                    var price = $('#productPrice').val();
+                    var productName = $('#productNameLabel').val();
+
+                    if (storageConditions === '' || storageLife === '' || energyValue === '' || carb === '' ||
+                        fatty === '' || protein === '' || fat === '' || massPerFat === '' || article === '' ||
+                        sostav === '' || sale === '' || remain === '' || description === '' || price === '' || productName === '') {
+                        alert('Пожалуйста, заполните все поля');
+                        return; // Если какое-либо поле не заполнено, прерываем выполнение функции
+                    }
+                    $('#exampleModal').on('hidden.bs.modal', function () {
+                        // Очищаем значения всех полей формы
+                        $('input[type="text"]').val('');
+                        $('textarea').val('');
+                        productId = null; // Сбрасываем идентификатор продукта
+                    });
+                    // Формируем объект с обновляемыми данными продукта
+                    var updatedProductData = {
+                        idProduct: productId,
+                        StorageConditions: storageConditions,
+                        StorageLife: storageLife,
+                        EnergyValue: energyValue,
+                        Carb: carb,
+                        Fatty: fatty,
+                        Protein: protein,
+                        Fat: fat,
+                        MassPerFat: massPerFat,
+                        Article: article,
+                        Sostav: sostav,
+                        Sale: sale,
+                        Remain: remain,
+                        Description: description,
+                        Price: price,
+                        ProductName: productName
+                    };
+
+                    // Отправляем AJAX запрос на сервер для обновления данных продукта
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/UpdateProductData", // URL метода контроллера для обновления данных
+                        data: updatedProductData,
+                        success: function (response) {
+                            // Если запрос выполнен успешно, выполните необходимые действия
+                            alert('Данные продукта успешно обновлены');
+                            location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Ошибка при обновлении данных продукта:', error);
+                            // Обработка ошибки при обновлении данных
+                        }
+                    });
+                });
+
             });
 
-            // Функция для отправки данных изображения на сервер
-            function uploadImage(base64Image, productId) {
-                // AJAX запрос на сервер для вызова метода контроллера UploadImage
-                $.ajax({
-                    type: "POST",
-                    url: "/Home/UploadImage", // URL вашего метода контроллера
-                    data: {
-                        imageData: base64Image,
-                        productId: productId
-                    },
-                    success: function (response) {
-                        // Обработка успешного ответа от сервера
-                        console.log('Изображение успешно сохранено на сервере:', response);
-                        alert('Изображение успешно сохранено на сервере');
-                    },
-                    error: function (xhr, status, error) {
-                        // Обработка ошибки при отправке данных на сервер
-                        console.error('Ошибка при сохранении изображения на сервер:', error);
-                        alert('Ошибка при сохранении изображения на сервер');
-                    }
+        </script>
+        <script>
+            $(document).ready(function () {
+                var productId; // Переменная для хранения идентификатора продукта
+
+                // Обработчик события клика для кнопки .info-button2
+                $('.info-button2').click(function () {
+                    // Получаем идентификатор продукта из атрибута data-idproduct кнопки
+                    productId = $(this).data('idproduct');
                 });
-            }
-        });
-    </script>
+
+                // Обработчик события изменения выбора поставщика
+                $('#selectProvider').change(function () {
+                    var selectedProviderId = $(this).val(); // Получаем выбранный provider_id
+
+                    if (!productId) {
+                        console.log('Идентификатор продукта не определен');
+                        return;
+                    }
+
+                    // Отправка AJAX запроса на сервер для обновления провайдера продукта
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/UpdateProductProvider", // URL метода контроллера для обновления провайдера продукта
+                        data: {
+                            idProduct: productId,
+                            providerId: selectedProviderId
+                        },
+                        success: function (response) {
+                            console.log('Провайдер продукта успешно обновлен');
+                            // Дополнительный код после успешного обновления провайдера
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Ошибка при обновлении провайдера продукта:', error);
+                            // Обработка ошибки при обновлении провайдера
+                        }
+                    });
+                });
+            });
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                var productId; // Переменная для хранения идентификатора продукта
+
+                // Обработчик события клика для кнопки .info-button2
+                $('.info-button2').click(function () {
+                    // Получаем идентификатор продукта из атрибута data-idproduct кнопки
+                    productId = $(this).data('idproduct');
+                });
+
+                // Обработчик события изменения выбора упаковки
+                $('#selectPackage').change(function () {
+                    var selectedPackageId = $(this).val(); // Получаем выбранный package_id
+
+                    if (!productId) {
+                        console.log('Идентификатор продукта не определен');
+                        return;
+                    }
+
+                    // Отправка AJAX запроса на сервер для обновления упаковки продукта
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/UpdateProductPackage", // URL метода контроллера для обновления упаковки продукта
+                        data: {
+                            idProduct: productId,
+                            packageId: selectedPackageId
+                        },
+                        success: function (response) {
+                            console.log('Упаковка продукта успешно обновлена');
+                            // Дополнительный код после успешного обновления упаковки
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Ошибка при обновлении упаковки продукта:', error);
+                            // Обработка ошибки при обновлении упаковки
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                // Обработчик события клика для кнопки "Поставщики"
+                $('#Sup').click(function () {
+                    // Перенаправляем пользователя на другую страницу
+                    window.location.href = '/Home/Supplies'; // Замените '/path/to/your/suppliers/page' на реальный URL страницы с поставщиками
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                // Обработчик события клика для кнопки "Поставщики"
+                $('#pack').click(function () {
+                    // Перенаправляем пользователя на другую страницу
+                    window.location.href = '/Home/Package'; // Замените '/path/to/your/suppliers/page' на реальный URL страницы с поставщиками
+                });
+            });
+        </script>
+        <script>
+
+            $(document).ready(function () {
+                var productId; // Переменная для хранения идентификатора продукта
+
+                // Обработчик клика по кнопке ".info-button2" для получения productId
+                $('.info-button2').click(function () {
+                    // Получаем идентификатор продукта из атрибута data-idproduct кнопки
+                    productId = $(this).data('idproduct');
+                    console.log('Выбран идентификатор продукта:', productId);
+                });
+
+                // Обработчик клика по кнопке "Изменить фото" с id="savebuttonimg"
+                $('#savebuttonimg').click(function () {
+                    // Создаем input элемент для выбора файла изображения
+                    var fileInput = $('<input type="file" accept="image/*" style="display: none;">');
+
+                    // Обработчик выбора файла изображения
+                    fileInput.on('change', function (e) {
+                        var file = e.target.files[0];
+
+                        if (file) {
+                            // Проверяем тип файла
+                            if (file.type.startsWith('image/')) {
+                                // Создаем объект FileReader для чтения содержимого файла
+                                var reader = new FileReader();
+
+                                // Обработчик события загрузки файла
+                                reader.onload = function (event) {
+                                    // Получаем содержимое файла в формате Base64
+                                    var base64Image = event.target.result;
+
+                                    // Отправляем данные изображения на сервер
+                                    uploadImage(base64Image, productId);
+                                };
+
+                                // Читаем содержимое файла как Base64
+                                reader.readAsDataURL(file);
+                            } else {
+                                // Если выбран файл не изображение
+                                alert('Выберите изображение');
+                            }
+                        }
+                    });
+
+                    // Кликаем по input для выбора файла
+                    fileInput.click();
+                });
+
+                // Функция для отправки данных изображения на сервер
+                function uploadImage(base64Image, productId) {
+                    // AJAX запрос на сервер для вызова метода контроллера UploadImage
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/UploadImage", // URL вашего метода контроллера
+                        data: {
+                            imageData: base64Image,
+                            productId: productId
+                        },
+                        success: function (response) {
+                            // Обработка успешного ответа от сервера
+                            console.log('Изображение успешно сохранено на сервере:', response);
+                            alert('Изображение успешно сохранено на сервере');
+                        },
+                        error: function (xhr, status, error) {
+                            // Обработка ошибки при отправке данных на сервер
+                            console.error('Ошибка при сохранении изображения на сервер:', error);
+                            alert('Ошибка при сохранении изображения на сервер');
+                        }
+                    });
+                }
+            });
+        </script>
 
         <script>
             $(document).ready(function () {
@@ -2217,50 +2583,50 @@
 
         <script>
 
-            
-                $(document).ready(function () {
-                    $('#NewProduct').click(function () {
-                        // Выполняем AJAX-запрос для получения списка поставщиков
-                        $.ajax({
-                            url: '/Home/GetProviders', // Укажите свой URL для метода получения списка поставщиков
-                            type: 'GET',
-                            success: function (providers) {
-                                // Очищаем и заполняем выпадающий список поставщиков
-                                var selectProvider = $('#selectProvider2');
-                                selectProvider.empty();
 
-                                // Добавляем каждого поставщика в выпадающий список
-                                providers.forEach(function (provider) {
-                                    selectProvider.append('<option value="' + provider.id + '">' + provider.name + '</option>');
-                                });
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                console.log('Ошибка при получении списка поставщиков:');
-                                console.log(textStatus, errorThrown);
-                            }
-                        });
+            $(document).ready(function () {
+                $('#NewProduct').click(function () {
+                    // Выполняем AJAX-запрос для получения списка поставщиков
+                    $.ajax({
+                        url: '/Home/GetProviders', // Укажите свой URL для метода получения списка поставщиков
+                        type: 'GET',
+                        success: function (providers) {
+                            // Очищаем и заполняем выпадающий список поставщиков
+                            var selectProvider = $('#selectProvider2');
+                            selectProvider.empty();
 
-                        // Выполняем AJAX-запрос для получения списка упаковок
-                        $.ajax({
-                            url: '/Home/GetPackages', // Укажите свой URL для метода получения списка упаковок
-                            type: 'GET',
-                            success: function (packages) {
-                                // Очищаем и заполняем выпадающий список упаковок
-                                var selectPackage = $('#selectPackage2');
-                                selectPackage.empty();
+                            // Добавляем каждого поставщика в выпадающий список
+                            providers.forEach(function (provider) {
+                                selectProvider.append('<option value="' + provider.id + '">' + provider.name + '</option>');
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('Ошибка при получении списка поставщиков:');
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
 
-                                // Добавляем каждую упаковку в выпадающий список
-                                packages.forEach(function (pkg) {
-                                    selectPackage.append('<option value="' + pkg.id + '">' + pkg.name + '</option>');
-                                });
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                console.log('Ошибка при получении списка упаковок:');
-                                console.log(textStatus, errorThrown);
-                            }
-                        });
+                    // Выполняем AJAX-запрос для получения списка упаковок
+                    $.ajax({
+                        url: '/Home/GetPackages', // Укажите свой URL для метода получения списка упаковок
+                        type: 'GET',
+                        success: function (packages) {
+                            // Очищаем и заполняем выпадающий список упаковок
+                            var selectPackage = $('#selectPackage2');
+                            selectPackage.empty();
+
+                            // Добавляем каждую упаковку в выпадающий список
+                            packages.forEach(function (pkg) {
+                                selectPackage.append('<option value="' + pkg.id + '">' + pkg.name + '</option>');
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('Ошибка при получении списка упаковок:');
+                            console.log(textStatus, errorThrown);
+                        }
                     });
                 });
+            });
         </script>
 
         <script>
@@ -2315,81 +2681,7 @@
             }
         </script>
         <script>
-            $(document).ready(function () {
-                // Обработчик события клика для кнопки сохранения данных
-                $('#savebuttonproduct2').click(function () {
-                    // Получение выбранных значений из селектов
-                    var selectedProviderId = $('#selectProvider2').val();
-                    var selectedPackageId = $('#selectPackage2').val();
-
-                    // Сбор данных из полей формы
-                    var storageConditions = $('#productStorageConditions2').val();
-                    var storageLife = $('#productStorageLife2').val();
-                    var energyValue = $('#productEnergyValue2').val();
-                    var carb = $('#productCarb2').val();
-                    var fatty = $('#productFatty2').val();
-                    var protein = $('#productProtein2').val();
-                    var fat = $('#productfat2').val();
-                    var massPerFat = $('#productMassPerFat2').val();
-                    var article = $('#productArticle2').val();
-                    var sostav = $('#productSostav2').val();
-                    var sale = $('#productsale2').val();
-                    var remain = $('#productRemain2').val();
-                    var description = $('#description2').val();
-                    var price = $('#productPrice2').val();
-                    var productName = $('#productNameLabel2').val();
-                    var img = $('#hiddenImage').text();
-
-                    // Проверка на заполнение всех полей
-                    if (storageConditions === '' || storageLife === '' || energyValue === '' || carb === '' ||
-                        fatty === '' || protein === '' || fat === '' || massPerFat === '' || article === '' ||
-                        sostav === '' || sale === '' || remain === '' || description === '' || price === '' || productName === '') {
-                        alert('Пожалуйста, заполните все поля');
-                        return;
-                    }
-
-                    // Формирование объекта с данными для отправки на сервер
-                    var updatedProductData = {
-                        storageConditions: storageConditions,
-                        storageLife: storageLife,
-                        energyValue: energyValue,
-                        carb: carb,
-                        fatty: fatty,
-                        protein: protein,
-                        fat: fat,
-                        massPerFat: massPerFat,
-                        article: article,
-                        sostav: sostav,
-                        sale: sale,
-                        remain: remain,
-                        description: description,
-                        price: price,
-                        productName: productName,
-                        providerId: selectedProviderId,
-                        packageId: selectedPackageId,
-                        img: img
-                    };
-
-                    // Вывод данных в лог перед отправкой на сервер
-                    console.log('Данные перед отправкой:', updatedProductData);
-
-                    // Отправка AJAX запроса на сервер для добавления нового продукта
-                    $.ajax({
-                        type: "POST",
-                        url: "/Home/AddProduct",
-                        data: updatedProductData,
-                        success: function (response) {
-                            alert('Продукт успешно добавлен');
-                            location.reload(); // Перезагрузка страницы после успешного добавления продукта
-                        },
-                        error: function (xhr, status, error) {
-                            console.log('Ошибка при добавлении продукта:', error);
-                            // Обработка ошибки при добавлении продукта
-                        }
-                    });
-                });
-            });
+           
 
         </script>
 </body>
-

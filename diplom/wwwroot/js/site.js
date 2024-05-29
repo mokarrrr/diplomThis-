@@ -140,7 +140,7 @@ returnToLoginButton.onclick = function (event) {
 for (var i = 0; i < closeButtons.length; i++) {
     closeButtons[i].onclick = function () {
         modal.style.display = "none";
-        setVisitedCookie();
+        /*setVisitedCookie();*/
     }
 }
 
@@ -418,37 +418,7 @@ $(document).ready(function () {
 
 /*    @* табы * @*/
 
-document.addEventListener('DOMContentLoaded', function () {
-    const tabs = document.querySelectorAll('#myTabs .tab');
-    const tabContents = document.querySelectorAll('#myTabsContent .tab-content');
 
-    tabs.forEach(function (tab, index) {
-        tab.addEventListener('click', function () {
-            tabs.forEach(function (t) {
-                t.classList.remove('active');
-            });
-
-            tabContents.forEach(function (content) {
-                content.classList.remove('active');
-            });
-
-            this.classList.add('active');
-            tabContents[index].classList.add('active');
-
-            // Добавленный код для скрытия tab-reviews-content
-            if (tabContents[index].id === 'tab-info-content') {
-                document.getElementById('tab-reviews-content').style.display = 'none';
-                document.getElementById('myTabs').style.marginTop = '10px';
-            } else {
-                document.getElementById('tab-reviews-content').style.display = 'flex';
-                document.getElementById('myTabs').style.marginTop = '-185px';
-            }
-        });
-    });
-
-    // Активировать первую вкладку
-    tabs[0].click();
-});
  
 
 
@@ -896,6 +866,13 @@ $(document).ready(function () {
     $('#registerButton').click(function () {
         console.log('Кнопка регистрации нажата');
 
+        $('#Email').css('border-color', '');
+        $('#passwordregister').css('border-color', '');
+        $('#passwordregistersecond').css('border-color', '');
+        $('#phoneRegister').css('border-color', '');
+        $('#lastName').css('border-color', '');
+        $('#Name').css('border-color', '');
+
         var email = $('#Email').val();
         var name = $('#Name').val();
         var lastName = $('#lastName').val();
@@ -908,12 +885,12 @@ $(document).ready(function () {
         var consentChecked = checkbox.is(':checked');
 
         // Проверка длины номера телефона
-        if (phoneLogin.length !== 10) {
-            $('#phoneErrorMessage').text('Номер телефона должен содержать ровно 10 цифр').show();
-            return; // Прекращаем выполнение функции, если длина номера телефона неверна
-        } else {
-            $('#phoneErrorMessage').hide(); // Если длина номера телефона правильная, скрываем сообщение об ошибке
-        }
+        //if (phoneLogin.length !== 10) {
+        //    $('#phoneErrorMessage').text('Номер телефона должен содержать ровно 10 цифр').show();
+        //    return; // Прекращаем выполнение функции, если длина номера телефона неверна
+        //} else {
+        //    $('#phoneErrorMessage').hide(); // Если длина номера телефона правильная, скрываем сообщение об ошибке
+        //}
 
         // Удаление всех символов форматирования из номера телефона
         phoneLogin = phoneLogin.replace(/\s+/g, '').replace(/[()+-]/g, '').replace(/^7/, '');
@@ -971,29 +948,45 @@ $(document).ready(function () {
                     });
                 } else {
                     // Регистрация не успешна
-                    if (data.message === "Не все поля заполнены") {
-                        $('#errorMessage2').show();
-                    } else if (data.message === "Пароли не совпадают") {
-                        $('#errorMessage3').show();
+                    if (data.message === "Не все поля заполнены") {                        
+                        showNotification('Не все поля заполнены', 'warning');
+                        $('#Email').css('border-color', 'red');
+                        $('#passwordregister').css('border-color', 'red');
+                        $('#passwordregistersecond').css('border-color', 'red');
+                        $('#phoneRegister').css('border-color', 'red');
+                        $('#lastName').css('border-color', 'red');
+                        $('#Name').css('border-color', 'red');
+                    } else if (data.message === "Пароли не совпадают") {                        
+                        showNotification('Пароли не совпадают', 'warning');
+                        $('#passwordregister').css('border-color', 'red');
+                        $('#passwordregistersecond').css('border-color', 'red');
                     } else if (data.message === "Номер телефона должен содержать ровно 10 символов") {
-                        $('#phoneErrorMessage').show();
+                        showNotification('Номер телефона должен содержать ровно 10 символов', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
                     } else if (data.message === "Неверный формат адреса электронной почты") {
-                        $('#mailErrorMessage').show();
+                        showNotification('Неверный формат адреса электронной почты', 'warning');
+                        $('#Email').css('border-color', 'red');
+                    } else if (data.message === "Пользователь с таким номером телефона и адресом электронной почты уже существует") {
+                        showNotification('Пользователь с таким номером телефона и адресом электронной почты уже существует', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
+                        $('#Email').css('border-color', 'red');
                     } else if (data.message === "Номер телефона содержит четыре подряд нуля") {
-                        $('#phoneErrorMessage').show();
+                        showNotification('Номер телефона содержит четыре подряд нуля', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
                     } else if (data.message === "Номер телефона не может состоять только из нулей") {
-                        $('#phoneErrorMessage').show();
+                        showNotification('Номер телефона не может состоять только из нулей', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
                     } else if (data.message === "Необходимо согласиться с условиями") {
                         if (!consentChecked) {
+                            showNotification2('Необходимо согласиться с условиями');
                             $('#consentLink').css('color', 'red');
                         }
-                    } else if (data.message === "Пользователь с таким номером телефона и адресом электронной почты уже существует") {
-                        $('#phoneExistsErrorMessage').show();
-                        $('#mailExistsErrorMessage').show();
                     } else if (data.message === "Пользователь с таким адресом электронной почты уже зарегистрирован") {
-                        $('#mailExistsErrorMessage').show();
+                        showNotification('Пользователь с таким адресом электронной почты уже зарегистрирован', 'warning');
+                        $('#Email').css('border-color', 'red');
                     } else if (data.message === "Пользователь с таким номером телефона уже зарегистрирован") {
-                        $('#phoneExistsErrorMessage').show();
+                        showNotification('Пользователь с таким номером телефона уже зарегистрирован', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
                     } else {
                         $('#errorDiv').text('Произошла ошибка при регистрации: ' + data.message).show();
                     }
@@ -1001,29 +994,40 @@ $(document).ready(function () {
 
                 // Добавим обработку ошибок с !consentChecked
                 if (!consentChecked) {
-                    if (data.message === "Не все поля заполнены") {
-                        $('#errorMessage2').show();
-                    } else if (data.message === "Пароли не совпадают") {
-                        $('#errorMessage3').show();
+                    if (data.message === "Не все поля заполнены") {                        
+                        showNotification('Не все поля заполнены', 'warning');
+                        $('#Email').css('border-color', 'red');
+                        $('#passwordregister').css('border-color', 'red');
+                        $('#passwordregistersecond').css('border-color', 'red');
+                        $('#phoneRegister').css('border-color', 'red');
+                        $('#lastName').css('border-color', 'red');
+                        $('#Name').css('border-color', 'red');
+                    } else if (data.message === "Пароли не совпадают") {                        
+                        showNotification('Пароли не совпадают', 'warning');
+                        $('#passwordregister').css('border-color', 'red');
+                        $('#passwordregistersecond').css('border-color', 'red');
                     } else if (data.message === "Номер телефона должен содержать ровно 10 символов") {
-                        $('#phoneErrorMessage').show();
+                        showNotification('Номер телефона должен содержать ровно 10 символов', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
                     } else if (data.message === "Неверный формат адреса электронной почты") {
-                        $('#mailErrorMessage').show();
-                    } else if (data.message === "Номер телефона содержит четыре подряд нуля") {
-                        $('#phoneErrorMessage').show();
-                    } else if (data.message === "Номер телефона не может состоять только из нулей") {
-                        $('#phoneErrorMessage').show();
-                    } else if (data.message === "Необходимо согласиться с условиями") {
-                        if (!consentChecked) {
-                            $('#consentLink').css('color', 'red');
-                        }
+                        showNotification('Неверный формат адреса электронной почты', 'warning');
+                        $('#Email').css('border-color', 'red');
                     } else if (data.message === "Пользователь с таким номером телефона и адресом электронной почты уже существует") {
-                        $('#phoneExistsErrorMessage').show();
-                        $('#mailExistsErrorMessage').show();
-                    } else if (data.message === "Пользователь с таким адресом электронной почты уже зарегистрирован") {
-                        $('#mailExistsErrorMessage').show();
+                        showNotification('Пользователь с таким номером телефона и адресом электронной почты уже существует', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
+                        $('#Email').css('border-color', 'red');
+                    } else if (data.message === "Номер телефона содержит четыре подряд нуля") {
+                        showNotification('Номер телефона содержит четыре подряд нуля', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
+                    } else if (data.message === "Номер телефона не может состоять только из нулей") {
+                        showNotification('Номер телефона не может состоять только из нулей', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
+                    }  else if (data.message === "Пользователь с таким адресом электронной почты уже зарегистрирован") {
+                        showNotification('Пользователь с таким адресом электронной почты уже зарегистрирован', 'warning');
+                        $('#Email').css('border-color', 'red');
                     } else if (data.message === "Пользователь с таким номером телефона уже зарегистрирован") {
-                        $('#phoneExistsErrorMessage').show();
+                        showNotification('Пользователь с таким номером телефона уже зарегистрирован', 'warning');
+                        $('#phoneRegister').css('border-color', 'red');
                     } else {
                         $('#errorDiv').text('Произошла ошибка при регистрации: ' + data.message).show();
                     }
@@ -2022,7 +2026,23 @@ function AddCardListeners() {
             checkUserLike(productId, button);
         });
     });
-    function showNotification(message, type) {
+    function showNotification2(message, type) {
+        Swal.fire({
+            position: 'bottom-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 5000, // Закрыть уведомление через 5 секунд
+            toast: true,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                // Убрать закрытие при наведении мыши
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+    }
+    function showNotification2(message, type) {
         Swal.fire({
             position: 'bottom-end',
             icon: type,

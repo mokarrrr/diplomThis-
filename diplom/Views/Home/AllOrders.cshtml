@@ -144,7 +144,7 @@
             });
         });
     </script>
-    @* <script>
+     <script>
         $(document).ready(function () {
             $('#filter').on('change', function () {
                 var selectedFilter = $(this).val();
@@ -159,6 +159,7 @@
 
                         // Сортируем по возрастанию разницы во времени с текущей датой (чем дальше от сегодня, тем больше)
                         return Math.abs(dateA.diff(today)) - Math.abs(dateB.diff(today));
+
                     });
                 } else if (selectedFilter === 'by_old') {
                     // Сначала Старые (самая давняя дата от сегодня)
@@ -179,10 +180,43 @@
                 $orderCards.each(function () {
                     $(this).appendTo('#list');
                 });
+                $(".cancelOrderBtn").click(function () {
+                    // Получаем идентификатор заказа из атрибута data-order-id данной кнопки
+                    var orderId = $(this).data("order-id");
+                    var btn = $(this); // Сохраняем ссылку на кнопку
+
+                    // Отключаем кнопку временно, чтобы избежать множественных запросов
+                    btn.prop('disabled', true);
+
+                    // Отправляем AJAX запрос на отмену заказа
+                    $.ajax({
+                        url: '/Home/CancelOrder/' + orderId, // Путь к методу отмены заказа с передачей orderId
+                        type: "POST", // Метод POST для отправки данных
+                        success: function (response) {
+                            console.log("Заказ успешно отменен:", response);
+                            // Дополнительные действия при успешной отмене заказа
+                            // Например, обновление интерфейса или перенаправление на другую страницу
+
+                            // Восстанавливаем состояние кнопки после выполнения запроса
+                            btn.prop('disabled', false);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Ошибка при отмене заказа:", error);
+                            // Обработка ошибки отмены заказа
+
+                            // Восстанавливаем состояние кнопки в случае ошибки
+                            btn.prop('disabled', false);
+                        }
+                    });
+                });
+
+
             });
 
             // Инициализация сортировки при загрузке страницы (по умолчанию сначала новые)
             $('#filter').trigger('change');
+
+
         });
-    </script> *@
+    </script> 
     </body>

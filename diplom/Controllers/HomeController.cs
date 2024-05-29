@@ -42,7 +42,7 @@ namespace diplom.Controllers
             _logger = logger;
         }
 
-       
+
         public IActionResult AboutUsPage()
         {
             return View();
@@ -126,11 +126,11 @@ namespace diplom.Controllers
         public IActionResult UserOrders()
         {
             long userIdCookie = Int64.Parse(Request.Cookies["UserId"]);
-            var _Orders = db._orders.Where(o => o._user_id == userIdCookie).Include(o => o.Products).Include(o=>o.Status).ToList();
+            var _Orders = db._orders.Where(o => o._user_id == userIdCookie).Include(o => o.Products).Include(o => o.Status).ToList();
             return View(_Orders);
         }
         public IActionResult AllOrders(string searchQuery)
-        {            
+        {
 
             IQueryable<_order> usersQuery = db._orders.Include(o => o.Products).Include(o => o.Status).Include(o => o.User).AsQueryable();
 
@@ -164,26 +164,26 @@ namespace diplom.Controllers
         }
 
         [HttpPost]
-public async Task<IActionResult> UpdateUser(int userId, string userName, string surname, string email, string phoneNumber)
-{
-    var user = await db.User.FirstOrDefaultAsync(u => u.IdUser == userId);
+        public async Task<IActionResult> UpdateUser(int userId, string userName, string surname, string email, string phoneNumber)
+        {
+            var user = await db.User.FirstOrDefaultAsync(u => u.IdUser == userId);
 
-    if (user == null)
-    {
-        return NotFound(); // Если пользователь не найден, возвращаем ошибку 404
-    }
+            if (user == null)
+            {
+                return NotFound(); // Если пользователь не найден, возвращаем ошибку 404
+            }
 
-    // Обновляем данные пользователя
-    user.User_name = userName;
-    user.Surname = surname;
-    user.Email = email;
-    user.PhoneNumber = phoneNumber;
+            // Обновляем данные пользователя
+            user.User_name = userName;
+            user.Surname = surname;
+            user.Email = email;
+            user.PhoneNumber = phoneNumber;
 
-    db.Update(user);
-    await db.SaveChangesAsync();
+            db.Update(user);
+            await db.SaveChangesAsync();
 
-    return Ok(); // Возвращаем успешный результат
-}
+            return Ok(); // Возвращаем успешный результат
+        }
         [HttpPost]
         public IActionResult DeleteUser(int userId)
         {
@@ -304,7 +304,7 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
             {
                 hasResults = productsQuery.Any();
             }
-            
+
             // Фильтруем продукты по каждой категории, если соответствующий categoryId не равен null
             FilterProductsByCategory(ref productsQuery, categoryId);
             FilterProductsByCategory(ref productsQuery, secondCategoryId);
@@ -326,7 +326,7 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
                 ProviderNames = providerNames,
                 SelectedProductId = selectedProductId ?? 0,
                 ProductAverageRates = productAverageRates,
-                
+
             };
 
             return View(viewModel);
@@ -368,9 +368,10 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
 
                 productsQuery = productsQuery
                     .Where(p => productIdsInCategory.Contains(p.IdProduct));
-               
+
             }
         }
+
 
         //private IQueryable<Product> ApplyFilters(IQueryable<Product> productsQuery, string searchQuery, int? categoryId)
         //{
@@ -430,6 +431,40 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
             }
 
             return ratingCounts;
+        }
+        [HttpGet]
+        public IActionResult GetProductCategory(int idProduct)
+        {
+            var catalogProduct = db.catalog_Product.FirstOrDefault(cp => cp.id_product_catalog == idProduct);
+            if (catalogProduct == null)
+            {
+                return NotFound();
+            }
+            return Json(catalogProduct);
+        }
+        [HttpPost]
+        [ActionName("UpdateProductCategory")]
+        public IActionResult UpdateProductCategory(int productId, int categoryId)
+        {
+            try
+            {
+                // Найдите продукт по его идентификатору
+                var product = db.catalog_Product.FirstOrDefault(p => p.id_product_catalog == productId);
+
+                if (product == null)
+                {
+                    return NotFound(); // Если продукт не найден, вернуть ошибку 404
+                }
+
+                // Выполните сырой SQL-запрос для принудительного изменения значения внешнего ключа
+                db.Database.ExecuteSqlRaw("UPDATE catalog_Product SET Id_catalog = {0} WHERE id_product_catalog = {1}", categoryId, productId);
+
+                return Ok(); // Вернуть успешный статус 200 OK
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Произошла ошибка при обновлении категории продукта: {ex.Message}");
+            }
         }
 
         [HttpGet]
@@ -1065,10 +1100,7 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
             }
 
             // Проверка пароля и его подтверждения
-            if (passwordregister != passwordregistersecond)
-            {
-                return Json(new { success = false, message = "Пароли не совпадают" });
-            }
+            
 
             try
             {
@@ -1087,6 +1119,10 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
                 return Json(new { success = false, message = "Номер телефона содержит четыре подряд нуля" });
             }
 
+            if (passwordregister != passwordregistersecond)
+            {
+                return Json(new { success = false, message = "Пароли не совпадают" });
+            }
             // Проверка, что номер телефона не состоит из всех нулей
             if (phoneRegister.All(c => c == '0'))
             {
@@ -1651,6 +1687,8 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
             return Json(new { success = true });
         }
 
+
+
         [HttpPost]
         public IActionResult DeleteSup(int userId)
         {
@@ -1710,7 +1748,7 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
         }
 
         [HttpPost]
-        public IActionResult AddProduct(string img, int packageId,int providerId, string storageConditions, int storageLife, int energyValue, int carb, int fatty, int protein, int fat, string massPerFat, string article, string sostav, int sale, int remain, string description, int price, string productName)
+        public IActionResult AddProduct(string img, int packageId, int providerId, string storageConditions, int storageLife, int energyValue, int carb, int fatty, int protein, int fat, string massPerFat, string article, string sostav, int sale, int remain, string description, int price, string productName, int categoryId)
         {
             try
             {
@@ -1735,11 +1773,22 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
                     Name_product = productName,
                     product_package_id = packageId,
                     Provider_id = providerId,
-                    product_img = img,
+                    product_img = img
                 };
 
                 // Добавляем новый продукт в базу данных
                 db.Product.Add(newProduct);
+                db.SaveChanges(); // Сохраняем изменения, чтобы получить ID нового продукта
+
+                // Создаем новую запись в таблице catalog_Product для связи с категорией
+                var catalogProduct = new catalog_product
+                {
+                    id_product_catalog = newProduct.IdProduct, // Предполагается, что ID продукта генерируется после SaveChanges
+                    Id_catalog = categoryId
+                };
+
+                // Добавляем новую запись в таблицу catalog_Product
+                db.catalog_Product.Add(catalogProduct);
                 db.SaveChanges(); // Сохраняем изменения
 
                 // Возвращаем успешный результат
@@ -1751,6 +1800,7 @@ public async Task<IActionResult> UpdateUser(int userId, string userName, string 
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

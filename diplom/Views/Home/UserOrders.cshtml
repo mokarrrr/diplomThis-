@@ -1093,7 +1093,7 @@
     </script>
 
 
-@*     <script>
+     <script>
         $(document).ready(function () {
             $('#filter').on('change', function () {
                 var selectedFilter = $(this).val();
@@ -1128,12 +1128,152 @@
                 $orderCards.each(function () {
                     $(this).appendTo('#list');
                 });
+
+                 $(".cancelOrderBtn").click(function () {
+                // Получаем идентификатор заказа из атрибута data-order-id данной кнопки
+                var orderId = $(this).data("order-id");
+                var btn = $(this); // Сохраняем ссылку на кнопку
+
+                // Отключаем кнопку временно, чтобы избежать множественных запросов
+                btn.prop('disabled', true);
+
+                // Отправляем AJAX запрос на отмену заказа
+                $.ajax({
+                    url: '/Home/CancelOrder/' + orderId, // Путь к методу отмены заказа с передачей orderId
+                    type: "POST", // Метод POST для отправки данных
+                    success: function (response) {
+                        console.log("Заказ успешно отменен:", response);
+                        // Дополнительные действия при успешной отмене заказа
+                        // Например, обновление интерфейса или перенаправление на другую страницу
+                        showNotification('Заказ отменен', 'warning');
+                        // Восстанавливаем состояние кнопки после выполнения запроса
+                        btn.prop('disabled', false);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Ошибка при отмене заказа:", error);
+                        // Обработка ошибки отмены заказа
+
+                        // Восстанавливаем состояние кнопки в случае ошибки
+                        btn.prop('disabled', false);
+                    }
+                });
+            });
+
+                var productId;
+                var bannedWords = [];
+
+                // Функция для загрузки списка матерных слов
+                function loadBannedWords() {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/banned_words.txt', // Путь к файлу с матерными словами
+                        dataType: 'text',
+                        success: function (response) {
+                            bannedWords = response.split('\n').map(word => word.trim().toLowerCase()); // Разбиваем строки на слова и приводим к нижнему регистру
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Ошибка при загрузке матерных слов:', error);
+                        }
+                    });
+                }
+
+                loadBannedWords(); // Загружаем матерные слова при загрузке страницы
+
+                $('.fav-button5').click(function () {
+                    productId = $(this).data('idd');
+                    console.log('ID товара:', productId);
+
+                    // Отправляем AJAX запрос на сервер для проверки наличия комментария
+                    $.ajax({
+                        type: 'GET',
+                        url: '/Home/CheckComment',
+                        data: { productId: productId },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                // Если комментарий уже существует, заполняем поле комментария в модальном окне
+                                $('#commentTextarea').val(response.comment);
+                            } else {
+                                // Если комментарий отсутствует, оставляем поле комментария пустым
+                                $('#commentTextarea').val('');
+                            }
+                            $('#modalсomm').show();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Ошибка при проверке комментария:', error);
+                            // Произошла ошибка при проверке комментария, отображаем модальное окно без изменений
+                            $('#modalсomm').show();
+                        }
+                    });
+                });
+
+                $('.close').click(function () {
+                    $('#modalсomm').hide();
+                });
+
+                $(window).click(function (event) {
+                    if (event.target == $('#modalсomm')[0]) {
+                        $('#modalсomm').hide();
+                    }
+                });
+
+                $('#savebuttoncom').click(function () {
+                    var comment = $('#commentTextarea').val();
+                    console.log('Комментарий:', comment);
+                    var rating = $('input[name="rating"]:checked').val();
+                    console.log('Рейтинг:', rating);
+
+                    // Проверяем, заполнен ли рейтинг
+                    if (rating === undefined || rating == 0) {
+
+                        showNotification('Необходимо поставить оценку', 'error');// Отображаем сообщение об ошибке
+                        return; // Прекращаем выполнение функции
+                    } else {
+                        $('#errorMessage2').hide(); // Скрываем сообщение об ошибке, если рейтинг заполнен
+                    }
+
+                    // Проверяем каждое слово комментария на матерность и заменяем, если необходимо
+                    var words = comment.split(' ');
+                    for (var i = 0; i < words.length; i++) {
+                        var word = words[i].toLowerCase(); // Приводим слово к нижнему регистру для сравнения
+
+                        if (bannedWords.includes(word)) {
+                            words[i] = '*'.repeat(words[i].length);
+                        }
+                    }
+
+                    // Собираем комментарий обратно из измененных слов
+                    var sanitizedComment = words.join(' ');
+
+                    var data = {
+                        productId: productId,
+                        comment: sanitizedComment, // Отправляем замененный комментарий на сервер
+                        rating: rating
+                    };
+                    console.log('Данные для отправки на сервер:', data);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Home/SaveComment',
+                        data: data,
+                        dataType: 'json',
+                        success: function (response) {
+                            console.log('Комментарий и рейтинг успешно сохранены!');
+                            console.log('Ответ сервера:', response);
+                            showNotification('Комментарий успешно сохранен', 'success');
+                            $('#modalсomm').hide();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Ошибка при сохранении комментария и рейтинга:', error);
+                        }
+                    });
+                });
             });
 
             // Инициализация сортировки при загрузке страницы (по умолчанию сначала новые)
             $('#filter').trigger('change');
         });
-    </script> *@
+    </script> 
 
    
 </body>
