@@ -11,7 +11,8 @@
 
 <!-- Подключение скрипта SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@model List<_order>
+@using diplom.Models.ViewModels
+@model ULVM;
 <body style="background-color:#a6a6a6!important">
     <header class="_header" style="background: linear-gradient(to bottom right,#F9D86E,#EDC237);">
         <div class="logo">
@@ -152,16 +153,20 @@
     </div>
 
 
-    <div class="main" style="margin-top: 6%;">
-        <select name="filter" id="filter" style="margin-top:200px!important">
-
-            <option value="by_old">Cначала Старые</option>
-            <option value="by_new">Сначала Новые</option>
-
-        </select>
+    <div class="main" style="margin-top: -2%;">
+       
         <div class="container3" id="container3" style="margin-left: -4%; background-color: #a6a6a6 !important;">
-            <ul id="list" style="background-color: #a6a6a6 !important; width: 100% !important;">
-                @foreach (var order in Model)
+            <form method="get" style="margin-left: 2.4%;margin-top:10%">
+                <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
+            </form>
+            <select name="filter" id="filter" style="margin-top:200px!important;margin-left:0px!important">
+
+                <option value="by_old">Cначала Старые</option>
+                <option value="by_new">Сначала Новые</option>
+
+            </select>
+            <ul id="list" style="background-color: #a6a6a6 !important; width: 100% !important;margin-top:-2%">
+                @foreach (var order in Model._orders)
                 {
                     <!-- Карточка заказа -->
                     <ul class="order-card" style="border: 2px solid black; background-color: white !important; width: 97%; margin-bottom: 1%;">
@@ -200,12 +205,13 @@
                                                     <i class="fa fa-clock-o"></i> Энергетическая ценность: @product.product_fatty кДж.
                                                 </li>
                                             </ul>
-                                            @if (order.status_id != 6)
+                                            @if (order.status_id != 6 && order.status_id != 1)
                                             {
                                                 <button class="fav-button5" title="Оставить отзыв" data-idd="@product.IdProduct">
                                                     <i class="fa-regular fa-star"></i>
                                                 </button>
                                             }
+
                                         </div>
                                     </div>
                                 </div>
@@ -222,6 +228,47 @@
                 }
             </ul>
         </div>
+        @if (Model.HasOrders)
+        {
+            <div class="pagination" style="margin-top: 20px;">
+                @if (Model.OrderPageNumber > 1)
+                {
+                    <a class="prev page-numbers" href="@Url.Action("UserOrders", new { pageNumber = Model.OrderPageNumber - 1, pageSize = Model.OrderPageSize })">« Предыдущая</a>
+                }
+
+                <!-- Отображаем первую страницу -->
+                <a class="page-numbers @(1 == Model.OrderPageNumber ? "current" : "")" href="@Url.Action("UserOrders", new { pageNumber = 1, pageSize = Model.OrderPageSize })">1</a>
+
+                <!-- Отображаем многоточия слева, если текущая страница не близко к началу -->
+                @if (Model.OrderPageNumber > 4)
+                {
+                    <span class="page-numbers">...</span>
+                }
+
+                <!-- Отображаем страницы вокруг текущей страницы -->
+                @for (int i = Math.Max(2, Model.OrderPageNumber - 2); i <= Math.Min(Model.OrderPageNumber + 2, Model.OrderTotalPages - 1); i++)
+                {
+                    <a class="page-numbers @(i == Model.OrderPageNumber ? "current" : "")" href="@Url.Action("UserOrders", new { pageNumber = i, pageSize = Model.OrderPageSize })">@i</a>
+                }
+
+                <!-- Отображаем многоточия справа, если текущая страница не близко к концу -->
+                @if (Model.OrderPageNumber < Model.OrderTotalPages - 3)
+                {
+                    <span class="page-numbers">...</span>
+                }
+
+                <!-- Отображаем последнюю страницу -->
+                @if (Model.OrderTotalPages > 1)
+                {
+                    <a class="page-numbers @(Model.OrderTotalPages == Model.OrderPageNumber ? "current" : "")" href="@Url.Action("UserOrders", new { pageNumber = Model.OrderTotalPages, pageSize = Model.OrderPageSize })">@Model.OrderTotalPages</a>
+                }
+
+                @if (Model.OrderPageNumber < Model.OrderTotalPages)
+                {
+                    <a class="next page-numbers" href="@Url.Action("UserOrders", new { pageNumber = Model.OrderPageNumber + 1, pageSize = Model.OrderPageSize })">Следующая »</a>
+                }
+            </div>
+        }
     </div>
 
 
@@ -374,7 +421,7 @@
     </div>
 
     <div class="container4" style="position:relative;z-index:0">
-        <footer class="footer">
+        <footer class="footer" style="">
             <div class="footer-left col-md-4 col-sm-6">
                 <p class="about">
                     <span> О нашей компании</span> "Dairy Delights Emporium - это гурманский рай для любителей сыра. С особой страстью к мастерству и качеству, мы предлагаем эксклюзивный ассортимент сыров, от классических французских бри и камамберов до редких и экзотических вариаций со всего мира. Наша миссия — дарить неповторимый вкус и наслаждение каждому клиенту, подбирая идеальные сыры для их стола, будь то повседневный ужин или особый праздничный приём. В Cheese Delight вы найдете сыр, который удовлетворит ваш гурманский вкус и превратит каждое блюдо в произведение искусства."
@@ -1273,7 +1320,14 @@
             // Инициализация сортировки при загрузке страницы (по умолчанию сначала новые)
             $('#filter').trigger('change');
         });
-    </script> 
-
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.page-numbers').on('click', function () {
+                $('.page-numbers').removeClass('current');
+                $(this).addClass('current');
+            });
+        });
+    </script>
    
 </body>

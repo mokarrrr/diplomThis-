@@ -25,5 +25,8 @@ namespace diplom.Models.ViewModels
         public List<_Provider> providers { get; set; }
 
         public List<Package> packages { get; set; }
+
+        public int PageNumber { get; set; }
+        public int TotalPages { get; set; }
     }
 }

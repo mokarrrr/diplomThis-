@@ -251,11 +251,11 @@ $(document).ready(function () {
                     commentHTML += '<div style="display: flex; align-items: flex-start; padding: 20px;">'; // Изменено здесь
                     commentHTML += '<div class="user-initials" style="width: 50px; height: 50px; background-color: gray; border-radius: 50%; text-align: center; line-height: 31px; color: white; font-weight: bold; margin-right: 10px;padding:10px;line-width:20px">' + initials + '</div>';
                     commentHTML += '<div style="flex-grow: 1;">';
-                    commentHTML += '<p style="margin-top: -0.2%; margin-bottom: 0;font-size:20px">' + comment["user"]["user_name"] + " " + comment["user"]["surname"] + '</p>';
+                    commentHTML += '<p style="margin-top: -0.2%; margin-bottom: 0;text-align:left;font-size:20px">' + comment["user"]["user_name"] + " " + comment["user"]["surname"] + '</p>';
 
                     commentHTML += '<div style="display: flex; flex-direction: row;">'; // Обертка для комментария и звезд
                     if (comment["rate_comment"] !== null) {
-                        commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:850px">' + comment["rate_comment"] + '</p>';
+                        commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:850px;text-align:left">' + comment["rate_comment"] + '</p>';
                     }
                     commentHTML += '<p style="margin-top: -16px; margin-bottom: 0; font-size: 30px; margin-left: auto;color:#FFD700">' + starsHTML + '</p>';
                     commentHTML += '</div>';
@@ -1523,11 +1523,11 @@ function AddCardListeners() {
                     commentHTML += '<div style="display: flex; align-items: flex-start; padding: 20px;">';
                     commentHTML += '<div class="user-initials" style="width: 50px; height: 50px; background-color: gray; border-radius: 50%; text-align: center; line-height: 31px; color: white; font-weight: bold; margin-right: 10px;padding:10px;line-width:20px">' + initials + '</div>';
                     commentHTML += '<div style="flex-grow: 1;">';
-                    commentHTML += '<p style="margin-top: -0.2%; margin-bottom: 0;font-size:20px">' + comment["user"]["user_name"] + " " + comment["user"]["surname"] + '</p>';
+                    commentHTML += '<p style="margin-top: -0.2%; margin-bottom: 0;text-align:left;font-size:20px">' + comment["user"]["user_name"] + " " + comment["user"]["surname"] + '</p>';
 
                     commentHTML += '<div style="display: flex; flex-direction: row;">';
                     if (comment["rate_comment"] !== null) {
-                        commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:850px">' + comment["rate_comment"] + '</p>';
+                        commentHTML += '<p style="margin-top: 5px; margin-bottom: 0;text-align:left; font-size: 20px;width:850px">' + comment["rate_comment"] + '</p>';
                     }
                     commentHTML += '<p style="margin-top: -16px; margin-bottom: 0; font-size: 30px; margin-left: auto;color:#FFD700">' + starsHTML + '</p>';
                     commentHTML += '</div>';

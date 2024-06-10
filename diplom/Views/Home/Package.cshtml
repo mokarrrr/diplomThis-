@@ -2,40 +2,42 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model List<Package>
+<link rel="stylesheet" href="~/css/Pack.css" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
-    <div>
+    <div class="search-container">
         <form method="get">
             <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
         </form>
     </div>
-    <button id="Supnew" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
-        <center style="">
-            <p style="margin-top:4px">Добавить упаковку</p>
-        </center>
+    <center>
+    <button id="Supnew" type="button" class="button">
+        <p>Добавить упаковку</p>
     </button>
-    <div id="modal" class="modal" style="overflow-y:hidden;display:none">
-        <!-- Модальный контент -->
-        <div class="modal-content" style="z-index:1">
-            <div style="display:flex">
+    </center>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div style="width: 100%;">
                 <p>Наименование упаковки</p>
-                <textarea id="PackName" style="margin-top:50px" class="form-control"></textarea>
-            </div>          
-            <button id="Supnew2" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
-                <center style="">
-                    <p style="margin-top:4px">Добавить</p>
-                </center>
+                <textarea id="PackName" class="form-control" rows="6"></textarea>
+            </div>
+            <button id="Supnew2" type="button" class="button">
+                <p>Добавить</p>
             </button>
         </div>
     </div>
-    <div>
+    <div class="packages-container">
         @foreach (var package in Model)
         {
-            <p>@package.Package_name</p>
-            <button class="delete-user-btn" data-user-id="@package.Package_id">Удалить пользователя</button>
+            <div class="package-item">
+                <p>@package.Package_name</p>
+                <button class="delete-user-btn" data-user-id="@package.Package_id">Удалить</button>
+            </div>
         }
     </div>
-
+    <button onclick="window.location.href='AdminPage'" class="back-button">
+        На главную
+    </button>
 
     <script>
         // Находим элементы кнопки и модального окна
@@ -117,7 +119,7 @@
                         if (result.success) {
                             // Успешное удаление пользователя
                             console.log(result.message); // Лог для отладки
-                            alert("Пользователь удален.") // Отобразить сообщение об успешном удалении
+                            alert("Упаковка удаленa.") // Отобразить сообщение об успешном удалении
                         } else {
                             // Не удалось удалить пользователя из-за активных заказов
                             console.log(result.message); // Лог для отладки

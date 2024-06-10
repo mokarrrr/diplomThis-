@@ -5,7 +5,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-@model List<_order>
+@using diplom.Models.ViewModels
+@model ULVM;
 <body style="background-color:#a6a6a6!important;margin-top:10%">
     <header class="_header" style="background: linear-gradient(to bottom right,#F9D86E,#EDC237);">
         <div class="logo">
@@ -19,34 +20,48 @@
         </div>
     </header>
 
-    <div class="main" style="">
-        <select name="filter" id="filter" style="margin-top:200px!important">
-            <option value="by_old">Cначала Старые</option>
-            <option value="by_new">Сначала Новые</option>
-
-        </select>
+    <div class="main" style="margin-top:-5%">
+       
         <div class="container3" id="container3" style="margin-left: -4%; background-color: #a6a6a6 !important;">
             <div style="z-index:1;margin-top:5%">
-            <form method="get" style="">
-                <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
-            </form>
+                <form method="get" style="margin-left: 8.6%;">
+                    <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
+                </form>
             </div>
-            <ul id="list" style="background-color: #a6a6a6 !important; width: 100% !important;">
-                @foreach (var order in Model)
+            <select name="filter" id="filter" style="margin-top:5.5%!important">
+                <option value="by_old">Cначала Старые</option>
+                <option value="by_new">Сначала Новые</option>
+
+            </select>
+            <ul id="list" style="background-color: #a6a6a6 !important; width: 100% !important;margin-top:-3%">
+                @foreach (var order in Model._orders)
                 {
-                    <ul class="order-card" style="border: 2px solid black; background-color: white !important; width: 97%; margin-bottom: 1%;">
+                    <ul class="order-card" style="border: 2px solid black; background-color: white !important; width: 100%; margin-bottom: 1%;margin-left:-1%">
                         <div style="display: flex; justify-content: space-between;">
                             <p style="background-color: white; font-size: 20px;">Заказ №@order.Idorder</p>
                             <p id="statusidd" style="display: none;">@order.status_id</p>
-                            <p style="font-size: 20px;">Статус заказа: @order.Status.status_name</p>
+                           <div style="display:flex">
+                            <p style="font-size: 20px;">Статус заказа:</p>
+                            <select name="filter3" class="status-dropdown" style="margin-top:15px!important;margin-left:20px">
+                                @foreach (var status in ViewBag.Statuses as List<SelectListItem>)
+                                {
+                                    <option value="@status.Value">@status.Text</option>
+                                }
+                            </select>
+                            </div>
                             <p id="orderDate" style="font-size: 20px;">Дата: @order.order_date</p>
-                            <p style="display: none;">@order.status_id</p>
+                            <p class="status-id" style="display: none;">@order.status_id</p>
                             <p style="margin-right: 20px; font-size: 20px;">Сумма заказа: @order.OrderSum руб.</p>
                         </div>
-                        <div style="display:flex">
+                        <div style="display:flex;justify-content: space-between">
                             <p style="margin-right: 5%;">Имя пользователя: @order.User.User_name</p>
                             <p style="margin-right: 5%;">Отчество пользователя: @order.User.Surname</p>
                             <p style="margin-right: 5%;">Айди пользователя: @order._user_id</p>
+                            <p style ="margin-right: 5%;">Город назначения: @order.order_city </p>
+                            <p style="margin-right: 5%;">Адрес назначения: @order.order_address </p>
+                        </div>
+                        <div>
+                            <p style="margin-right: 5%;">Комментарий: @order.order_commentary</p>
                         </div>
                         <div style="display: flex; flex-wrap: wrap;">                          
                             @foreach (var product in order.Products)
@@ -109,7 +124,55 @@
                 }
             </ul>
         </div>
+        @if (Model.HasOrders)
+        {
+            <div class="pagination" style="margin-top: 20px;margin-bottom: 20px ;grid-column:2">
+                @if (Model.OrderPageNumber > 1)
+                {
+                    <a class="prev page-numbers" href="@Url.Action("AllOrders", new { searchQuery = ViewBag.SearchQuery, pageNumber = Model.OrderPageNumber - 1 })">« Предыдущая</a>
+                }
+
+                <!-- Отображаем первую страницу -->
+                <a class="page-numbers @(1 == Model.OrderPageNumber ? "current" : "")" href="@Url.Action("AllOrders", new { searchQuery = ViewBag.SearchQuery, pageNumber = 1 })">1</a>
+
+                @if (Model.OrderPageNumber > 4)
+                {
+                    <span class="page-numbers">...</span>
+                }
+
+                <!-- Отображаем страницы вокруг текущей страницы -->
+                @for (int i = Math.Max(2, Model.OrderPageNumber - 2); i <= Math.Min(Model.OrderPageNumber + 2, Model.OrderTotalPages - 1); i++)
+                {
+                    <a class="page-numbers @(i == Model.OrderPageNumber ? "current" : "")" href="@Url.Action("AllOrders", new { searchQuery = ViewBag.SearchQuery, pageNumber = i })">@i</a>
+                }
+
+                @if (Model.OrderPageNumber < Model.OrderTotalPages - 2)
+                {
+                    <span class="page-numbers">...</span>
+                }
+
+                <!-- Отображаем последнюю страницу -->
+                @if (Model.OrderTotalPages > 1)
+                {
+                    <a class="page-numbers @(Model.OrderTotalPages == Model.OrderPageNumber ? "current" : "")" href="@Url.Action("AllOrders", new { searchQuery = ViewBag.SearchQuery, pageNumber = Model.OrderTotalPages })">@Model.OrderTotalPages</a>
+                }
+
+                @if (Model.OrderPageNumber < Model.OrderTotalPages)
+                {
+                    <a class="next page-numbers" href="@Url.Action("AllOrders", new { searchQuery = ViewBag.SearchQuery, pageNumber = Model.OrderPageNumber + 1 })">Следующая »</a>
+                }
+            </div>
+        }
     </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.page-numbers').on('click', function () {
+                $('.page-numbers').removeClass('current');
+                $(this).addClass('current');
+            });
+        });
+    </script>
     <script>
         $(document).ready(function () {
             // Обработчик клика на кнопке "Отменить"
@@ -218,5 +281,63 @@
 
 
         });
-    </script> 
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var dropdowns = document.querySelectorAll('.status-dropdown');
+            dropdowns.forEach(function (dropdown) {
+                var statusId = dropdown.closest('.order-card').querySelector('.status-id').textContent;
+                for (var i = 0; i < dropdown.options.length; i++) {
+                    if (dropdown.options[i].value === statusId) {
+                        dropdown.options[i].selected = true;
+                        break;
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var dropdowns = document.querySelectorAll('.status-dropdown');
+            dropdowns.forEach(function (dropdown) {
+                dropdown.addEventListener('change', function () {
+                    var orderIdText = dropdown.closest('.order-card').querySelector('p').textContent.trim();
+                    var orderId = parseInt(orderIdText.match(/\d+/)[0]);
+                    var newStatusId = this.value;
+
+                    console.log('Order ID:', orderId);
+                    console.log('New Status ID:', newStatusId);
+
+                    fetch('/Home/UpdateOrderStatus', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            orderId: orderId,
+                            newStatusId: newStatusId
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Response:', data);
+                            if (data.success) {
+                                var statusNameElement = dropdown.closest('.order-card').querySelector('.status-name');
+                                if (statusNameElement) {
+                                    statusNameElement.textContent = data.statusName;
+                                } else {
+                                    console.error('Status name element not found');
+                                }
+                            } else {
+                                console.error('Failed to update status:', data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+        });
+    </script>
+
     </body>

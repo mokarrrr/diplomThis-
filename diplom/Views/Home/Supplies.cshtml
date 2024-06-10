@@ -2,47 +2,52 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @model List<_Provider>
+<link rel="stylesheet" href="~/css/Sup.css" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <body>
-    <div>
+    <div class="search-container">
         <form method="get">
             <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
         </form>
-        <button id="Supnew" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
-            <center style="">
-                <p style="margin-top:4px">Добавить поставщика</p>
-            </center>
+        <center>
+        <button id="Supnew" type="button" class="button">
+            <p>Добавить поставщика</p>
         </button>
+        </center>
     </div>
 
-    <div id="modal" class="modal" style="overflow-y:hidden;display:none">
-        <!-- Модальный контент -->
-        <div class="modal-content" style="z-index:1">
-            <div style="display:flex">
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <center>
+            <div class="form-group">
                 <p>Наименование поставщика</p>
-                <textarea id="SupName" style="margin-top:50px" class="form-control"></textarea>
+                <textarea id="SupName" class="form-control"></textarea>
             </div>
-            <div style="display:flex">
+            <div class="form-group">
                 <p>Контактный телефон</p>
-                <textarea id="SupPhone" style="margin-top:50px" class="form-control"></textarea>
+                <textarea id="SupPhone" class="form-control"></textarea>
             </div>
-            <button id="Supnew2" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
-                <center style="">
-                    <p style="margin-top:4px">Добавить</p>
-                </center>
+            <button id="Supnew2" type="button" class="button">
+                <p>Добавить</p>
             </button>
+            </center>
         </div>
     </div>
 
-    <div style="">
+    <div class="packages-container">
         @foreach (var provider in Model)
         {
-            <p>@provider.provider_name</p>
-            <p>@provider.provider_phone</p>
-            <button class="delete-user-btn" data-user-id="@provider.IdProvider">Удалить пользователя</button>
+            <div class="package-item">
+                <p class="provider-name">Наименование:@provider.provider_name</p>
+                <p class="provider-phone">Контактный телефон:@provider.provider_phone</p>
+                <button class="delete-user-btn" data-user-id="@provider.IdProvider">Удалить</button>
+            </div>
         }
     </div>
+    <button onclick="window.location.href='AdminPage'" class="back-button">
+        На главную
+    </button>
     <script>
         // Находим элементы кнопки и модального окна
         var button = document.getElementById('Supnew');

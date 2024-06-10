@@ -3,7 +3,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=53800501-1164-49ee-93c1-09d0e0a305c8" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Подключение скрипта SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -421,11 +422,11 @@
 
     <div id="modalсomm" class="modal" style="overflow-y:hidden">
         <!-- Модальный контент -->
-        <div class="modal-content4" style="height:700px; border: 3px solid black;border-radius: 25px;">
+        <div class="modal-content4" style="height:600px; border: 3px solid black;border-radius: 25px;">
             <div class="modal-header" style="font-family: 'Dancing Script', cursive;font-weight:bold;font-size:20px">
                 <center>
                     <h5 class="modal-title" id="exampleModalLabel" style="margin-top:-5px">
-                        Составление заказа
+                        Оформление заказа
                     </h5>
                 </center>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background-color: transparent;border: none;margin-top:-55px">
@@ -434,12 +435,29 @@
             </div>
             <hr style="color: black;background: black;border: black;height: 1px;">                   
 
-            <center>
-                <input id="cityInput" placeholder="Город назначения" style="display: block; margin-bottom: 10px;height:38px" />
-                <input id="addressInput" placeholder="Ваш адрес" style="display: block; margin-bottom: 10px;height:38px"  />
+            <center style="margin-top:7%">
+                <div class="address-container">
+                    <input id="cityInput" placeholder="Город назначения" style="display: block; margin-bottom: 10px; height: 38px; width: 300px;" />
+                    <input id="addressInput" placeholder="Ваш адрес" style="display: block; margin-bottom: 10px; height: 38px; width: 255px;margin-left: -44px;margin-top:10%" />
+                    <span class="map-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </span>
+                </div>
+
+                <!-- Yandex Maps Modal -->
+                <div id="mapModal">
+                    <div id="mapContainer">
+                        <div class="close-btn" onclick="closeMap()">Закрыть</div>
+                    </div>
+                </div>
+                <select style="margin-top:2%;margin-left:0" name="filter" id="filterselect">
+                    <option value="by_card">Оплата картой</option>
+                    <option value="by_nal">Наличными при получении</option>
+                </select>
                 <div style="display: flex; justify-content: flex-end;margin-right:12.5%">
                     <div id="charCount">0 / 100</div>
                 </div>
+               
                 <textarea id="commentInput" placeholder="Комментарий к заказу" style="background-color:white;width:600px;height:100px;margin-top: 5px; resize: none;font-size:20px" maxlength="100" "></textarea>
                 <p id="suuummorder" style="display: block;">Сумма к оплате:</p>
             </center>
@@ -456,6 +474,41 @@
             </center>
 
 
+        </div>
+    </div>
+    <div id="myModal2" class="modal1" style="overflow-x:hidden">
+        <div class="modal-content1">
+            <span class="close">&times;</span>
+            <h1>Политика Конфиденциальности Интернет-Магазина "Dairy Delights Emporium"</h1>
+            <p>Дата вступления в силу: 13.05.2004</p>
+            <h1>1. Общие положения</h1>
+            <p>Настоящая Политика конфиденциальности (далее – «Политика») действует в отношении всей информации, которую интернет-магазин "Dairy Delights Emporium", расположенный на доменном имени https://localhost:44330/, может получить о Пользователе во время использования сайта, программ и продуктов интернет-магазина.</p>
+            <h1>2. Основные понятия</h1>
+            <ul>
+                <li>"Оператор" – интернет-магазин "Dairy Delights Emporium", осуществляющий обработку персональных данных, а также определяющий цели обработки персональных данных, состав персональных данных, подлежащих обработке, действия или операции, совершаемые с персональными данными.</li>
+                <li>"Персональные данные" – любая информация, относящаяся прямо или косвенно к определенному или определяемому физическому лицу (субъекту персональных данных).</li>
+                <li>"Пользователь" – любой посетитель веб-сайта интернет-магазина "Dairy Delights Emporium".</li>
+            </ul>
+            <h1>3. Принципы и цели обработки персональных данных</h1>
+            <p>1.Обработка персональных данных в "Dairy Delights Emporium" осуществляется на основе принципов:</p>
+            <ul>
+                <li>законности и справедливых оснований;</li>
+                <li>целесообразности обработки;</li>
+                <li>соответствия целей обработки персональных данных.</li>
+            </ul>
+            <p>2.Цели обработки персональных данных:</p>
+            <ul>
+                <li>осуществление деятельности, предусмотренной действующим законодательством Российской Федерации;</li>
+                <li>выполнение обязательств "Dairy Delights Emporium" перед Пользователями относительно предоставления товаров и услуг.</li>
+            </ul>
+            <h1>4. Права субъекта персональных данных</h1>
+            <p>Пользователь имеет право на получение информации касательно обработки его персональных данных. В соответствии с законодательством РФ Пользователь вправе требовать уточнения своих персональных данных, их блокирования или уничтожения в случае, если такие данные являются неполными, устаревшими, неточными, незаконно полученными или не являются необходимыми для заявленной цели обработки.</p>
+            <hi>5. Меры по защите персональных данных</hi>
+            <p>"Dairy Delights Emporium" принимает необходимые и достаточные организационные и технические меры для защиты персональных данных от неправомерного или случайного доступа, уничтожения, изменения, блокирования, копирования, распространения, а также от иных неправомерных действий с ними.</p>
+            <h1>6. Изменения в Политике конфиденциальности</h1>
+            <p>Оператор имеет право вносить изменения в настоящую Политику. Новая редакция Политики вступает в силу с момента ее размещения на Сайте, если иное не предусмотрено новой редакцией Политики.</p>
+            <h1>7. Обратная связь. Вопросы и предложения</h1>
+            <p>Все предложения, вопросы, запросы и иные обращения по поводу настоящей Политики и использования своих персональных данных Пользователи вправе направлять по адресу: DairyDelightsEmporium@mail.ru.</p>
         </div>
     </div>
 
@@ -492,13 +545,31 @@
                     <a href="#"> Каталог</a> |
                     <a href="@Url.Action("AboutUsPage", "Home")" onclick="scrollToElement('mya')"> О нас</a> |
                     <a href="@Url.Action("AboutUsPage", "Home")#contacts"> Контакты</a> |
-                    <a href="#myModal1" id="modalOpen"> Политика конфиденциальности</a>
+                    <a href="#myModal2" id="modalOpen"> Политика конфиденциальности</a>
                 </p>
                 <p class="name"> Dairy Delights Emporium; 2004</p>
             </div>
         </footer>
     </div>
 </div>
+    <script>
+        $(document).ready(function () {
+            $("#modalOpen").click(function (event) {
+                event.preventDefault();
+                $("#myModal2").fadeIn();
+            });
+
+            $(".close").click(function () {
+                $("#myModal2").fadeOut();
+            });
+
+            $(window).click(function (event) {
+                if ($(event.target).is("#myModal2")) {
+                    $("#myModal2").fadeOut();
+                }
+            });
+        });
+    </script>
 
     <script>
         $(document).ready(function () {
@@ -1787,17 +1858,19 @@
                 var numericTotalPrice = parseInt(totalPrice.replace(/[^\d.-]/g, ''));
 
                 // Передаем общую сумму заказа в модальное окно (только числовую часть)
-                $("#suuummorder").text("Сумма к оплате: " + numericTotalPrice+" рублей");
+                $("#suuummorder").text("Сумма к оплате: " + numericTotalPrice + " рублей");
 
-                // Показываем модальное окно    
+                // Показываем модальное окно
                 $("#modalсomm").show();
             });
+
             $('#modalсomm .close').click(function () {
                 $('#modalсomm').hide();
 
                 // Устанавливаем значение "AuthenticationSuccess" в "0" при закрытии окна
                 localStorage.setItem("AuthenticationSuccess", "0");
             });
+
             // Обработчик нажатия на кнопку "Оформить"
             $("#savebuttonorder").click(function () {
                 // Получаем текст общей суммы заказа
@@ -1808,11 +1881,12 @@
                 // Получаем значения города и адреса из инпутов
                 var city = $("#cityInput").val().trim();
                 var address = $("#addressInput").val().trim();
+                var paymentMethod = $("#filterselect").val(); // Получаем значение выбранного способа оплаты
 
                 // Проверяем заполнение города и адреса
                 if (city === '' || address === '') {
                     // Если город или адрес не заполнены, выводим сообщение об ошибке
-                    displayErrorMessage("Пожалуйста, укажите город и адрес для доставки.");
+                    showNotification('Пожалуйста, укажите город и адрес для доставки', 'warning');
                     return; // Прерываем выполнение функции, если поля не заполнены
                 }
 
@@ -1822,6 +1896,7 @@
                     address: address,
                     comment: $("#commentInput").val(),
                     totalPrice: numericTotalPrice,
+                    paymentMethod: paymentMethod, // Добавляем способ оплаты в данные заказа
                     productQuantities: {} // Инициализируем объект для количества товаров
                 };
 
@@ -1852,7 +1927,7 @@
                                 data: { orderId: orderId, productQuantities: orderData.productQuantities },
                                 success: function (addItemResponse) {
                                     console.log("Товары успешно добавлены в заказ:", addItemResponse);
-                                    showNotification('Заказ успешно оформлен,страница обновится через 5 секунд', 'warning');                                   
+                                    showNotification('Заказ успешно оформлен, страница обновится через 5 секунд', 'success');
                                     $("#modalсomm").hide();
                                     setTimeout(function () {
                                         // Обновляем страницу
@@ -1884,9 +1959,11 @@
                     }
                 });
             });
+
             function displayErrorMessage(message) {
                 $("#errorMessageproduct").css("display", "block").text(message);
             }
+
             function updateTotalPrice() {
                 var totalPrice = 0;
 
@@ -1962,8 +2039,9 @@
                     totalQuantity += quantity;
                 });
 
-                // Если в корзине только один товар и его количество равно 0, отключаем кнопку "Заказать"
-                if (totalQuantity === 0 && quantityInputs.length === 1) {
+                // Если в корзине только один товар и его количество равно 0, выводим уведомление и отключаем кнопку "Заказать"
+                if (totalQuantity === 0) {
+                    showNotification('Введите корректное количество товаров', 'error');
                     $("#orderbutton").prop("disabled", true);
                 } else {
                     $("#orderbutton").prop("disabled", false);
@@ -1983,8 +2061,8 @@
 
             updateTotalPrice(); // Вызываем функцию для первоначального расчета общей суммы
         });
-
     </script>
+
 
 
     <script>
@@ -2099,9 +2177,94 @@
 
     </script>
 
+    <script>
+        let myMap;
 
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('.map-icon').addEventListener('click', function () {
+                openMap();
+            });
+        });
 
+        function openMap() {
+            var city = document.getElementById('cityInput').value.trim();
+            if (city === '') {
+                
+                showNotification('Пожалуйста, введите город', 'warning ');
+                return;
+            }
 
+            // Инициализация карты Яндекс.Карт
+            ymaps.ready(function () {
+                // Находим координаты города
+                ymaps.geocode(city).then(function (res) {
+                    if (res.geoObjects.getLength() === 0) {                       
+                        showNotification('Пожалуйста, введите город', 'warning ');
+                        return;
+                    }
+
+                    var coordinates = res.geoObjects.get(0).geometry.getCoordinates();
+
+                    // Проверяем, если карта уже существует, удаляем её
+                    if (myMap) {
+                        myMap.destroy();
+                    }
+
+                    // Показываем mapContainer
+                    document.getElementById('mapContainer').style.display = 'block';
+
+                    // Показываем модальное окно
+                    document.getElementById('mapModal').style.display = 'flex';
+
+                    // Создаем карту с центром на указанном городе
+                    myMap = new ymaps.Map("mapContainer", {
+                        center: coordinates,
+                        zoom: 12
+                    });
+
+                    // Обработчик клика по карте
+                    myMap.events.add('click', function (e) {
+                        var coords = e.get('coords');
+                        // Преобразуем координаты в адрес
+                        ymaps.geocode(coords).then(function (res) {
+                            var firstGeoObject = res.geoObjects.get(0);
+                            var address = firstGeoObject.getAddressLine();
+                            // Помещаем адрес в поле адреса
+                            document.getElementById('addressInput').value = address;
+                            // Закрываем модальное окно с картой
+                            closeMap();
+                        });
+                    });
+                });
+            });
+        }
+
+        function closeMap() {
+            document.getElementById('mapModal').style.display = 'none';
+        }
+    </script>
+    <script>
+        // Функция для отображения неблокирующего уведомления (Toast)
+        function showNotification(message, type) {
+            Swal.fire({
+                position: 'bottom-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 5000, // Закрыть уведомление через 5 секунд
+                toast: true,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    // Убрать закрытие при наведении мыши
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+        }
+
+                // Пример использования функции showNotification для вывода уведомления
+
+    </script>
 
 
 

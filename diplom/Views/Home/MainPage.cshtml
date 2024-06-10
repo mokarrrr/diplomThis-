@@ -188,25 +188,25 @@
                                 </center>
                             </div>
                             <!-- Содержимое вкладки "Безопасность" -->
-                            <div id="tab-password" class="tab-content" style="display:none;margin-top:85%;">
+                            <div id="tab-password" class="tab-content" style="display:none;margin-top:50%;width:110%;margin-left:-13%;">
                                 <!-- Ваше содержимое здесь -->
                                 
                                 <div style="display:flex; margin-bottom: 20px;">
-                                    <input class="userinf" id="passwordregistersend" type="password" placeholder="Введите старый пароль">
-                                    <button id="showPasswordButton4" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                    <input class="userinf styled-input" id="passwordregistersend" type="password" placeholder="Введите старый пароль">
+                                    <button id="showPasswordButton4" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -40px;font-size: 20pt;margin-top: -3px;border:transparent">
                                         &#128065;
                                     </button>
                                 </div>
                                 <p id="errorMessagepastab1" style="color:red;z-index:1;display:none;position:absolute;margin-top: -1%;margin-left: 1.2%;">Проверьте пароль</p>
                                 <div style="display:flex; margin-bottom: 20px;">
-                                    <input class="userinf" id="passwordregisterveryf" type="password" placeholder="Новый пароль">
-                                    <button id="showPasswordButton5" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                    <input class="userinf styled-input" id="passwordregisterveryf" type="password" placeholder="Новый пароль">
+                                    <button id="showPasswordButton5" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -40px;font-size: 20pt;margin-top: -3px;border:transparent">
                                         &#128065;
                                     </button>
                                 </div>
                                 <div style="display:flex; margin-bottom: 20px;">
-                                    <input class="userinf" id="passwordregisteveryf2r" type="password" placeholder="Повторите новый пароль">
-                                    <button id="showPasswordButton6" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                    <input class="userinf styled-input" id="passwordregisteveryf2r" type="password" placeholder="Повторите новый пароль">
+                                    <button id="showPasswordButton6" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -40px;font-size: 20pt;margin-top: -3px;border:transparent">
                                         &#128065;
                                     </button>
                                 </div>
@@ -231,7 +231,7 @@
         </div>
 
         
-        <div id="myModal1" class="modal1" style="overflow-x:hidden">
+        <div id="myModal2" class="modal1" style="overflow-x:hidden">
             <div class="modal-content1">
                 <span class="close">&times;</span>
                 <h1>Политика Конфиденциальности Интернет-Магазина "Dairy Delights Emporium"</h1>
@@ -362,15 +362,58 @@
             </div>
 
             <div class="container3" id="container3">
-                @if (Model.HasResults)
-                {
-                    @await Html.PartialAsync("_ProductPartial", Model.Products)
-                }
-                else
-                {
-                    <p class="error">К сожалению, по вашему запросу ничего не найдено.</p>
-                }
-            </div>
+    @if (Model.HasResults)
+    {
+        @await Html.PartialAsync("_ProductPartial", Model.Products)
+    }
+    else
+    {
+        <p class="error">К сожалению, по вашему запросу ничего не найдено.</p>
+    }
+</div>
+
+@if (Model.HasResults)
+{
+    <div class="pagination" style="grid-column:2">
+        @if (Model.PageNumber > 1)
+        {
+            <a class="prev page-numbers" href="@Url.Action("MainPage", new { pageNumber = Model.PageNumber - 1, pageSize = ViewBag.PageSize })">« Предыдущая</a>
+        }
+
+        <!-- Display the first page -->
+        <a class="page-numbers @(1 == Model.PageNumber ? "current" : "")" href="@Url.Action("MainPage", new { pageNumber = 1, pageSize = ViewBag.PageSize })">1</a>
+
+        @if (Model.PageNumber > 4) 
+        {
+            <span class="page-numbers">...</span>
+        }
+
+        <!-- Display pages around the current page -->
+        @for (int i = Math.Max(2, Model.PageNumber - 2); i <= Math.Min(Model.PageNumber + 2, Model.TotalPages - 1); i++)
+        {
+            <a class="page-numbers @(i == Model.PageNumber ? "current" : "")" href="@Url.Action("MainPage", new { pageNumber = i, pageSize = ViewBag.PageSize })">@i</a>
+        }
+
+        @if (Model.PageNumber < Model.TotalPages - 2)
+        {
+            <span class="page-numbers">...</span>
+        }
+
+        <!-- Display the last page -->
+        @if (Model.TotalPages > 1)
+        {
+            <a class="page-numbers @(Model.TotalPages == Model.PageNumber ? "current" : "")" href="@Url.Action("MainPage", new { pageNumber = Model.TotalPages, pageSize = ViewBag.PageSize })">@Model.TotalPages</a>
+        }
+
+        @if (Model.PageNumber < Model.TotalPages)
+        {
+            <a class="next page-numbers" href="@Url.Action("MainPage", new { pageNumber = Model.PageNumber + 1, pageSize = ViewBag.PageSize })">Следующая »</a>
+        }
+    </div>
+}
+
+
+
 
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="">
                 <div class="modal-dialog">
@@ -584,7 +627,7 @@
                             <a href="#"> Каталог</a> |
                             <a href="@Url.Action("AboutUsPage", "Home")" onclick="scrollToElement('mya')"> О нас</a> |
                             <a href="@Url.Action("AboutUsPage", "Home")#contacts"> Контакты</a> |
-                            <a href="#myModal1" id="modalOpen"> Политика конфиденциальности</a>
+                            <a href="#myModal2" id="modalOpen"> Политика конфиденциальности</a>
                         </p>
                         <p class="name"> Dairy Delights Emporium; 2004</p>
                     </div>
@@ -619,7 +662,25 @@
                 }
             });
         });
-    </script> 
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#modalOpen").click(function (event) {
+                event.preventDefault();
+                $("#myModal2").fadeIn();
+            });
+
+            $(".close").click(function () {
+                $("#myModal2").fadeOut();
+            });
+
+            $(window).click(function (event) {
+                if ($(event.target).is("#myModal2")) {
+                    $("#myModal").fadeOut();
+                }
+            });
+        });
+    </script>
     <script>
         $(document).ready(function () {
             $(window).scroll(function () {
@@ -1296,7 +1357,7 @@
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         // Пароль успешно изменен
-                        console.log("Пароль успешно изменен");
+                        showNotification('Пароль успешно изменен.','success')
 
                         // Выполняем выход из системы
                         $.ajax({
@@ -1306,7 +1367,9 @@
                                 // Успешное выполнение запроса
                                 console.log(response);
                                 localStorage.setItem('AuthenticationSuccess', '0');
-                                window.location.reload(); // Пример обновления страницы
+                                setTimeout(function () {
+                                    window.location.reload(); // Обновление страницы
+                                }, 6000);
                             },
                             error: function (error) {
                                 // Ошибка выполнения запроса
@@ -1327,8 +1390,8 @@
         }
 
         function showError(errorMessage) {
-            // Показываем сообщение об ошибке на странице
-            $('#errorMessagepastab1').text(errorMessage).show();
+            // Показываем сообщение об ошибке на странице          
+            showNotification('Проверьте пароль.', 'error')
         }
 
         // Функция для получения и установки нового пароля
@@ -1339,15 +1402,15 @@
 
             // Проверяем, что значения не пустые
             if (!(oldPassword && newPassword && newPasswordConfirm)) {
-                console.error("Пожалуйста, заполните все поля пароля");
-                $("#errorMessage6").show();
+               
+                showNotification('Пожалуйста, заполните все поля пароля.', 'error')
                 return;
             }
 
             // Проверяем, что значения нового пароля совпадают
             if (newPassword !== newPasswordConfirm) {
-                console.error("Пароли не совпадают");
-                $("#errorMessagepastab").show();
+                
+                showNotification('Пароли не совпадают.', 'error')
                 return;
             }
 
@@ -1417,6 +1480,30 @@
 
     </script>
     <script>
+        <script>
+            // Функция для отображения неблокирующего уведомления (Toast)
+            function showNotification(message, type) {
+                Swal.fire({
+                    position: 'bottom-end',
+                    icon: type,
+                    title: message,
+                    showConfirmButton: false,
+                    timer: 5000, // Закрыть уведомление через 5 секунд
+                    toast: true,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        // Убрать закрытие при наведении мыши
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+            }
+
+        // Пример использования функции showNotification для вывода уведомления
+
+    </script>
+    </script>
+    <script>
         document.getElementById('showPasswordButton4').addEventListener('click', function () {
             var passwordField = document.getElementById('passwordregistersend');
             if (passwordField.type === 'password') {
@@ -1475,6 +1562,24 @@
             adminButton.addEventListener('click', function () {
                 // Переходим на страницу AdminPage
                 window.location.href = '/Home/AdminPage'; // Укажите здесь путь к странице AdminPage
+            });
+        });
+    </script>
+    <script>
+        document.querySelectorAll('.page-numbers').forEach(function (el) {
+            el.addEventListener('click', function () {
+                document.querySelectorAll('.page-numbers').forEach(function (el) {
+                    el.classList.remove('current');
+                });
+                this.classList.add('current');
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.page-numbers').on('click', function () {
+                $('.page-numbers').removeClass('current');
+                $(this).addClass('current');
             });
         });
     </script>

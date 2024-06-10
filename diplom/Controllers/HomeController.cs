@@ -123,45 +123,143 @@ namespace diplom.Controllers
             return View(viewModel);
         }
 
-        public IActionResult UserOrders()
+        public IActionResult UserOrders(string searchQuery, int pageNumber = 1, int pageSize = 5)
         {
             long userIdCookie = Int64.Parse(Request.Cookies["UserId"]);
-            var _Orders = db._orders.Where(o => o._user_id == userIdCookie).Include(o => o.Products).Include(o => o.Status).ToList();
-            return View(_Orders);
-        }
-        public IActionResult AllOrders(string searchQuery)
-        {
-
-            IQueryable<_order> usersQuery = db._orders.Include(o => o.Products).Include(o => o.Status).Include(o => o.User).AsQueryable();
+            var userOrdersQuery = db._orders.Where(o => o._user_id == userIdCookie)
+                                            .Include(o => o.Products)
+                                            .Include(o => o.Status)
+                                            .OrderByDescending(o => o.order_date)
+                                            .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                // Фильтруем пользователей на основе поискового запроса (имя пользователя или фамилия содержат поисковой запрос)
-                usersQuery = usersQuery.Where(u => u.User.Surname.ToLower().Contains(searchQuery.ToLower()) || u.User.IdUser.ToString().Contains(searchQuery.ToLower()));
+                // Фильтруем заказы по айди заказа
+                userOrdersQuery = userOrdersQuery.Where(o => o.Idorder.ToString().Contains(searchQuery));
             }
 
-            // Преобразуем запрос в список (выполняем запрос к базе данных и получаем отфильтрованных пользователей)
-            var usersList = usersQuery.ToList();
+            int totalOrders = userOrdersQuery.Count();
+            var userOrdersList = userOrdersQuery.Skip((pageNumber - 1) * pageSize)
+                                                .Take(pageSize)
+                                                .ToList();
 
-            return View(usersList);
+            int totalPages = (int)Math.Ceiling(totalOrders / (double)pageSize);
 
+            var viewModel = new ULVM
+            {
+                _orders = userOrdersList,
+                OrderPageNumber = pageNumber,
+                OrderTotalPages = totalPages,
+                OrderPageSize = pageSize,
+                HasOrders = userOrdersList.Any()
+            };
+
+            return View(viewModel);
+        }
+        public IActionResult AllOrders(string searchQuery, int pageNumber = 1, int pageSize = 5)
+        {
+            IQueryable<_order> ordersQuery = db._orders
+                .Include(o => o.Products)
+                .Include(o => o.Status)
+                .Include(o => o.User)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                ordersQuery = ordersQuery.Where(o => o.User.Surname.ToLower().Contains(searchQuery.ToLower()) || o.User.IdUser.ToString().Contains(searchQuery.ToLower()));
+            }
+
+            int totalOrders = ordersQuery.Count();
+            var ordersList = ordersQuery
+                .OrderByDescending(o => o.order_date)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            int totalPages = (int)Math.Ceiling(totalOrders / (double)pageSize);
+
+            var viewModel = new ULVM
+            {
+                _orders = ordersList,
+                OrderPageNumber = pageNumber,
+                OrderTotalPages = totalPages,
+                OrderPageSize = pageSize,
+                HasOrders = ordersList.Any()
+            };
+
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.PageSize = pageSize;
+
+            var statuses = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Принят" },
+        new SelectListItem { Value = "2", Text = "Идет отправка" },
+        new SelectListItem { Value = "3", Text = "В доставке" },
+        new SelectListItem { Value = "4", Text = "Ожидает получения" },
+        new SelectListItem { Value = "5", Text = "Завершён" },
+        new SelectListItem { Value = "6", Text = "Отменен" }
+    };
+
+            ViewBag.Statuses = statuses;
+
+            return View(viewModel);
+        }
+        [HttpPost]
+        public IActionResult UpdateOrderStatus(int orderId, int newStatusId)
+        {
+            var order = db._orders.FirstOrDefault(o => o.Idorder == orderId);
+            if (order == null)
+            {
+                return NotFound(new { success = false, message = "Order not found" });
+            }
+
+            order.status_id = newStatusId;
+            db.SaveChanges();
+
+            var statusName = db._statuses
+                .Where(s => s.Idstatus == newStatusId)
+                .Select(s => s.status_name)
+                .FirstOrDefault();
+
+            return Json(new { success = true, statusName = statusName });
         }
 
-        public IActionResult AllUsers(string searchQuery)
+
+        public IActionResult AllUsers(string searchQuery, int pageNumber = 1, int pageSize = 16)
         {
             IQueryable<User> usersQuery = db.User.AsQueryable();
 
-            // Проверяем, есть ли поисковый запрос
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                // Фильтруем пользователей на основе поискового запроса (имя пользователя или фамилия содержат поисковой запрос)
-                usersQuery = usersQuery.Where(u => u.User_name.ToLower().Contains(searchQuery.ToLower()) || u.Surname.ToLower().Contains(searchQuery.ToLower()) || u.IdUser.ToString().Contains(searchQuery.ToLower()));
+                usersQuery = usersQuery.Where(u =>
+                    u.User_name.ToLower().Contains(searchQuery.ToLower()) ||
+                    u.Surname.ToLower().Contains(searchQuery.ToLower()) ||
+                    u.IdUser.ToString().Contains(searchQuery.ToLower())
+                );
             }
 
-            // Преобразуем запрос в список (выполняем запрос к базе данных и получаем отфильтрованных пользователей)
-            var usersList = usersQuery.ToList();
-            return View(usersList);
+            int totalUsers = usersQuery.Count();
+            var usersList = usersQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            int totalPages = (int)Math.Ceiling(totalUsers / (double)pageSize);
+
+            var viewModel = new ULVM
+            {
+                Users = usersList,
+                UserPageNumber = pageNumber,
+                UserTotalPages = totalPages,
+                UserPageSize = pageSize,
+                HasUsers = usersList.Any()
+            };
+
+            ViewBag.PageSize = pageSize;
+
+            return View(viewModel);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> UpdateUser(int userId, string userName, string surname, string email, string phoneNumber)
@@ -202,7 +300,7 @@ namespace diplom.Controllers
                 if (ordersCount > 0)
                 {
                     // Если у пользователя есть связанные заказы, возвращаем сообщение об ошибке
-                    return StatusCode(500, "Невозможно удалить пользователя, так как у него есть связанные заказы.");
+                    return StatusCode(500, "Невозможно удалить пользователя, так как у нео есть связанные заказы.");
                 }
 
                 // Находим и удаляем все связанные записи в таблице Rate, где client_id равен userId
@@ -289,7 +387,7 @@ namespace diplom.Controllers
         //    return View(PVM);
         //}
 
-        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames, int? categoryId, int? secondCategoryId, int? thirdCategoryId, int? fourthCategoryId, int? fifthCategoryId)
+        public ActionResult MainPage(string searchQuery, int? selectedProductId, string packageNames, string providerNames, int? categoryId, int? secondCategoryId, int? thirdCategoryId, int? fourthCategoryId, int? fifthCategoryId, int pageNumber = 1, int pageSize = 10)
         {
             IQueryable<Product> productsQuery = db.Product.Include(p => p.Rates);
             bool hasResults = true;
@@ -313,24 +411,31 @@ namespace diplom.Controllers
             FilterProductsByCategory(ref productsQuery, fifthCategoryId);
 
             productsQuery = productsQuery.Where(p => !p.Ishidden);
-            var productsList = productsQuery.ToList();
+
+            int totalProducts = productsQuery.Count();
+            var productsList = productsQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             Dictionary<int, double> productAverageRates = productsList
                 .ToDictionary(p => p.IdProduct, p => p.Rates.Any() ? p.Rates.Average(r => r._Rate) : 0);
+
             ProductViewModel viewModel = new ProductViewModel
             {
                 Products = productsList,
                 HasResults = hasResults,
-                ProductCount = productsList.Count,
+                ProductCount = totalProducts,
+                PageNumber = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalProducts / (double)pageSize),
                 PackageNames = packageNames,
                 ProviderNames = providerNames,
                 SelectedProductId = selectedProductId ?? 0,
                 ProductAverageRates = productAverageRates,
-
             };
+
+            ViewBag.PageSize = pageSize;
 
             return View(viewModel);
         }
+
         [HttpGet]
         public ActionResult GetProviderName(int providerId)
         {
@@ -504,6 +609,16 @@ namespace diplom.Controllers
 
             return Content(packageName);
         }
+        [HttpGet]
+        public ActionResult GetStatusName(int statusId)
+        {
+            var statName = db._statuses
+                .Where(p => p.Idstatus == statusId)
+                .Select(p => p.status_name)
+                .FirstOrDefault();
+
+            return Content(statName);
+        }
         public ActionResult Login(string phoneLogin, string password)
         {
             // Поиск пользователя по номеру телефона
@@ -593,7 +708,7 @@ namespace diplom.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateOrder(string city, string address, string comment, int totalPrice, Dictionary<int, int> productQuantities)
+        public async Task<ActionResult> CreateOrder(string city, string address, string comment, int totalPrice, Dictionary<int, int> productQuantities, string paymentMethod)
         {
             try
             {
@@ -657,6 +772,7 @@ namespace diplom.Controllers
                     order_address = address,
                     order_commentary = comment,
                     OrderSum = totalPrice,
+                    Payment = paymentMethod, // Сохраняем способ оплаты
                     _user_id = int.Parse(userIdCookie) // Преобразуем строку с идентификатором пользователя в целое число
                 };
 
@@ -675,6 +791,7 @@ namespace diplom.Controllers
                 return StatusCode(500, new { error = $"Failed to create order: {ex.Message}" });
             }
         }
+
 
 
         [HttpPost]
@@ -1752,6 +1869,14 @@ namespace diplom.Controllers
         {
             try
             {
+                // Проверяем, существует ли продукт с таким же именем
+                var existingProduct = db.Product.FirstOrDefault(p => p.Name_product == productName);
+                if (existingProduct != null)
+                {
+                    // Если продукт с таким именем уже существует, возвращаем ошибку
+                    return BadRequest($"Продукт с именем '{productName}' уже существует.");
+                }
+
                 // Создаем новый объект Product для добавления в базу данных
                 var newProduct = new Product
                 {

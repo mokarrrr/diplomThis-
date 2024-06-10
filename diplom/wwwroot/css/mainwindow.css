@@ -305,7 +305,7 @@ a:active {
     grid-column: 1;
     grid-row: 1;
     position: absolute;
-    left: 10px;
+    left: 2%;
     background: #ff6633;
     border-radius: 4px;
     font-weight: 400;
@@ -1138,3 +1138,191 @@ a:active {
     background-color: transparent;
     color: black;
 }
+.pagination,
+.pagination--square {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.page-numbers {
+    margin: 0 2px;
+    margin-bottom: 5px;
+    background: lighten(#5E5656, 55%);
+    color: #000;
+    display: inline-block;
+    border-radius: 25px; /* Change this to 2px for .pagination--square */
+    padding: 15px 20px;
+    text-decoration: none !important;
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    transform: translateY(0);
+    transition: all 200ms ease-in-out;
+}
+
+    .page-numbers:hover,
+    .page-numbers:focus {
+        background: #ccc;
+        color: #111;
+        transform: translateY(-5px);
+        transition: all 250ms ease-in-out;
+    }
+
+    .page-numbers.current {
+        background: #FFC900;
+        color: #000;
+    }
+.address-container {
+    position: relative;
+    display: inline-block;
+}
+
+.map-icon {
+    position: absolute;
+    right: 17px;
+    top: 73%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+#mapModal {
+    display: none;
+    position: fixed;
+    top: 5%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+#mapContainer {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    display: none;
+}
+
+.close-btn {
+    position: absolute;
+    top: 58px;
+    border: 2px solid black;
+    border-radius: 10px;
+    right: 10px;
+    background: #fff;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+#adminbutton {
+    display: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: black;
+    background: white;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin-left: -100px;
+}
+
+    #adminbutton:hover {
+        background: white;
+        transform: scale(1.05);
+    }
+
+    #adminbutton:active {
+        background: white;
+        transform: scale(1);
+    }
+
+    .outer-container {
+    width: 80%;
+    height: 80%;
+    overflow-y: scroll; /* Внешний контейнер с прокруткой */
+    padding-right: 17px; /* Оставляем место для скрытой полосы прокрутки */
+    box-sizing: content-box; /* Чтобы padding не влиял на размеры */
+}
+
+.outer-container::-webkit-scrollbar {
+    width: 0; /* Убираем полосу прокрутки */
+    background: transparent; /* Скрываем фоновую часть полосы прокрутки */
+}
+
+.inner-container {
+    max-height: 100%;
+    overflow-y: hidden; /* Внутренний контейнер без полосы прокрутки */
+}
+.cancelOrderBtn {
+    background-color: #FFC107; /* Более тёмный сырный цвет */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: background-color 0.3s ease;
+}
+
+    .cancelOrderBtn:hover {
+        background-color: #FFA000; /* Более темный сырный цвет для эффекта наведения */
+    }
+
+    .cancelOrderBtn:active {
+        background-color: #FF8F00; /* Еще более темный цвет при клике */
+    }
+
+.styled-input {
+    width: 110%;
+    max-width: 400px;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+    font-size: 16px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+    .styled-input:focus {
+        border-color: #ffcc00; /* Сырный цвет */
+        box-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
+        outline: none;
+    }
+
+    .styled-input::placeholder {
+        color: #999;
+    }
+
+#goaway {
+    background-color: white; /* Зеленый */
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+    #goaway:hover {
+        background-color: white; /* Затемненный зеленый */
+        color: black;
+    }

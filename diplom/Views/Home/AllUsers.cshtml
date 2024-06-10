@@ -3,9 +3,11 @@
 <link rel="stylesheet" href="~/css/mainwindow.css" />
 <link rel="stylesheet" href="~/css/rate.css" />
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-@model List<User>
+@using diplom.Models.ViewModels
+@model ULVM;
 <body style="background-color:#a6a6a6!important;margin-top:10%">
     <header class="_header" style="background: linear-gradient(to bottom right,#F9D86E,#EDC237);">
         <div class="logo">
@@ -21,34 +23,78 @@
     <form method="get" >
     <input type="text" name="searchQuery" placeholder="Искать в магазине" class="search-bar" />
     </form>
-    <div class="row" style="flex-wrap: wrap;display: flex;min-width: fit-content;">
-        @foreach (var user in Model)
-        {
-            <div class="col-md-3 mb-4" style="margin-right: 2%;margin-top:1%">
-                <div class="user-info" style="border: 1px solid #ccc; padding: 10px;display: table-caption;">
-@*                     <p><strong>ID:</strong> @user.IdUser</p>
-                    <p><strong>Имя:</strong> @user.User_name</p>
-                    <p><strong>Фамилия:</strong> @user.Surname</p>
-                    <p><strong>Email:</strong> @user.Email</p>
-                    <p><strong>Номер телефона:</strong> @user.PhoneNumber</p> *@
-                    <div class="user-info">
-                        <p><strong>ID:</strong> @user.IdUser</p>
-                        <textarea name="userName">@user.User_name</textarea>
-                        <textarea name="surname">@user.Surname</textarea>
-                        <textarea name="email">@user.Email</textarea>
-                        <textarea name="phoneNumber">@user.PhoneNumber</textarea>
-                        
-                        <center style="display:flrx">
-                            <button class="edit-user-btn" data-user-id="@user.IdUser">Сохранить</button>
-                            <button class="delete-user-btn" data-user-id="@user.IdUser">Удалить пользователя</button>
-
-                        </center>
-                    </div>
-                   
-                </div>               
+  <div class="row" style="flex-wrap: wrap; display: flex; min-width: fit-content;">
+    @foreach (var user in Model.Users)
+    {
+        <div class="col-md-3 mb-4" style="margin-right: 2%; margin-top: 1%">
+            <div class="user-info" style="border: 1px solid #ccc; padding: 10px; display: table-caption;">
+                <div class="user-info">
+                    <p><strong>ID:</strong> @user.IdUser</p>
+                    <textarea name="userName">@user.User_name</textarea>
+                    <textarea name="surname">@user.Surname</textarea>
+                    <textarea name="email">@user.Email</textarea>
+                    <textarea name="phoneNumber">@user.PhoneNumber</textarea>
+                    
+                    <center style="display: flex;">
+                        <button class="edit-user-btn" data-user-id="@user.IdUser">Сохранить</button>
+                        <button class="delete-user-btn" data-user-id="@user.IdUser">Удалить пользователя</button>
+                    </center>
+                </div>
             </div>
-        }
-    </div>
+        </div>
+    }
+</div>
+
+    @if (Model.HasUsers)
+    {
+        <div class="pagination" style="grid-column:2;margin-top:20px">
+            @if (Model.UserPageNumber > 1)
+            {
+                <a class="prev page-numbers" href="@Url.Action("AllUsers", new { pageNumber = Model.UserPageNumber - 1, pageSize = ViewBag.PageSize })">« Предыдущая</a>
+            }
+
+            <!-- Display the first page -->
+            <a class="page-numbers @(1 == Model.UserPageNumber ? "current" : "")" href="@Url.Action("AllUsers", new { pageNumber = 1, pageSize = ViewBag.PageSize })">1</a>
+
+            @if (Model.UserPageNumber > 4)
+            {
+                <span class="page-numbers">...</span>
+            }
+
+            <!-- Display pages around the current page -->
+            @for (int i = Math.Max(2, Model.UserPageNumber - 2); i <= Math.Min(Model.UserPageNumber + 2, Model.UserTotalPages - 1); i++)
+            {
+                <a class="page-numbers @(i == Model.UserPageNumber ? "current" : "")" href="@Url.Action("AllUsers", new { pageNumber = i, pageSize = ViewBag.PageSize })">@i</a>
+            }
+
+            @if (Model.UserPageNumber < Model.UserTotalPages - 2)
+            {
+                <span class="page-numbers">...</span>
+            }
+
+            <!-- Display the last page -->
+            @if (Model.UserTotalPages > 1)
+            {
+                <a class="page-numbers @(Model.UserTotalPages == Model.UserPageNumber ? "current" : "")" href="@Url.Action("AllUsers", new { pageNumber = Model.UserTotalPages, pageSize = ViewBag.PageSize })">@Model.UserTotalPages</a>
+            }
+
+            @if (Model.UserPageNumber < Model.UserTotalPages)
+            {
+                <a class="next page-numbers" href="@Url.Action("AllUsers", new { pageNumber = Model.UserPageNumber + 1, pageSize = ViewBag.PageSize })">Следующая »</a>
+            }
+        </div>
+    }
+
+
+    <script>
+        $(document).ready(function () {
+            $('.page-numbers').on('click', function () {
+                $('.page-numbers').removeClass('current');
+                $(this).addClass('current');
+            });
+        });
+    </script>
+   
 
         <script>
             $(document).ready(function () {
