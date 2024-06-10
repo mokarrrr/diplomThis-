@@ -1273,7 +1273,8 @@ $(document).ready(function () {
                         data: { phone: phone },
                         success: function (result) {
                             if (result.exists) {
-                                $("#phoneErrorMessage10").text("Номер телефона уже используется").show();
+                               
+                                showNotification('Номер телефона уже используется.', 'error');
                             } else {
                                 // Проверяем, изменился ли email
                                 if (emailChanged) {
@@ -1283,7 +1284,7 @@ $(document).ready(function () {
                                         data: { email: email },
                                         success: function (emailResult) {
                                             if (emailResult.exists) {
-                                                $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                                showNotification('Пользователь с таким email уже существует.', 'error');
                                             } else {
                                                 updateUser(email, name, lastName, phone);
                                             }
@@ -1313,7 +1314,7 @@ $(document).ready(function () {
                             data: { email: email },
                             success: function (emailResult) {
                                 if (emailResult.exists) {
-                                    $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                    showNotification('Пользователь с таким email уже существует.', 'error');
                                 } else {
                                     updateUser(email, name, lastName, phone);
                                 }
@@ -1337,7 +1338,8 @@ $(document).ready(function () {
                         data: { email: email },
                         success: function (emailResult) {
                             if (emailResult.exists) {
-                                $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                
+                                showNotification('Пользователь с таким email уже существует.', 'error');
                             } else {
                                 updateUser(email, name, lastName, phone);
                             }
@@ -1367,17 +1369,22 @@ $(document).ready(function () {
                 } else {
                     // Обработка ошибок при сохранении данных
                     if (result.message === "Номер телефона содержит четыре подряд нуля") {
-                        $('#phoneErrorMessage20').text("Номер телефона содержит четыре подряд нуля").show();
+                        showNotification('Номер телефона содержит четыре подряд нуля.', 'error');
                     } else if (result.message === "Номер телефона должен содержать не менее 10 символов") {
-                        $('#phoneErrorMessage20').text("Номер телефона должен содержать не менее 10 символов").show();
+
+                        showNotification('Номер телефона должен содержать не менее 10 символов', 'error');
                     } else if (result.message === "Номер телефона не может состоять только из нулей") {
-                        $('#phoneErrorMessage20').text("Номер телефона не может состоять только из нулей").show();
+
+                        showNotification('Номер телефона не может состоять только из нулей.', 'error');
                     } else if (result.message === "Номер телефона должен содержать не более 10 символов") {
-                        $('#phoneErrorMessage20').text("Номер телефона должен содержать не более 10 символов").show();
+
+                        showNotification('"Номер телефона должен содержать не более 10 символов.', 'error');
                     } else if (result.message === "Некорректный адрес электронной почты") {
-                        $('#phoneMailMessage20').text("Некорректный адрес электронной почты").show();
+
+                        showNotification('Некорректный адрес электронной почты.', 'error');
                     } else if (result.message === "Пользователь с таким email уже существует") {
-                        $('#phoneMail10').text("Пользователь с таким email уже существует").show();
+
+                        showNotification('Пользователь с таким email уже существует.', 'error');
                     } else {
                         alert("Ошибка: " + result.message);
                     }
