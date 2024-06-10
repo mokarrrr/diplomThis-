@@ -255,7 +255,7 @@ $(document).ready(function () {
 
                     commentHTML += '<div style="display: flex; flex-direction: row;">'; // Обертка для комментария и звезд
                     if (comment["rate_comment"] !== null) {
-                        commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:850px;text-align:left">' + comment["rate_comment"] + '</p>';
+                        commentHTML += '<p style="margin-top: 5px; margin-bottom: 0; font-size: 20px;width:822px;text-align:left">' + comment["rate_comment"] + '</p>';
                     }
                     commentHTML += '<p style="margin-top: -16px; margin-bottom: 0; font-size: 30px; margin-left: auto;color:#FFD700">' + starsHTML + '</p>';
                     commentHTML += '</div>';

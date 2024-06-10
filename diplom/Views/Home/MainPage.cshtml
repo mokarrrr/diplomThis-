@@ -35,11 +35,11 @@
                         <span class="close">&times;</span>
                         <h2>Авторизация</h2>
 
-                        @Html.TextBox("phoneLogin", "", new { placeholder = "Введите номер телефона",@class = "phoneregister2",style ="width: 98% !important;" })
+                        @Html.TextBox("phoneLogin", "", new { placeholder = "Введите номер телефона",@class = "phoneregister2",style ="width: 560px !important;" })
 
                         <div style="display:flex">
                         @* @Html.TextBox("password", "", new { placeholder = "Введите пароль" }) *@
-                            <input id="password" type="password" placeholder="Введите пароль" >
+                            <input id="password" type="password" placeholder="Введите пароль" style="" >
                         <button id="showPasswordButton" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
                             &#128065;
                         </button>
@@ -60,15 +60,15 @@
                     </h2>
 
                     @* <input type="text" placeholder="Email"> *@
-                        @Html.TextBox("Email", "", new { placeholder = "Email", })
+                        @Html.TextBox("Email", "", new { placeholder = "Email",style ="width: 560px !important;" })
                         <div id="mailExistsErrorMessage" style="display:none;">
                             <p style="z-index:1;color:red;margin-top: 1%;">Пользователь с такой почтой уже существует</p>
                         </div>
                         <div id="mailErrorMessage" style="display:none;">
                             <p style="z-index:1;color:red;margin-top: 1%;">Проверьте правильность заполнения поля</p>
                         </div>
-                        @Html.TextBox("Name", "", new { placeholder = "Ваше имя", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')" })
-                        @Html.TextBox("lastName", "", new { placeholder = "Ваша фамилия", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')" })
+                        @Html.TextBox("Name", "", new { placeholder = "Ваше имя", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')",style ="width: 560px !important;" })
+                        @Html.TextBox("lastName", "", new { placeholder = "Ваша фамилия", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')",style ="width: 560px !important;" })
                         <div style="display:flex">
                         <input id="passwordregister" type="password" placeholder="Пароль">
                             <button id="showPasswordButton2" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
@@ -86,7 +86,7 @@
                     @* @Html.TextBox("passwordregistersecond", "", new { placeholder = "Повторите пароль" }) *@
                                          
                     @* <input type="text" id="phoneRegister" maxlength="10" placeholder="Номер телефона"> *@
-                        @Html.TextBox("phoneRegister", "", new { placeholder = "Номер телефона",@class ="phoneRegister1",style ="width: 98% !important;"})
+                        @Html.TextBox("phoneRegister", "", new { placeholder = "Номер телефона",@class ="phoneRegister1",style ="width: 560px !important;"})
                         <p id="phoneErrorMessage" style="z-index:1;color:red;margin-top: 1%;display:none">Неверный формат номера телефона</p>
                         <div id="phoneExistsErrorMessage" style="display:none;">
                             <p style="z-index:1;color:red;margin-top: 1%;margin-left: 5%;">Пользователь с таким номером телефона уже существует</p>
@@ -144,7 +144,7 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div style="margin-left:-50px">
                                             
                         <div style="width:100%;gap:50px;display:inline-grid;margin-top:40px">
 
@@ -212,7 +212,7 @@
                                 </div>
                                 <p id="errorMessagepastab" style="color:red;z-index:1;display:none;margin-left: 10.2%">Пароли не совпадают</p>
                                 <p id="errorMessage6" style="color:red;z-index:1;display:none;margin-left: 10.2%;">⚠️ Не все поля заполнены</p>
-                                <center style="margin-top: 14%;margin-left: 16%;">
+                                <center style="margin-top: 14%;">
                                     <button id="savebuttonpas" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
                                         <center style="">
                                             <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>

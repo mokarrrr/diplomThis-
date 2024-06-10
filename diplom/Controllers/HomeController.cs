@@ -225,7 +225,7 @@ namespace diplom.Controllers
         }
 
 
-        public IActionResult AllUsers(string searchQuery, int pageNumber = 1, int pageSize = 16)
+        public IActionResult AllUsers(string searchQuery, int pageNumber = 1, int pageSize = 14)
         {
             IQueryable<User> usersQuery = db.User.AsQueryable();
 
