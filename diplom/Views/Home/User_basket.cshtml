@@ -63,6 +63,7 @@
                         <div style="display:flex;gap:10px;cursor: pointer;caret-color: transparent" data-tab="tab-history">
                             <center>
                                 <button id="logoutButton"> Выход</button>
+
                             </center>
                         </div>
                     </div>
@@ -75,7 +76,7 @@
                         <div id="tab-information" class="tab-content">
                             @* <form id="userForm"> *@
 
-                            <center style="padding:1%;margin-top:9%;margin-bottom: 15%;margin-left: 7%;">
+                            <center style="padding:1%;margin-top:9%;margin-bottom: 15%;margin-left: 25%;">
                                 <div class="userimg" style="height: 150px; width: 150px;">
 
                                     <p id="nameuserphoto" style="margin-top:66px">Абоба</p>
@@ -95,41 +96,41 @@
                                     <div style="display:block">
                                         @Html.TextBox("phoneRegisteruser", "", new { placeholder = "Номер телефона",@class ="numberrr"})
                                         <p id="phoneErrorMessage10" style="z-index:1;color:red;margin-top: 1%;display:none;width: 118%;">Пользвоатель с таким номером телефона уже существует</p>
-                                        <p id="phoneErrorMessage20" style="z-index:1;color:red;margin-top: 1%;display:none;width: 118%">Неверный формат номера телефона</p>
+                                        <p id="phoneErrorMessage20" style="z-index:1;color:red;MARGIN-LEFT: -13%;margin-top: 3%;display:none;width: 168%">Неверный формат номера телефона</p>
                                     </div>
                                 </div>
                             </div>
                             <p id="errorMessage5" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
                             @* </form> *@
-                            <center style="margin-top: 14%;caret-color: transparent">
+                            <center style="margin-top: 14%;caret-color: transparent;margin-left: 21%;">
                                 <button id="savebutton" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
-                                    <center style="">
-                                        <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>
+                                    <center style="margin-left: -6px;">
+                                        <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;margin-left: 20%;"></i>
                                         <p style="margin-top:4px">Сохранить</p>
                                     </center>
                                 </button>
                             </center>
                         </div>
                         <!-- Содержимое вкладки "Безопасность" -->
-                        <div id="tab-password" class="tab-content" style="display:none;margin-top:85%;">
+                        <div id="tab-password" class="tab-content" style="display:none;margin-top:50%;width:110%;margin-left:-13%;">
                             <!-- Ваше содержимое здесь -->
 
                             <div style="display:flex; margin-bottom: 20px;">
-                                <input class="userinf" id="passwordregistersend" type="password" placeholder="Введите старый пароль">
-                                <button id="showPasswordButton4" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                <input class="userinf styled-input" id="passwordregistersend" type="password" placeholder="Введите старый пароль">
+                                <button id="showPasswordButton4" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -40px;font-size: 20pt;margin-top: -3px;border:transparent">
                                     &#128065;
                                 </button>
                             </div>
                             <p id="errorMessagepastab1" style="color:red;z-index:1;display:none;position:absolute;margin-top: -1%;margin-left: 1.2%;">Проверьте пароль</p>
                             <div style="display:flex; margin-bottom: 20px;">
-                                <input class="userinf" id="passwordregisterveryf" type="password" placeholder="Новый пароль">
-                                <button id="showPasswordButton5" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                <input class="userinf styled-input" id="passwordregisterveryf" type="password" placeholder="Новый пароль">
+                                <button id="showPasswordButton5" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -40px;font-size: 20pt;margin-top: -3px;border:transparent">
                                     &#128065;
                                 </button>
                             </div>
                             <div style="display:flex; margin-bottom: 20px;">
-                                <input class="userinf" id="passwordregisteveryf2r" type="password" placeholder="Повторите новый пароль">
-                                <button id="showPasswordButton6" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;border:transparent">
+                                <input class="userinf styled-input" id="passwordregisteveryf2r" type="password" placeholder="Повторите новый пароль">
+                                <button id="showPasswordButton6" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -40px;font-size: 20pt;margin-top: -3px;border:transparent">
                                     &#128065;
                                 </button>
                             </div>
@@ -1174,7 +1175,8 @@
                                 data: { phone: phone },
                                 success: function (result) {
                                     if (result.exists) {
-                                        $("#phoneErrorMessage10").text("Номер телефона уже используется").show();
+
+                                        showNotification('Номер телефона уже используется.', 'error');
                                     } else {
                                         // Проверяем, изменился ли email
                                         if (emailChanged) {
@@ -1184,7 +1186,7 @@
                                                 data: { email: email },
                                                 success: function (emailResult) {
                                                     if (emailResult.exists) {
-                                                        $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                                        showNotification('Пользователь с таким email уже существует.', 'error');
                                                     } else {
                                                         updateUser(email, name, lastName, phone);
                                                     }
@@ -1214,7 +1216,7 @@
                                     data: { email: email },
                                     success: function (emailResult) {
                                         if (emailResult.exists) {
-                                            $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+                                            showNotification('Пользователь с таким email уже существует.', 'error');
                                         } else {
                                             updateUser(email, name, lastName, phone);
                                         }
@@ -1238,7 +1240,8 @@
                                 data: { email: email },
                                 success: function (emailResult) {
                                     if (emailResult.exists) {
-                                        $("#phoneMail10").text("Пользователь с таким email уже существует").show();
+
+                                        showNotification('Пользователь с таким email уже существует.', 'error');
                                     } else {
                                         updateUser(email, name, lastName, phone);
                                     }
@@ -1268,17 +1271,22 @@
                         } else {
                             // Обработка ошибок при сохранении данных
                             if (result.message === "Номер телефона содержит четыре подряд нуля") {
-                                $('#phoneErrorMessage20').text("Номер телефона содержит четыре подряд нуля").show();
+                                showNotification('Номер телефона содержит четыре подряд нуля.', 'error');
                             } else if (result.message === "Номер телефона должен содержать не менее 10 символов") {
-                                $('#phoneErrorMessage20').text("Номер телефона должен содержать не менее 10 символов").show();
+
+                                showNotification('Номер телефона должен содержать не менее 10 символов', 'error');
                             } else if (result.message === "Номер телефона не может состоять только из нулей") {
-                                $('#phoneErrorMessage20').text("Номер телефона не может состоять только из нулей").show();
+
+                                showNotification('Номер телефона не может состоять только из нулей.', 'error');
                             } else if (result.message === "Номер телефона должен содержать не более 10 символов") {
-                                $('#phoneErrorMessage20').text("Номер телефона должен содержать не более 10 символов").show();
+
+                                showNotification('"Номер телефона должен содержать не более 10 символов.', 'error');
                             } else if (result.message === "Некорректный адрес электронной почты") {
-                                $('#phoneMailMessage20').text("Некорректный адрес электронной почты").show();
+
+                                showNotification('Некорректный адрес электронной почты.', 'error');
                             } else if (result.message === "Пользователь с таким email уже существует") {
-                                $('#phoneMail10').text("Пользователь с таким email уже существует").show();
+
+                                showNotification('Пользователь с таким email уже существует.', 'error');
                             } else {
                                 alert("Ошибка: " + result.message);
                             }
@@ -1321,6 +1329,12 @@
                 }
             });
         });
+
+    </script>
+    <script>
+        document.getElementById('Nameuser').setAttribute('maxlength', '30');
+        document.getElementById('lastNameuser').setAttribute('maxlength', '30');
+        document.getElementById('Emailuser').setAttribute('maxlength', '50');
     </script>
     <script>
         function updatePassword(oldPassword, newPassword) {
@@ -1841,7 +1855,11 @@
             tabs[0].click();
         });
     </script>
-
+    <script>
+        document.getElementById('Nameuser').setAttribute('maxlength', '30');
+        document.getElementById('lastNameuser').setAttribute('maxlength', '30');
+        document.getElementById('Emailuser').setAttribute('maxlength', '50');
+    </script>
 
     <script>
         $(document).ready(function () {

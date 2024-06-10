@@ -178,9 +178,9 @@
                                 </div>
                                 <p id="errorMessage5" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
                                 @* </form> *@
-                                <center style="margin-top: 14%;caret-color: transparent">
+                                <center style="margin-top: 14%;caret-color: transparent;margin-left: 21%;">
                                     <button id="savebutton" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
-                                        <center style="">
+                                        <center style="margin-left: -6px;">
                                             <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;margin-left: 20%;"></i>
                                             <p style="margin-top:4px">Сохранить</p>
                                         </center>
@@ -212,7 +212,7 @@
                                 </div>
                                 <p id="errorMessagepastab" style="color:red;z-index:1;display:none;margin-left: 10.2%">Пароли не совпадают</p>
                                 <p id="errorMessage6" style="color:red;z-index:1;display:none;margin-left: 10.2%;">⚠️ Не все поля заполнены</p>
-                                <center style="margin-top: 14%;">
+                                <center style="margin-top: 14%;margin-left: 16%;">
                                     <button id="savebuttonpas" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:100px">
                                         <center style="">
                                             <i class="fas fa-check" style="font-size:20pt;margin-top: 6px;"></i>
@@ -1424,6 +1424,11 @@
         $('#exampleModal').on('hidden.bs.modal', function (e) {
             $('#rewey').empty(); // Очистка содержимого элемента #rewey
         });
+    </script>
+    <script>
+        document.getElementById('Nameuser').setAttribute('maxlength', '30');
+        document.getElementById('lastNameuser').setAttribute('maxlength', '30');
+        document.getElementById('Emailuser').setAttribute('maxlength', '50');
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
