@@ -61,9 +61,9 @@ using Microsoft.EntityFrameworkCore;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //optionsBuilder.UseSqlServer(@"Data Source=192.168.227.12;User ID=user04;Password=04;database=1myay;TrustServerCertificate=True");
+        optionsBuilder.UseSqlServer(@"Data Source=192.168.227.12;User ID=user10;Password=10;database=this;TrustServerCertificate=True");
 
-        optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-SD2NSU5\MSSQLSERVER05;User ID=sa;Password=12345;database=this10;TrustServerCertificate=True");
+        //optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-SD2NSU5\MSSQLSERVER05;User ID=sa;Password=12345;database=this10;TrustServerCertificate=True");
 
         //optionsBuilder.UseSqlServer("Data Source=DESKTOP-3FU748J;Database=misha;Integrated Security = sspi; Encrypt=False;");
         //optionsBuilder.UseSqlServer(@"Data Source=hnt8.ru,1433;User ID=sa;Password=_RasulkotV2;database=Aleksey_BD_finish;TrustServerCertificate=True");
