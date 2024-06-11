@@ -26,16 +26,16 @@
   <div class="row" style="flex-wrap: wrap; display: flex; min-width: fit-content;">
     @foreach (var user in Model.Users)
     {
-        <div class="col-md-3 mb-4" style="margin-right: 5%; margin-top: 1%">
+        <div class="col-md-3 mb-4" style="margin-right: 1%; margin-top: 1%">
             <div class="user-info" style="border: 1px solid #ccc; padding: 10px; display: table-caption;">
-                <div class="user-info">
+                    <div class="user-info" style="width: 189px;">
                     <p><strong>ID:</strong> @user.IdUser</p>
-                    <textarea name="userName">@user.User_name</textarea>
-                    <textarea name="surname">@user.Surname</textarea>
-                    <textarea name="email">@user.Email</textarea>
-                    <textarea name="phoneNumber">@user.PhoneNumber</textarea>
+                        <textarea style="width: 182px;" name="userName">@user.User_name</textarea>
+                        <textarea style="width: 182px;" name="surname">@user.Surname</textarea>
+                        <textarea style="width: 182px;" name="email">@user.Email</textarea>
+                        <textarea style="width: 182px;" name="phoneNumber">@user.PhoneNumber</textarea>
                     
-                    <center style="display: flex;">
+                        <center style="display: flex;width: 87px;">
                         <button class="edit-user-btn" data-user-id="@user.IdUser">Сохранить</button>
                         <button class="delete-user-btn" data-user-id="@user.IdUser">Удалить пользователя</button>
                     </center>
