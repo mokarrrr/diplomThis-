@@ -1,0 +1,81 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+<!-- Подключение скрипта SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link rel="stylesheet" href="~/css/mainwindow.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<body>
+
+    <header class="_header" style="background: #F9D86E!important;">
+
+        <div class="logo">
+            <a href="/Home/MainPage" class="company-name">Dairy Delights Emporium</a>
+        </div>
+        <div class="mogo">
+            <a href="/Home/AboutUsPage"><img src="~/img/Group 84(11).png" style="height:180px;width:180px;margin-top:-5px;" /></a>
+        </div>
+        <div class="header-buttons">
+            <button id="adminbutton" style="display:none">Админ-панель</button>
+            <button id="cartButton" class="btn cart-button" style="border: 2px solid black;">
+                <i class="fas fa-shopping-basket"></i>
+            </button>
+            <button class="btn fav-button" style="border: 2px solid black;">
+                <i class="fas fa-heart"></i>
+            </button>
+
+            <button class="btn user-button" style="border: 2px solid black;" type="button" id="openAuthModalButton">
+                <i class="fas fa-user"></i>
+            </button>
+        </div>
+    </header>
+
+    <div style="max-width: 100%;margin-top: 7%; background-color: #ffffff; padding: 20px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); text-align: justify; line-height: 1.6;">
+        <h2 style="color: #2d4e89; text-align: center; margin-bottom: 20px;">Согласие на обработку персональных данных</h2>
+        <p style="margin-bottom: 15px;">
+            Я, подписываясь, даю свое согласие на обработку моих персональных данных Онлайн-магазином <strong>Dairy Delights Emporium</strong> (далее – Магазин) для оформления, обработки и доставки заказов продукции, включая сыры и другие товары, предлагаемые Магазином.
+        </p>
+        <p style="margin-bottom: 15px;">
+            Персональные данные, которые могут быть обработаны, включают:
+        </p>
+        <ul style="margin-bottom: 15px; padding-left: 20px;">
+            <li>Имя и фамилия</li>
+            <li>Адрес электронной почты</li>
+            <li>Адрес доставки</li>
+            <li>Номер телефона</li>
+            <li>Информация о заказах</li>
+            <li>Платежные реквизиты (для оплаты заказов)</li>
+        </ul>
+        <p style="margin-bottom: 15px;">
+            Обработка персональных данных будет включать сбор, запись, систематизацию, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передачу (распространение, предоставление, доступ), обезличивание, блокирование, удаление и уничтожение персональных данных.
+        </p>
+        <p style="margin-bottom: 15px;">
+            Мои данные могут быть переданы третьим лицам для исполнения обязательств передо мной, например, курьерским службам, почтовым организациям и платежным системам, в целях исполнения договора купли-продажи.
+        </p>
+        <p style="margin-bottom: 15px;">
+            Я понимаю, что обработка данных будет осуществляться с соблюдением законодательства о защите персональных данных, включая Федеральный закон "О персональных данных" № 152-ФЗ. Мои данные будут храниться только на период, необходимый для достижения целей их обработки, и могут быть удалены по моей просьбе, если иное не предусмотрено законодательством.
+        </p>
+        <p style="margin-bottom: 15px;">
+            Мне известны мои права по отношению к персональным данным, включая:
+        </p>
+        <ul style="margin-bottom: 15px; padding-left: 20px;">
+            <li>Право на доступ к моим персональным данным</li>
+            <li>Право на исправление или уточнение данных</li>
+            <li>Право на удаление данных (право на забвение)</li>
+            <li>Право на ограничение обработки данных</li>
+            <li>Право на возражение против обработки данных</li>
+            <li>Право на перенос данных</li>
+            <li>Право на отзыв согласия в любое время</li>
+        </ul>
+        <p style="margin-bottom: 15px;">
+            Я подтверждаю, что ознакомлен с Политикой конфиденциальности Магазина и соглашаюсь с условиями обработки моих персональных данных, изложенными в настоящем документе.
+        </p>       
+    </div>
+</body>

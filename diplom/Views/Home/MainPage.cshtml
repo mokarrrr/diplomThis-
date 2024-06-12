@@ -93,13 +93,11 @@
                         </div>
                         <div style="display:flex;height:70px;align-items: center;gap:10px;">
                         <input id="givetrue" type="checkbox"/>
-                        
-                            <a id="consentLink" style="color: black" >Даю согласие на обработку персональных данных</a>
-                            <i class="fa fa-question wqwqwq" title="Даю согласие на обработку моих персональных данных Онлайн-магазином Dairy Delights Emporium для оформления, обработки и доставки заказов продукции, включая сыры и другие товары, предлагаемые магазином. Мои персональные данные могут включать имя, адрес электронной почты, адрес доставки, номер телефона и информацию о моих заказах.
 
-Я понимаю, что мои данные будут обрабатываться для указанных целей, включая сбор, хранение, использование и передачу третьим лицам в соответствии с законодательством. Мои данные будут храниться столько, сколько необходимо для целей обработки, с соблюдением действующего законодательства о защите данных.
-
-Мне известны мои права по отношению к моим персональным данным, включая право на доступ, исправление, удаление или блокирование данных. Подписываясь ниже, я выражаю свое согласие на обработку моих персональных данных Dairy Delights Emporium."></i>
+                            <a id="consentLink" href="/Home/Privacy" style="text-decoration: none; color: black;">
+                                Даю <span style="text-decoration: underline;">согласие на обработку персональных данных</span>
+                            </a>
+                            
                     </div>
                         
                         <p id="errorMessage2" style="color:red;z-index:1;display:none">⚠️ Не все поля заполнены</p>
@@ -627,7 +625,9 @@
                             <a href="#"> Каталог</a> |
                             <a href="@Url.Action("AboutUsPage", "Home")" onclick="scrollToElement('mya')"> О нас</a> |
                             <a href="@Url.Action("AboutUsPage", "Home")#contacts"> Контакты</a> |
+                            <a href="@Url.Action("Privacy", "Home")#contacts"> Согласие на обработку персональных данных</a> |
                             <a href="#myModal2" id="modalOpen"> Политика конфиденциальности</a>
+
                         </p>
                         <p class="name"> Dairy Delights Emporium; 2004</p>
                     </div>

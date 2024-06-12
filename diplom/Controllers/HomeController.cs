@@ -48,6 +48,10 @@ namespace diplom.Controllers
         {
             return View();
         }
+        public IActionResult Privacy()
+        {
+            return View();
+        }
         public IActionResult Supplies(string searchQuery)
         {
             IQueryable<_Provider> suppliersQuery = db._Provider.AsQueryable();
