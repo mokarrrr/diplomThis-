@@ -370,45 +370,45 @@
     }
 </div>
 
-@if (Model.HasResults)
-{
-    <div class="pagination" style="grid-column:2">
-        @if (Model.PageNumber > 1)
-        {
-            <a class="prev page-numbers" href="@Url.Action("MainPage", new { pageNumber = Model.PageNumber - 1, pageSize = ViewBag.PageSize })">« Предыдущая</a>
-        }
+            @if (Model.HasResults)
+            {
+                <div class="pagination" style="grid-column: 2; width: 400%; text-align: center; margin: 20px 0;">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <a class="prev page-numbers" style="display: inline-block; margin: 0 5px;" href="@Url.Action("MainPage", new { pageNumber = Model.PageNumber - 1, pageSize = ViewBag.PageSize })">« Предыдущая</a>
+                    }
 
-        <!-- Display the first page -->
-        <a class="page-numbers @(1 == Model.PageNumber ? "current" : "")" href="@Url.Action("MainPage", new { pageNumber = 1, pageSize = ViewBag.PageSize })">1</a>
+                    <!-- Display the first page -->
+                    <a class="page-numbers @(1 == Model.PageNumber ? "current" : "")" style="display: inline-block; margin: 0 5px;" href="@Url.Action("MainPage", new { pageNumber = 1, pageSize = ViewBag.PageSize })">1</a>
 
-        @if (Model.PageNumber > 4) 
-        {
-            <span class="page-numbers">...</span>
-        }
+                    @if (Model.PageNumber > 4)
+                    {
+                        <span class="page-numbers" style="display: inline-block; margin: 0 5px;">...</span>
+                    }
 
-        <!-- Display pages around the current page -->
-        @for (int i = Math.Max(2, Model.PageNumber - 2); i <= Math.Min(Model.PageNumber + 2, Model.TotalPages - 1); i++)
-        {
-            <a class="page-numbers @(i == Model.PageNumber ? "current" : "")" href="@Url.Action("MainPage", new { pageNumber = i, pageSize = ViewBag.PageSize })">@i</a>
-        }
+                    <!-- Display pages around the current page -->
+                    @for (int i = Math.Max(2, Model.PageNumber - 2); i <= Math.Min(Model.PageNumber + 2, Model.TotalPages - 1); i++)
+                    {
+                        <a class="page-numbers @(i == Model.PageNumber ? "current" : "")" style="display: inline-block; margin: 0 5px;" href="@Url.Action("MainPage", new { pageNumber = i, pageSize = ViewBag.PageSize })">@i</a>
+                    }
 
-        @if (Model.PageNumber < Model.TotalPages - 2)
-        {
-            <span class="page-numbers">...</span>
-        }
+                    @if (Model.PageNumber < Model.TotalPages - 2)
+                    {
+                        <span class="page-numbers" style="display: inline-block; margin: 0 5px;">...</span>
+                    }
 
-        <!-- Display the last page -->
-        @if (Model.TotalPages > 1)
-        {
-            <a class="page-numbers @(Model.TotalPages == Model.PageNumber ? "current" : "")" href="@Url.Action("MainPage", new { pageNumber = Model.TotalPages, pageSize = ViewBag.PageSize })">@Model.TotalPages</a>
-        }
+                    <!-- Display the last page -->
+                    @if (Model.TotalPages > 1)
+                    {
+                        <a class="page-numbers @(Model.TotalPages == Model.PageNumber ? "current" : "")" style="display: inline-block; margin: 0 5px;" href="@Url.Action("MainPage", new { pageNumber = Model.TotalPages, pageSize = ViewBag.PageSize })">@Model.TotalPages</a>
+                    }
 
-        @if (Model.PageNumber < Model.TotalPages)
-        {
-            <a class="next page-numbers" href="@Url.Action("MainPage", new { pageNumber = Model.PageNumber + 1, pageSize = ViewBag.PageSize })">Следующая »</a>
-        }
-    </div>
-}
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                        <a class="next page-numbers" style="display: inline-block; margin: 0 5px;" href="@Url.Action("MainPage", new { pageNumber = Model.PageNumber + 1, pageSize = ViewBag.PageSize })">Следующая »</a>
+                    }
+                </div>
+            }
 
 
 
