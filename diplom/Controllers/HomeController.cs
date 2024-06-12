@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace diplom.Controllers
 {
@@ -293,6 +294,28 @@ namespace diplom.Controllers
                 return NotFound(); // Если пользователь не найден, вернуть 404
             }
 
+            // Определяем роль администратора
+            string adminRole = "admin".Trim();
+
+            // Получаем роль пользователя и удаляем все символы, кроме букв и цифр
+            string userRole = Regex.Replace(user.role ?? string.Empty, @"\W+", "").Trim().ToLower();
+
+            // Сравниваем роль пользователя с ролью администратора
+            if (userRole == adminRole)
+            {
+                // Устанавливаем куки с ролью пользователя
+                HttpContext.Response.Cookies.Append("UserRole", userRole, new CookieOptions
+                {
+                    Expires = DateTime.Now.AddHours(400),
+                    HttpOnly = false,
+                    Secure = false,
+                    Path = "/"
+                });
+
+                // Возвращаем сообщение о невозможности удаления пользователя с ролью админ
+                return StatusCode(403, "Невозможно удалить пользователя с ролью админ.");
+            }
+
             try
             {
                 var ordersCount = db._orders.Count(o => o._user_id == userId);
@@ -300,7 +323,7 @@ namespace diplom.Controllers
                 if (ordersCount > 0)
                 {
                     // Если у пользователя есть связанные заказы, возвращаем сообщение об ошибке
-                    return StatusCode(500, "Невозможно удалить пользователя, так как у нео есть связанные заказы.");
+                    return StatusCode(500, "Невозможно удалить пользователя, так как у него есть связанные заказы.");
                 }
 
                 // Находим и удаляем все связанные записи в таблице Rate, где client_id равен userId

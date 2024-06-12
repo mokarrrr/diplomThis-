@@ -94,40 +94,45 @@
             });
         });
     </script>
-   
 
-        <script>
-            $(document).ready(function () {
-                $(".delete-user-btn").click(function () {
-                    var userId = $(this).data("user-id");
 
-                    // Отправляем AJAX-запрос на сервер для удаления пользователя
-                    $.ajax({
-                        url: "/Home/DeleteUser",
-                        type: "POST",
-                        data: { userId: userId },
-                        success: function (result) {
-                            if (result.success) {
-                                // Успешное удаление пользователя
-                                console.log(result.message); // Лог для отладки
-                            alert("Пользователь удален.") // Отобразить сообщение об успешном удалении
-                            } else {
-                                // Не удалось удалить пользователя из-за активных заказов
-                                console.log(result.message); // Лог для отладки
-                                alert(result.message); // Отобразить сообщение об ошибке
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Ошибка удаления пользователя:", error);
-                            if (xhr.status === 500 && xhr.responseText) {
-                                alert(xhr.responseText); // Отобразить текст ошибки 500
-                            } else {
-                                alert("Произошла ошибка при удалении пользователя."); // Отобразить общее сообщение об ошибке
-                            }
+    <script>
+        $(document).ready(function () {
+            $(".delete-user-btn").click(function () {
+                var userId = $(this).data("user-id");
+
+                // Отправляем AJAX-запрос на сервер для удаления пользователя
+                $.ajax({
+                    url: "/Home/DeleteUser",
+                    type: "POST",
+                    data: { userId: userId },
+                    success: function (result) {
+                        if (result.success) {
+                            // Успешное удаление пользователя
+                            console.log(result.message); // Лог для отладки
+                            alert("Пользователь удален."); // Отобразить сообщение об успешном удалении
+                        } else {
+                            // Не удалось удалить пользователя из-за активных заказов
+                            console.log(result.message); // Лог для отладки
+                            alert(result.message); // Отобразить сообщение об ошибке
                         }
-                    });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Ошибка удаления пользователя:", error);
+                        if (xhr.status === 403 && xhr.responseText) {
+                            // Обработка ошибки 403, когда невозможно удалить пользователя с ролью админ
+                            alert(xhr.responseText); // Отобразить текст ошибки 403
+                        } else if (xhr.status === 500 && xhr.responseText) {
+                            // Обработка ошибки 500
+                            alert(xhr.responseText); // Отобразить текст ошибки 500
+                        } else {
+                            // Обработка других ошибок
+                            alert("Произошла ошибка при удалении пользователя."); // Отобразить общее сообщение об ошибке
+                        }
+                    }
                 });
             });
+        });
     </script>
 
     <script>

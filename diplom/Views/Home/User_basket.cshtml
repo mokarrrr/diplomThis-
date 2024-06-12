@@ -68,7 +68,7 @@
                         </div>
                     </div>
                 </div>
-                <div>
+                <div style="margin-left: -50px;">
 
                     <div style="width:100%;gap:50px;display:inline-grid;margin-top:40px">
 
@@ -574,7 +574,7 @@
 
     <script>
         $(document).ready(function () {
-            $('.info-button1').on('click', function () {               
+            $('.info-button1').on('click', function () {
                 var productId = $(this).data('idproduct');
 
 
@@ -1861,225 +1861,268 @@
         document.getElementById('Emailuser').setAttribute('maxlength', '50');
     </script>
 
-    <script>
-        $(document).ready(function () {
-            var productQuantities = {}; // Объявляем объект productQuantities
 
-            // Обработчик нажатия на кнопку "Заказать"
-            $("#orderbutton").click(function () {
-                updateTotalPrice();
+        <script>
+            $(document).ready(function () {
+                var productQuantities = {}; // Объявляем объект productQuantities
 
-                // Получаем общую сумму заказа из элемента с id="sumorder"
-                var totalPrice = $("#sumorder").text();
+                // Обработчик нажатия на кнопку "Заказать"
+                $("#orderbutton").click(function () {
+                    updateTotalPrice();
 
-                // Обрезаем и оставляем только числовую часть
-                var numericTotalPrice = parseInt(totalPrice.replace(/[^\d.-]/g, ''));
+                    // Получаем общую сумму заказа из элемента с id="sumorder"
+                    var totalPrice = $("#sumorder").text();
 
-                // Передаем общую сумму заказа в модальное окно (только числовую часть)
-                $("#suuummorder").text("Сумма к оплате: " + numericTotalPrice + " рублей");
+                    // Обрезаем и оставляем только числовую часть
+                var numericTotalPrice = Math.ceil(parseFloat(totalPrice.replace(/[^\d.-]/g, '')));
 
-                // Показываем модальное окно
-                $("#modalсomm").show();
-            });
+                    // Передаем общую сумму заказа в модальное окно (только числовую часть)
+                    $("#suuummorder").text("Сумма к оплате: " + numericTotalPrice + " рублей");
 
-            $('#modalсomm .close').click(function () {
-                $('#modalсomm').hide();
+                    // Показываем модальное окно
+                    $("#modalсomm").show();
+                });
 
-                // Устанавливаем значение "AuthenticationSuccess" в "0" при закрытии окна
-                localStorage.setItem("AuthenticationSuccess", "0");
-            });
+                $('#modalсomm .close').click(function () {
+                    $('#modalсomm').hide();
 
-            // Обработчик нажатия на кнопку "Оформить"
-            $("#savebuttonorder").click(function () {
-                // Получаем текст общей суммы заказа
-                var totalPriceText = $("#sumorder").text();
-                // Преобразуем текст в числовое значение
-                var numericTotalPrice = parseInt(totalPriceText.replace(/[^\d.-]/g, ''));
+                    // Устанавливаем значение "AuthenticationSuccess" в "0" при закрытии окна
+                    localStorage.setItem("AuthenticationSuccess", "0");
+                });
 
-                // Получаем значения города и адреса из инпутов
-                var city = $("#cityInput").val().trim();
-                var address = $("#addressInput").val().trim();
-                var paymentMethod = $("#filterselect").val(); // Получаем значение выбранного способа оплаты
+                // Обработчик нажатия на кнопку "Оформить"
+                $("#savebuttonorder").click(function () {
+                    // Получаем текст общей суммы заказа
+                    var totalPriceText = $("#sumorder").text();
+                    // Преобразуем текст в числовое значение
+                    var numericTotalPrice = parseInt(totalPriceText.replace(/[^\d.-]/g, ''));
 
-                // Проверяем заполнение города и адреса
-                if (city === '' || address === '') {
-                    // Если город или адрес не заполнены, выводим сообщение об ошибке
-                    showNotification('Пожалуйста, укажите город и адрес для доставки', 'warning');
-                    return; // Прерываем выполнение функции, если поля не заполнены
+                    // Получаем значения города и адреса из инпутов
+                    var city = $("#cityInput").val().trim();
+                    var address = $("#addressInput").val().trim();
+                    var paymentMethod = $("#filterselect").val(); // Получаем значение выбранного способа оплаты
+
+                    // Проверка на содержание города только кириллическими символами
+                    var isCityValid = /^[а-яА-ЯёЁ\s]+$/.test(city);
+
+                    // Проверяем заполнение города и адреса и корректность города
+                    if (!isCityValid || city === '' || address === '') {
+                        // Если город не на кириллице, или город, или адрес не заполнены, выводим сообщение об ошибке
+                        showNotification('Пожалуйста, укажите город и адрес для доставки', 'warning');
+                        return; // Прерываем выполнение функции, если поля не заполнены
+                    }
+
+                    // Собираем данные для заказа
+                    var orderData = {
+                        city: city,
+                        address: address,
+                        comment: $("#commentInput").val(),
+                        totalPrice: numericTotalPrice,
+                        paymentMethod: paymentMethod, // Добавляем способ оплаты в данные заказа
+                        productQuantities: {} // Инициализируем объект для количества товаров
+                    };
+
+                    // Заполняем объект productQuantities количеством каждого товара
+                    var quantityInputs = document.querySelectorAll('[id^="quantity_"]');
+                    quantityInputs.forEach(function (input) {
+                        var productId = input.id.split('_')[1];
+                        var quantity = parseInt(input.value);
+                        orderData.productQuantities[productId] = quantity;
+                    });
+
+                    // Отправляем данные на сервер для создания заказа
+                    $.ajax({
+                        url: "/Home/CreateOrder",
+                        type: "POST",
+                        data: orderData,
+                        success: function (response) {
+                            // Обработка успешного ответа от сервера при создании заказа
+                            console.log("Заказ успешно создан:", response);
+
+                            if (response && response.orderId) {
+                                var orderId = response.orderId;
+
+                                // Отправляем товары из корзины пользователя на сервер для добавления в заказ
+                                $.ajax({
+                                    url: "/Home/AddItemsToOrderDetails",
+                                    type: "POST",
+                                    data: { orderId: orderId, productQuantities: orderData.productQuantities },
+                                    success: function (addItemResponse) {
+
+
+
+
+
+                                    var message = {
+                                        chat_id: -1002179771437,
+                                        text: "Заказ создан, данные заказа: \n" + JSON.stringify(orderData, null, 4) 
+
+                                    }
+                                    $.ajax({
+                                        url: "https://api.telegram.org/bot7008325374:AAH44sr9Ccp3fUX7vCcsna843Pv-7Wpow9w/sendMessage",
+                                        type: "POST",
+                                        contentType: "application/json", 
+                                        data: JSON.stringify(message), 
+                                        success: function (response) {
+                                            console.log("Сообщение успешно отправлено:", response);
+                                        },
+                                        error: function (xhr, status, error) {
+                                            console.error("Ошибка отправки сообщения:", error);
+                                        }
+                                    });
+                                        
+                                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        console.log("Товары успешно добавлены в заказ:", addItemResponse);
+                                        showNotification('Заказ успешно оформлен, страница обновится через 5 секунд', 'success');
+                                        $("#modalсomm").hide();
+                                        setTimeout(function () {
+                                            // Обновляем страницу
+                                            location.reload();
+                                        }, 6000);
+                                        localStorage.setItem("AuthenticationSuccess", "1");
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error("Ошибка при добавлении товаров в заказ:", error);
+                                    }
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Ошибка при создании заказа:", error);
+
+                            if (xhr && xhr.responseJSON && xhr.responseJSON.error === "Insufficient stock for some products") {
+                                var insufficientProducts = xhr.responseJSON.insufficientProducts;
+                                var errorMessage = "Недостаточное количество товара. Не хватает:\n";
+
+                                insufficientProducts.forEach(function (product) {
+                                    errorMessage += `- ${product.productName} (Доступное количество: ${product.availableQuantity})\n`;
+                                });
+
+                                displayErrorMessage(errorMessage);
+                            } else {
+                                displayErrorMessage("Произошла ошибка при создании заказа");
+                            }
+                        }
+                    });
+                });
+
+                function displayErrorMessage(message) {
+                    $("#errorMessageproduct").css("display", "block").text(message);
                 }
 
-                // Собираем данные для заказа
-                var orderData = {
-                    city: city,
-                    address: address,
-                    comment: $("#commentInput").val(),
-                    totalPrice: numericTotalPrice,
-                    paymentMethod: paymentMethod, // Добавляем способ оплаты в данные заказа
-                    productQuantities: {} // Инициализируем объект для количества товаров
-                };
+                function updateTotalPrice() {
+                    var totalPrice = 0;
 
-                // Заполняем объект productQuantities количеством каждого товара
+                    var priceElements = document.getElementsByClassName('price');
+
+                    for (var i = 0; i < priceElements.length; i++) {
+                        var priceText = priceElements[i].textContent;
+
+                        console.log("Цена товара текст:", priceText);
+
+                        // Находим элемент скидки
+                        var saleElement = priceElements[i].parentNode.parentNode.querySelector('.sale');
+
+                        console.log("Элемент скидки:", saleElement);
+
+                        // Инициализируем переменную для хранения размера скидки
+                        var discount = 0;
+
+                        // Если найден элемент скидки, извлекаем размер скидки
+                        if (saleElement) {
+                            var saleText = saleElement.textContent;
+                            console.log("Текст скидки:", saleText);
+                            // Удаляем символы '%' и '-' из строки скидки
+                            saleText = saleText.replace(/[%-]/g, '');
+                            discount = parseFloat(saleText); // Преобразуем текст скидки в число
+                            console.log("Размер скидки:", discount);
+                        }
+
+                        // Получаем цену до скидки (получаем только число из строки цены)
+                        var originalPrice = parseFloat(priceText.replace(' руб.', '').replace('Цена: ', '').replace('-', ''));
+
+                        console.log("Оригинальная цена:", originalPrice);
+
+                        // Получаем количество товаров из соответствующего поля ввода
+                        var productId = priceElements[i].id.split('_')[1];
+                        var quantityInput = document.getElementById('quantity_' + productId);
+
+                        console.log("Поле ввода количества товара:", quantityInput);
+
+                        if (quantityInput) {
+                            if (quantityInput.value.startsWith('0') && quantityInput.value !== '0') {
+                                quantityInput.value = 0;
+                            }
+
+                            var quantity = parseInt(quantityInput.value);
+
+                            console.log("Количество товара:", quantity);
+
+                            if (isNaN(quantity)) {
+                                quantity = 0;
+                            }
+
+                            // Вычисляем цену со скидкой и общую стоимость товара
+                            var discountedPrice = originalPrice - (originalPrice * discount / 100);
+                            var totalProductPrice = discountedPrice * quantity;
+
+                            console.log("Цена со скидкой:", discountedPrice);
+                            console.log("Общая стоимость товара:", totalProductPrice);
+
+                        totalPrice = Math.ceil(totalPrice + totalProductPrice);
+                        }
+                    }
+
+                    console.log("Общая сумма:", totalPrice);
+
+                    document.getElementById('sumorder').textContent = totalPrice + " руб.";
+
+                    // Проверяем, есть ли товары в корзине
+                    var quantityInputs = document.querySelectorAll('[id^="quantity_"]');
+                    var totalQuantity = 0;
+                    quantityInputs.forEach(function (input) {
+                        var quantity = parseInt(input.value);
+                        totalQuantity += quantity;
+                    });
+
+                    // Если в корзине только один товар и его количество равно 0, выводим уведомление и отключаем кнопку "Заказать"
+                    if (totalQuantity === 0) {
+                        showNotification('Введите корректное количество товаров', 'error');
+                        $("#orderbutton").prop("disabled", true);
+                    } else {
+                        $("#orderbutton").prop("disabled", false);
+                    }
+                }
+
+                // Получаем все поля ввода количества товаров
                 var quantityInputs = document.querySelectorAll('[id^="quantity_"]');
+
                 quantityInputs.forEach(function (input) {
-                    var productId = input.id.split('_')[1];
-                    var quantity = parseInt(input.value);
-                    orderData.productQuantities[productId] = quantity;
+                    input.value = 1;
                 });
 
-                // Отправляем данные на сервер для создания заказа
-                $.ajax({
-                    url: "/Home/CreateOrder",
-                    type: "POST",
-                    data: orderData,
-                    success: function (response) {
-                        // Обработка успешного ответа от сервера при создании заказа
-                        console.log("Заказ успешно создан:", response);
-
-                        if (response && response.orderId) {
-                            var orderId = response.orderId;
-
-                            // Отправляем товары из корзины пользователя на сервер для добавления в заказ
-                            $.ajax({
-                                url: "/Home/AddItemsToOrderDetails",
-                                type: "POST",
-                                data: { orderId: orderId, productQuantities: orderData.productQuantities },
-                                success: function (addItemResponse) {
-                                    console.log("Товары успешно добавлены в заказ:", addItemResponse);
-                                    showNotification('Заказ успешно оформлен, страница обновится через 5 секунд', 'success');
-                                    $("#modalсomm").hide();
-                                    setTimeout(function () {
-                                        // Обновляем страницу
-                                        location.reload();
-                                    }, 6000);
-                                    localStorage.setItem("AuthenticationSuccess", "1");
-                                },
-                                error: function (xhr, status, error) {
-                                    console.error("Ошибка при добавлении товаров в заказ:", error);
-                                }
-                            });
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Ошибка при создании заказа:", error);
-
-                        if (xhr && xhr.responseJSON && xhr.responseJSON.error === "Insufficient stock for some products") {
-                            var insufficientProducts = xhr.responseJSON.insufficientProducts;
-                            var errorMessage = "Недостаточное количество товара. Не хватает:\n";
-
-                            insufficientProducts.forEach(function (product) {
-                                errorMessage += `- ${product.productName} (Доступное количество: ${product.availableQuantity})\n`;
-                            });
-
-                            displayErrorMessage(errorMessage);
-                        } else {
-                            displayErrorMessage("Произошла ошибка при создании заказа");
-                        }
-                    }
-                });
-            });
-
-            function displayErrorMessage(message) {
-                $("#errorMessageproduct").css("display", "block").text(message);
-            }
-
-            function updateTotalPrice() {
-                var totalPrice = 0;
-
-                var priceElements = document.getElementsByClassName('price');
-
-                for (var i = 0; i < priceElements.length; i++) {
-                    var priceText = priceElements[i].textContent;
-
-                    console.log("Цена товара текст:", priceText);
-
-                    // Находим элемент скидки
-                    var saleElement = priceElements[i].parentNode.parentNode.querySelector('.sale');
-
-                    console.log("Элемент скидки:", saleElement);
-
-                    // Инициализируем переменную для хранения размера скидки
-                    var discount = 0;
-
-                    // Если найден элемент скидки, извлекаем размер скидки
-                    if (saleElement) {
-                        var saleText = saleElement.textContent;
-                        console.log("Текст скидки:", saleText);
-                        // Удаляем символы '%' и '-' из строки скидки
-                        saleText = saleText.replace(/[%-]/g, '');
-                        discount = parseFloat(saleText); // Преобразуем текст скидки в число
-                        console.log("Размер скидки:", discount);
-                    }
-
-                    // Получаем цену до скидки (получаем только число из строки цены)
-                    var originalPrice = parseFloat(priceText.replace(' руб.', '').replace('Цена: ', '').replace('-', ''));
-
-                    console.log("Оригинальная цена:", originalPrice);
-
-                    // Получаем количество товаров из соответствующего поля ввода
-                    var productId = priceElements[i].id.split('_')[1];
-                    var quantityInput = document.getElementById('quantity_' + productId);
-
-                    console.log("Поле ввода количества товара:", quantityInput);
-
-                    if (quantityInput) {
-                        if (quantityInput.value.startsWith('0') && quantityInput.value !== '0') {
-                            quantityInput.value = 0;
-                        }
-
-                        var quantity = parseInt(quantityInput.value);
-
-                        console.log("Количество товара:", quantity);
-
-                        if (isNaN(quantity)) {
-                            quantity = 0;
-                        }
-
-                        // Вычисляем цену со скидкой и общую стоимость товара
-                        var discountedPrice = originalPrice - (originalPrice * discount / 100);
-                        var totalProductPrice = discountedPrice * quantity;
-
-                        console.log("Цена со скидкой:", discountedPrice);
-                        console.log("Общая стоимость товара:", totalProductPrice);
-
-                        totalPrice += totalProductPrice;
-                    }
-                }
-
-                console.log("Общая сумма:", totalPrice);
-
-                document.getElementById('sumorder').textContent = totalPrice + " руб.";
-
-                // Проверяем, есть ли товары в корзине
-                var quantityInputs = document.querySelectorAll('[id^="quantity_"]');
-                var totalQuantity = 0;
                 quantityInputs.forEach(function (input) {
-                    var quantity = parseInt(input.value);
-                    totalQuantity += quantity;
+                    input.addEventListener('input', updateTotalPrice);
                 });
 
-                // Если в корзине только один товар и его количество равно 0, выводим уведомление и отключаем кнопку "Заказать"
-                if (totalQuantity === 0) {
-                    showNotification('Введите корректное количество товаров', 'error');
-                    $("#orderbutton").prop("disabled", true);
-                } else {
-                    $("#orderbutton").prop("disabled", false);
-                }
-            }
-
-            // Получаем все поля ввода количества товаров
-            var quantityInputs = document.querySelectorAll('[id^="quantity_"]');
-
-            quantityInputs.forEach(function (input) {
-                input.value = 1;
+                updateTotalPrice(); // Вызываем функцию для первоначального расчета общей суммы
             });
-
-            quantityInputs.forEach(function (input) {
-                input.addEventListener('input', updateTotalPrice);
-            });
-
-            updateTotalPrice(); // Вызываем функцию для первоначального расчета общей суммы
-        });
     </script>
+
+
 
 
 
@@ -2206,9 +2249,12 @@
 
         function openMap() {
             var city = document.getElementById('cityInput').value.trim();
-            if (city === '') {
-                
-                showNotification('Пожалуйста, введите город', 'warning ');
+
+            // Проверка на содержание города только кириллическими символами
+            var isCityValid = /^[а-яА-ЯёЁ\s]+$/.test(city);
+
+            if (!isCityValid || city === '') {
+                showNotification('Пожалуйста, укажите город на русском языке', 'warning');
                 return;
             }
 
@@ -2216,8 +2262,8 @@
             ymaps.ready(function () {
                 // Находим координаты города
                 ymaps.geocode(city).then(function (res) {
-                    if (res.geoObjects.getLength() === 0) {                       
-                        showNotification('Пожалуйста, введите город', 'warning ');
+                    if (res.geoObjects.getLength() === 0) {
+                        showNotification('Пожалуйста, введите корректный город', 'warning');
                         return;
                     }
 
@@ -2261,6 +2307,7 @@
             document.getElementById('mapModal').style.display = 'none';
         }
     </script>
+
     <script>
         // Функция для отображения неблокирующего уведомления (Toast)
         function showNotification(message, type) {

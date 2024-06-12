@@ -1606,6 +1606,9 @@
             });
         </script>
         <script>
+
+        </script>
+        <script>
             $(document).ready(function () {
                 var productId; // Переменная для хранения идентификатора продукта
 
@@ -1620,24 +1623,24 @@
                         data: { Id: productId },
                         success: function (Product) {
                             // Обновляем значения на странице с информацией о продукте
-                            $('#productNameLabel').text(Product["name_product"]);
-                            $('#productPrice').html(Product["product_price"]);
-                            $('#description').text(Product["product_description_"]);
+                            $('#productNameLabel').val(Product["name_product"]);
+                            $('#productPrice').val(Product["product_price"]);
+                            $('#description').val(Product["product_description_"]);
                             $('#productImage').attr('src', Product["product_img"]);
-                            $('#productMassPerFat').text(Product["product_mass_per_fat"]);
-                            $('#productfat').text(Product["product_fat"]);
-                            $('#productProtein').text(Product["product_protein"]);
-                            $('#productFatty').text(Product["product_fatty"]);
-                            $('#productCarb').text(Product["product_carb"]);
-                            $('#productEnergyValue').text(Product["product_energy_value"]);
-                            $('#productStorageLife').text(Product["product_storage_life"]);
-                            $('#productPackageId').text(Product["product_package_id"]);
-                            $('#productStorageConditions').text(Product["product_storage_conditions"]);
-                            $('#productsale').text(Product["product_sale"]);
-                            $('#productRemain').text(Product["product_remain"]);
-                            $('#productArticle').text(Product["product_article"]);
-                            $('#productSostav').text(Product["product_sostav"]);
-                            $('#prodid').text(Product["idProduct"]);
+                            $('#productMassPerFat').val(Product["product_mass_per_fat"]);
+                            $('#productfat').val(Product["product_fat"]);
+                            $('#productProtein').val(Product["product_protein"]);
+                            $('#productFatty').val(Product["product_fatty"]);
+                            $('#productCarb').val(Product["product_carb"]);
+                            $('#productEnergyValue').val(Product["product_energy_value"]);
+                            $('#productStorageLife').val(Product["product_storage_life"]);
+                            $('#productPackageId').val(Product["product_package_id"]);
+                            $('#productStorageConditions').val(Product["product_storage_conditions"]);
+                            $('#productsale').val(Product["product_sale"]);
+                            $('#productRemain').val(Product["product_remain"]);
+                            $('#productArticle').val(Product["product_article"]);
+                            $('#productSostav').val(Product["product_sostav"]);
+                            $('#prodid').val(Product["idProduct"]);
 
                             // Обновляем видимость кнопок в зависимости от значения ishidden
                             if (Product.ishidden === true) {
@@ -1909,6 +1912,65 @@
             });
           
 
+        </script>
+        <script>
+            $(document).ready(function () {
+                // Идентификатор модального окна
+                var modalId = '#exampleModal'; // Укажите правильный идентификатор вашего модального окна
+
+                // Обработчик клика для кнопки закрытия модального окна
+                $(modalId + ' .close').click(function () {
+                    $(modalId).hide();
+                    clearProductModalFields();
+                });
+
+                // Закрытие модального окна при клике вне его области
+                $(window).click(function (event) {
+                    if (event.target == $(modalId)[0]) {
+                        $(modalId).hide();
+                        clearProductModalFields();
+                    }
+                });
+
+                // Функция для очистки полей в модальном окне продукта
+                function clearProductModalFields() {
+                    $('#phoneErrorMessage10').hide();
+                    $('#phoneErrorMessage20').hide();
+                    $('#phoneMailMessage20').hide();
+                    $('#phoneMail10').hide();
+                    $('#errorMessage5').hide();
+
+                    // Сбрасываем значения полей ввода
+                    $('#Emailuser, #Nameuser, #lastNameuser, #phoneRegisteruser').val("");
+
+                    // Обновление состояния кнопки сохранения
+                    toggleSaveButton();
+                    phoneChanged = false;
+                    emailChanged = false;
+
+                    // Дополнительно очищаем поля продукта
+                    $('#productNameLabel').text('');
+                    $('#productPrice').html('');
+                    $('#description').text('');
+                    $('#productImage').attr('src', '');
+                    $('#productMassPerFat').text('');
+                    $('#productfat').text('');
+                    $('#productProtein').text('');
+                    $('#productFatty').text('');
+                    $('#productCarb').text('');
+                    $('#productEnergyValue').text('');
+                    $('#productStorageLife').text('');
+                    $('#productPackageId').text('');
+                    $('#productStorageConditions').text('');
+                    $('#productsale').text('');
+                    $('#productRemain').text('');
+                    $('#productArticle').text('');
+                    $('#productSostav').text('');
+                    $('#prodid').text('');
+                    $('#rewey').empty();
+                    $('#productVisibility').text('');
+                }
+            });
         </script>
 
         <script>
