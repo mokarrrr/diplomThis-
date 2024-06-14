@@ -1797,6 +1797,72 @@
                         }
                     });
                 });
+              
+
+                // Обработчик изменения значения в селекте категорий
+                $('#cat2').change(function () {
+                    var selectedCategory = $(this).val();
+
+                    // Определение categoryId в зависимости от выбранного значения в селекте
+                    var categoryId;
+                    if (selectedCategory === 'soft') {
+                        categoryId = 1;
+                    } else if (selectedCategory === 'semi-solid') {
+                        categoryId = 2;
+                    } else if (selectedCategory === 'solid') {
+                        categoryId = 3;
+                    } else if (selectedCategory === 'moldy') {
+                        categoryId = 4;
+                    } else if (selectedCategory === 'additives') {
+                        categoryId = 5;
+                    }
+
+                    console.log('Selected categoryId on change:', categoryId); // Для отладки
+
+                    // Дальнейшие действия при изменении категории, если нужно
+                });
+            });
+          
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                // Функция для ограничения ввода букв и длины символов в числовых полях
+                function restrictInputToNumbers(selector, maxLength) {
+                    $(selector).on('input', function () {
+                        this.value = this.value.replace(/[^0-9]/g, ''); // Запрещаем ввод нецифровых символов
+                        if (this.value.length > maxLength) {
+                            this.value = this.value.slice(0, maxLength); // Обрезаем до максимальной длины
+                        }
+                    });
+                }
+
+                // Ограничение на поле 'sale' до значения 100 и длиной не более 2 символов
+                $('#productsale2').on('input', function () {
+                    var value = parseInt(this.value, 10);
+                    if (value > 100) {
+                        // Показать пользователю предупреждение или визуальное отличие, что 100 или больше недопустимо
+                        // Например, можно изменить цвет рамки или добавить класс для подсветки
+                        $(this).addClass('invalid-input'); // Пример класса для подсветки
+                    } else {
+                        $(this).removeClass('invalid-input'); // Удаление класса при вводе допустимого значения
+                    }
+                    if (this.value.length > 2) {
+                        this.value = this.value.slice(0, 2); // Обрезаем до двух символов
+                    }
+                });
+
+                // Применяем ограничение на нужные поля
+                restrictInputToNumbers('#productStorageLife2', 4);
+                restrictInputToNumbers('#productEnergyValue2', 3);
+                restrictInputToNumbers('#productCarb2', 6);
+                restrictInputToNumbers('#productFatty2', 6);
+                restrictInputToNumbers('#productProtein2', 6);
+                restrictInputToNumbers('#productfat2', 6);
+                restrictInputToNumbers('#productMassPerFat2', 6);
+                restrictInputToNumbers('#productRemain2', 5);
+
+                // Обработчик нажатия кнопки сохранения
                 $('#savebuttonproduct2').click(function () {
                     // Получение выбранных значений из селектов
                     var selectedProviderId = $('#selectProvider2').val();
@@ -1845,6 +1911,13 @@
                         return;
                     }
 
+                    // Проверка скидки на значение больше 100
+                    var saleValue = parseInt(sale, 10);
+                    if (saleValue > 100) {
+                        alert('Скидка не может быть больше 100');
+                        return;
+                    }
+
                     // Формирование объекта с данными для отправки на сервер
                     var updatedProductData = {
                         storageConditions: storageConditions,
@@ -1886,32 +1959,7 @@
                         }
                     });
                 });
-
-                // Обработчик изменения значения в селекте категорий
-                $('#cat2').change(function () {
-                    var selectedCategory = $(this).val();
-
-                    // Определение categoryId в зависимости от выбранного значения в селекте
-                    var categoryId;
-                    if (selectedCategory === 'soft') {
-                        categoryId = 1;
-                    } else if (selectedCategory === 'semi-solid') {
-                        categoryId = 2;
-                    } else if (selectedCategory === 'solid') {
-                        categoryId = 3;
-                    } else if (selectedCategory === 'moldy') {
-                        categoryId = 4;
-                    } else if (selectedCategory === 'additives') {
-                        categoryId = 5;
-                    }
-
-                    console.log('Selected categoryId on change:', categoryId); // Для отладки
-
-                    // Дальнейшие действия при изменении категории, если нужно
-                });
             });
-          
-
         </script>
         <script>
             $(document).ready(function () {

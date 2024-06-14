@@ -67,12 +67,32 @@ using Microsoft.EntityFrameworkCore;
 
         optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-SD2NSU5\MSSQLSERVER05;User ID=sa;Password=12345;database=this10;TrustServerCertificate=True");
 
+        //optionsBuilder.UseNpgsql(@"Server=hnt8.ru;Port=5432;Database=sir;User ID=postgres;Password=_RasulkotV2");
+
+
         //optionsBuilder.UseSqlServer("Data Source=DESKTOP-3FU748J;Database=misha;Integrated Security = sspi; Encrypt=False;");
         //optionsBuilder.UseSqlServer(@"Data Source=hnt8.ru,1433;User ID=sa;Password=_RasulkotV2;database=Aleksey_BD_finish;TrustServerCertificate=True");
 
     }
+    public void EnsureDatabaseCreated()
+    {
+        using (var context = new MainContext())
+        {
+            context.Database.EnsureCreated();
+        }
+    }
+
+    // Ensure database is deleted
+    public void EnsureDatabaseDeleted()
+    {
+        using (var context = new MainContext())
+        {
+            context.Database.EnsureDeleted();
+        }
+    }
     public MainContext()
     {
+        Database.EnsureCreated();
     }
 }
 
