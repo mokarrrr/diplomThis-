@@ -606,7 +606,7 @@
                             <hr style="color: black;background: black;border: black;height: 1px;">
                             <form class="formmy">
                                 <div class="form-groupimg">
-                                    <img id="productImage" class="img-responsive" style="width:580px;height:420px;" />
+                                    <img id="productImage2" class="img-responsive" style="width:580px;height:420px;" />
                                     <button id="savebuttonimg2" type="button" style="display:flex;justify-content:center;border: 1px solid black;border-radius: 15px;gap:10px;width:144px">
                                         <center style="">
                                             <p id="newimg2" style="margin-top:4px">Фото</p>
@@ -1644,11 +1644,11 @@
 
                             // Обновляем видимость кнопок в зависимости от значения ishidden
                             if (Product.ishidden === true) {
-                                $('#productVisibility').text(' скрыт');
+                                $('#productVisibility').text('Скрыт');
                                 $('#savebuttonhidden').hide();
                                 $('#savebuttonnothidden').show();
                             } else {
-                                $('#productVisibility').text(' виден');
+                                $('#productVisibility').text('Виден');
                                 $('#savebuttonhidden').show();
                                 $('#savebuttonnothidden').hide();
                             }
@@ -1827,7 +1827,13 @@
         </script>
         <script>
             $(document).ready(function () {
-                // Функция для ограничения ввода букв и длины символов в числовых полях
+                // Обработчик выбора файла изображения
+                function uploadImage(base64Image) {
+                    console.log('Uploaded image:', base64Image);
+                    // Можно добавить дополнительные действия с изображением
+                }
+
+                // Ограничение ввода и длины символов в числовых полях
                 function restrictInputToNumbers(selector, maxLength) {
                     $(selector).on('input', function () {
                         this.value = this.value.replace(/[^0-9]/g, ''); // Запрещаем ввод нецифровых символов
@@ -1836,21 +1842,6 @@
                         }
                     });
                 }
-
-                // Ограничение на поле 'sale' до значения 100 и длиной не более 2 символов
-                $('#productsale2').on('input', function () {
-                    var value = parseInt(this.value, 10);
-                    if (value > 100) {
-                        // Показать пользователю предупреждение или визуальное отличие, что 100 или больше недопустимо
-                        // Например, можно изменить цвет рамки или добавить класс для подсветки
-                        $(this).addClass('invalid-input'); // Пример класса для подсветки
-                    } else {
-                        $(this).removeClass('invalid-input'); // Удаление класса при вводе допустимого значения
-                    }
-                    if (this.value.length > 2) {
-                        this.value = this.value.slice(0, 2); // Обрезаем до двух символов
-                    }
-                });
 
                 // Применяем ограничение на нужные поля
                 restrictInputToNumbers('#productStorageLife2', 4);
@@ -1861,15 +1852,15 @@
                 restrictInputToNumbers('#productfat2', 6);
                 restrictInputToNumbers('#productMassPerFat2', 6);
                 restrictInputToNumbers('#productRemain2', 5);
+                restrictInputToNumbers('#productPrice2', 10); // Поле для цены с поддержкой десятичных значений
+                restrictInputToNumbers('#productsale2', 2); // Поле для скидки без десятичных значений, максимум 2 символа
 
                 // Обработчик нажатия кнопки сохранения
                 $('#savebuttonproduct2').click(function () {
-                    // Получение выбранных значений из селектов
                     var selectedProviderId = $('#selectProvider2').val();
                     var selectedPackageId = $('#selectPackage2').val();
                     var selectedCategory = $('#cat2').val();
 
-                    // Определение categoryId в зависимости от выбранного значения в селекте
                     var categoryId;
                     if (selectedCategory === 'soft') {
                         categoryId = 1;
@@ -1883,9 +1874,8 @@
                         categoryId = 5;
                     }
 
-                    console.log('Selected categoryId:', categoryId); // Для отладки
+                    console.log('Selected categoryId:', categoryId);
 
-                    // Сбор данных из полей формы
                     var storageConditions = $('#productStorageConditions2').val();
                     var storageLife = $('#productStorageLife2').val();
                     var energyValue = $('#productEnergyValue2').val();
@@ -1903,7 +1893,6 @@
                     var productName = $('#productNameLabel2').val();
                     var img = $('#hiddenImage').text();
 
-                    // Проверка на заполнение всех полей
                     if (storageConditions === '' || storageLife === '' || energyValue === '' || carb === '' ||
                         fatty === '' || protein === '' || fat === '' || massPerFat === '' || article === '' ||
                         sostav === '' || sale === '' || remain === '' || description === '' || price === '' || productName === '') {
@@ -1911,14 +1900,6 @@
                         return;
                     }
 
-                    // Проверка скидки на значение больше 100
-                    var saleValue = parseInt(sale, 10);
-                    if (saleValue > 100) {
-                        alert('Скидка не может быть больше 100');
-                        return;
-                    }
-
-                    // Формирование объекта с данными для отправки на сервер
                     var updatedProductData = {
                         storageConditions: storageConditions,
                         storageLife: storageLife,
@@ -1937,30 +1918,28 @@
                         productName: productName,
                         providerId: selectedProviderId,
                         packageId: selectedPackageId,
-                        categoryId: categoryId, // Добавляем categoryId
+                        categoryId: categoryId,
                         img: img
                     };
 
-                    // Вывод данных в лог перед отправкой на сервер
                     console.log('Данные перед отправкой:', updatedProductData);
 
-                    // Отправка AJAX запроса на сервер для добавления нового продукта
                     $.ajax({
                         type: "POST",
                         url: "/Home/AddProduct",
                         data: updatedProductData,
                         success: function (response) {
                             alert('Продукт успешно добавлен');
-                            location.reload(); // Перезагрузка страницы после успешного добавления продукта
+                            location.reload();
                         },
                         error: function (xhr, status, error) {
                             console.log('Ошибка при добавлении продукта:', error);
-                            // Обработка ошибки при добавлении продукта
                         }
                     });
                 });
             });
         </script>
+
         <script>
             $(document).ready(function () {
                 // Идентификатор модального окна
@@ -2395,10 +2374,13 @@
                         url: "/Home/UpdateProductHiddenStatus", // URL метода контроллера
                         data: {
                             productId: productId,
-                            ishidden: false // Устанавливаем значение ishidden в false
+                            ishidden: false,
+                           // Устанавливаем значение ishidden в false
                         },
                         success: function (response) {
-
+                            $('#savebuttonhidden').show();
+                            $('#savebuttonnothidden').hide();
+                            $('#productVisibility').text('Виден');
                         },
                         error: function (xhr, status, error) {
                             console.log(error);
@@ -2431,11 +2413,14 @@
                         url: "/Home/UpdateProductHiddenStatus2", // URL метода контроллера
                         data: {
                             productId: productId,
-                            ishidden: true // Устанавливаем значение ishidden в false
+                            ishidden: true
+                           // Устанавливаем значение ishidden в false
                         },
                         success: function (response) {
-                            // Если запрос выполнен успешно, обновляем интерфейс
-
+                            $('#savebuttonhidden').hide();
+                            $('#savebuttonnothidden').show();
+                            $('#productVisibility').text('Скрыт');
+                            
                         },
                         error: function (xhr, status, error) {
                             console.log(error);
@@ -2460,37 +2445,41 @@
                 var productId; // Переменная для хранения идентификатора продукта
 
                 // Функция для ограничения ввода букв и длины символов в числовых полях
-                function restrictInputToNumbers(selector, maxLength) {
+                function restrictInputToNumbers(selector, maxLength, allowDecimal) {
                     $(selector).on('input', function () {
-                        this.value = this.value.replace(/[^0-9]/g, ''); // Запрещаем ввод нецифровых символов
-                        if (this.value.length > maxLength) {
-                            this.value = this.value.slice(0, maxLength); // Обрезаем до максимальной длины
+                        let value = this.value;
+
+                        // Удаляем все нечисловые символы, кроме точки, если allowDecimal включен
+                        value = value.replace(allowDecimal ? /[^\d.]/g : /[^\d]/g, '');
+
+                        // Разрешаем только одну точку для десятичных значений
+                        if (allowDecimal) {
+                            const parts = value.split('.');
+                            if (parts.length > 2) {
+                                value = parts[0] + '.' + parts[1];
+                            }
                         }
+
+                        // Обрезаем до максимальной длины
+                        if (value.length > maxLength) {
+                            value = value.slice(0, maxLength);
+                        }
+
+                        this.value = value;
                     });
                 }
 
-                // Ограничение на поле 'sale' до значения 100 и длиной не более 2 символов
-                $('#productsale').on('input', function () {
-                    var value = parseInt(this.value, 10);
-                    if (value > 100) {
-                        $(this).addClass('invalid-input'); // Пример класса для подсветки
-                    } else {
-                        $(this).removeClass('invalid-input'); // Удаление класса при вводе допустимого значения
-                    }
-                    if (this.value.length > 2) {
-                        this.value = this.value.slice(0, 2); // Обрезаем до двух символов
-                    }
-                });
-
                 // Применяем ограничение на нужные поля
-                restrictInputToNumbers('#productStorageLife', 4);
-                restrictInputToNumbers('#productEnergyValue', 3);
-                restrictInputToNumbers('#productCarb', 6);
-                restrictInputToNumbers('#productFatty', 6);
-                restrictInputToNumbers('#productProtein', 6);
-                restrictInputToNumbers('#productfat', 6);
-                restrictInputToNumbers('#productMassPerFat', 6);
-                restrictInputToNumbers('#productRemain', 5);
+                restrictInputToNumbers('#productStorageLife', 4, false);
+                restrictInputToNumbers('#productEnergyValue', 3, false);
+                restrictInputToNumbers('#productCarb', 6, false);
+                restrictInputToNumbers('#productFatty', 6, false);
+                restrictInputToNumbers('#productProtein', 6, false);
+                restrictInputToNumbers('#productfat', 6, false);
+                restrictInputToNumbers('#productMassPerFat', 6, false);
+                restrictInputToNumbers('#productRemain', 5, false);
+                restrictInputToNumbers('#productPrice', 10, true); // Поле для цены с поддержкой десятичных значений
+                restrictInputToNumbers('#productsale', 2, false); // Поле для скидки без десятичных значений, максимум 2 символа
 
                 // Обработчик события клика для кнопки .info-button2
                 $('.info-button2').click(function () {
@@ -2528,13 +2517,6 @@
                         sostav === '' || sale === '' || remain === '' || description === '' || price === '' || productName === '') {
                         alert('Пожалуйста, заполните все поля');
                         return; // Если какое-либо поле не заполнено, прерываем выполнение функции
-                    }
-
-                    // Проверка скидки на значение больше 100
-                    var saleValue = parseInt(sale, 10);
-                    if (saleValue > 100) {
-                        alert('Скидка не может быть больше 100');
-                        return;
                     }
 
                     // Формируем объект с обновляемыми данными продукта
@@ -2583,6 +2565,7 @@
                 });
             });
         </script>
+
         <script>
             $(document).ready(function () {
                 var productId; // Переменная для хранения идентификатора продукта
@@ -2713,6 +2696,7 @@
                                 reader.onload = function (event) {
                                     // Получаем содержимое файла в формате Base64
                                     var base64Image = event.target.result;
+                                    $('#productImage').attr('src', base64Image);
 
                                     // Отправляем данные изображения на сервер
                                     uploadImage(base64Image, productId);
@@ -2835,7 +2819,8 @@
                                 reader.onload = function (event) {
                                     // Получаем содержимое файла в формате Base64
                                     var base64Image = event.target.result;
-                                    $('#productImage').attr('src', base64Image);
+                                    // Устанавливаем изображение в элемент productImage
+                                    $('#productImage2').attr('src', base64Image);
                                     // Сохраняем base64Image в скрытом элементе (например, скрытый <p>)
                                     $('#hiddenImage').text(base64Image);
 
@@ -2854,17 +2839,16 @@
 
                     // Кликаем по input для выбора файла
                     fileInput.click();
-
-                    // Сразу вызываем обработчик change после клика на input для выбора файла
-                    fileInput.trigger('change');
                 });
             });
+
             function uploadImage(base64Image) {
                 // Ваш код для загрузки изображения
                 console.log('Uploaded image:', base64Image);
                 // Здесь вы можете отправить base64Image на сервер или выполнить другие операции
             }
         </script>
+
         <script>
             $(document).ready(function () {
                 $("#modalOpen").click(function (event) {
