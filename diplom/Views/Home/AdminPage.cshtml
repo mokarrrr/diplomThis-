@@ -2459,6 +2459,39 @@
             $(document).ready(function () {
                 var productId; // Переменная для хранения идентификатора продукта
 
+                // Функция для ограничения ввода букв и длины символов в числовых полях
+                function restrictInputToNumbers(selector, maxLength) {
+                    $(selector).on('input', function () {
+                        this.value = this.value.replace(/[^0-9]/g, ''); // Запрещаем ввод нецифровых символов
+                        if (this.value.length > maxLength) {
+                            this.value = this.value.slice(0, maxLength); // Обрезаем до максимальной длины
+                        }
+                    });
+                }
+
+                // Ограничение на поле 'sale' до значения 100 и длиной не более 2 символов
+                $('#productsale').on('input', function () {
+                    var value = parseInt(this.value, 10);
+                    if (value > 100) {
+                        $(this).addClass('invalid-input'); // Пример класса для подсветки
+                    } else {
+                        $(this).removeClass('invalid-input'); // Удаление класса при вводе допустимого значения
+                    }
+                    if (this.value.length > 2) {
+                        this.value = this.value.slice(0, 2); // Обрезаем до двух символов
+                    }
+                });
+
+                // Применяем ограничение на нужные поля
+                restrictInputToNumbers('#productStorageLife', 4);
+                restrictInputToNumbers('#productEnergyValue', 3);
+                restrictInputToNumbers('#productCarb', 6);
+                restrictInputToNumbers('#productFatty', 6);
+                restrictInputToNumbers('#productProtein', 6);
+                restrictInputToNumbers('#productfat', 6);
+                restrictInputToNumbers('#productMassPerFat', 6);
+                restrictInputToNumbers('#productRemain', 5);
+
                 // Обработчик события клика для кнопки .info-button2
                 $('.info-button2').click(function () {
                     // Получаем идентификатор продукта из атрибута data-idproduct кнопки
@@ -2489,18 +2522,21 @@
                     var price = $('#productPrice').val();
                     var productName = $('#productNameLabel').val();
 
+                    // Проверка на заполнение всех полей
                     if (storageConditions === '' || storageLife === '' || energyValue === '' || carb === '' ||
                         fatty === '' || protein === '' || fat === '' || massPerFat === '' || article === '' ||
                         sostav === '' || sale === '' || remain === '' || description === '' || price === '' || productName === '') {
                         alert('Пожалуйста, заполните все поля');
                         return; // Если какое-либо поле не заполнено, прерываем выполнение функции
                     }
-                    $('#exampleModal').on('hidden.bs.modal', function () {
-                        // Очищаем значения всех полей формы
-                        $('input[type="text"]').val('');
-                        $('textarea').val('');
-                        productId = null; // Сбрасываем идентификатор продукта
-                    });
+
+                    // Проверка скидки на значение больше 100
+                    var saleValue = parseInt(sale, 10);
+                    if (saleValue > 100) {
+                        alert('Скидка не может быть больше 100');
+                        return;
+                    }
+
                     // Формируем объект с обновляемыми данными продукта
                     var updatedProductData = {
                         idProduct: productId,
@@ -2538,8 +2574,14 @@
                     });
                 });
 
+                // Обработчик скрытия модального окна
+                $('#exampleModal').on('hidden.bs.modal', function () {
+                    // Очищаем значения всех полей формы
+                    $('input[type="text"]').val('');
+                    $('textarea').val('');
+                    productId = null; // Сбрасываем идентификатор продукта
+                });
             });
-
         </script>
         <script>
             $(document).ready(function () {
