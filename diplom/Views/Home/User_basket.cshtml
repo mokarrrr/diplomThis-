@@ -2251,8 +2251,8 @@
         function openMap() {
             var city = document.getElementById('cityInput').value.trim();
 
-            // Проверка на содержание города только кириллическими символами
-            var isCityValid = /^[а-яА-ЯёЁ\s]+$/.test(city);
+            // Проверка на содержание города только кириллическими символами и дефисами
+            var isCityValid = /^[а-яА-ЯёЁ\s-]+$/.test(city);
 
             if (!isCityValid || city === '') {
                 showNotification('Пожалуйста, укажите город на русском языке', 'warning');
@@ -2308,6 +2308,7 @@
             document.getElementById('mapModal').style.display = 'none';
         }
     </script>
+
 
     <script>
         // Функция для отображения неблокирующего уведомления (Toast)
