@@ -2246,6 +2246,11 @@
             document.querySelector('.map-icon').addEventListener('click', function () {
                 openMap();
             });
+
+            // Добавляем обработчик для кнопки "Order"
+            document.getElementById('#orderbutton').addEventListener('click', function () {
+                detectLocation();
+            });
         });
 
         function openMap() {
@@ -2255,7 +2260,9 @@
             var isCityValid = /^[а-яА-ЯёЁ\s-]+$/.test(city);
 
             if (!isCityValid || city === '') {
-                showNotification('Пожалуйста, укажите город на русском языке', 'warning');
+                showNotification('Пожалуйста, укажите город на русском языке или используйте определение местоположения', 'warning');
+                // Предложение определения местоположения
+                getCurrentLocation();
                 return;
             }
 
@@ -2270,44 +2277,110 @@
 
                     var coordinates = res.geoObjects.get(0).geometry.getCoordinates();
 
-                    // Проверяем, если карта уже существует, удаляем её
-                    if (myMap) {
-                        myMap.destroy();
-                    }
-
-                    // Показываем mapContainer
-                    document.getElementById('mapContainer').style.display = 'block';
-
-                    // Показываем модальное окно
-                    document.getElementById('mapModal').style.display = 'flex';
-
-                    // Создаем карту с центром на указанном городе
-                    myMap = new ymaps.Map("mapContainer", {
-                        center: coordinates,
-                        zoom: 12
-                    });
-
-                    // Обработчик клика по карте
-                    myMap.events.add('click', function (e) {
-                        var coords = e.get('coords');
-                        // Преобразуем координаты в адрес
-                        ymaps.geocode(coords).then(function (res) {
-                            var firstGeoObject = res.geoObjects.get(0);
-                            var address = firstGeoObject.getAddressLine();
-                            // Помещаем адрес в поле адреса
-                            document.getElementById('addressInput').value = address;
-                            // Закрываем модальное окно с картой
-                            closeMap();
-                        });
-                    });
+                    // Инициализация карты
+                    initializeMap(coordinates);
                 });
             });
+        }
+
+        function detectLocation() {
+            // Предложение определения местоположения
+            getCurrentLocation();
+        }
+
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var userCoordinates = [position.coords.latitude, position.coords.longitude];
+
+                    // Инициализация карты Яндекс.Карт
+                    ymaps.ready(function () {
+                        ymaps.geocode(userCoordinates).then(function (res) {
+                            if (res.geoObjects.getLength() === 0) {
+                                showNotification('Не удалось определить ваше местоположение', 'warning');
+                                return;
+                            }
+
+                            var coordinates = res.geoObjects.get(0).geometry.getCoordinates();
+
+                            // Инициализация карты
+                            initializeMap(coordinates);
+
+                            // Обновление поля города
+                            updateCityInputFromCoordinates(coordinates);
+                        });
+                    });
+                }, function (error) {
+                    showNotification('Не удалось получить ваше местоположение', 'warning');
+                });
+            } else {
+                showNotification('Геолокация не поддерживается вашим браузером', 'warning');
+            }
+        }
+
+        function initializeMap(coordinates) {
+            // Проверяем, если карта уже существует, удаляем её
+            if (myMap) {
+                myMap.destroy();
+            }
+
+            // Показываем mapContainer
+            document.getElementById('mapContainer').style.display = 'block';
+
+            // Показываем модальное окно
+            document.getElementById('mapModal').style.display = 'flex';
+
+            // Создаем карту с центром на указанных координатах
+            myMap = new ymaps.Map("mapContainer", {
+                center: coordinates,
+                zoom: 12
+            });
+
+            // Обработчик клика по карте
+            myMap.events.add('click', function (e) {
+                var coords = e.get('coords');
+                // Преобразуем координаты в адрес
+                ymaps.geocode(coords).then(function (res) {
+                    var firstGeoObject = res.geoObjects.get(0);
+                    var address = firstGeoObject.getAddressLine();
+
+                    // Обновление поля адреса
+                    document.getElementById('addressInput').value = address;
+
+                    // Обновление поля города
+                    updateCityInputFromAddress(firstGeoObject);
+
+                    // Закрываем модальное окно с картой
+                    closeMap();
+                });
+            });
+        }
+
+        function updateCityInputFromCoordinates(coordinates) {
+            ymaps.geocode(coordinates).then(function (res) {
+                if (res.geoObjects.getLength() > 0) {
+                    var firstGeoObject = res.geoObjects.get(0);
+                    updateCityInputFromAddress(firstGeoObject);
+                }
+            });
+        }
+
+        function updateCityInputFromAddress(geoObject) {
+            var localities = geoObject.properties.get('metaDataProperty.GeocoderMetaData.Address.Components').filter(function (component) {
+                return component.kind === 'locality';
+            });
+
+            if (localities.length > 0) {
+                var city = localities[0].name;
+                document.getElementById('cityInput').value = city;
+            }
         }
 
         function closeMap() {
             document.getElementById('mapModal').style.display = 'none';
         }
     </script>
+
 
 
     <script>
