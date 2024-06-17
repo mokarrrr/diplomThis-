@@ -6,7 +6,8 @@
 
 
 <link rel="stylesheet" href="~/css/AbotUsPage.css" />
-<script src="~/js/site.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@* <script src="~/js/site.js"></script> *@
 
 <header class="_header" style="backdrop-filter:none">
     <div class="logo">
@@ -18,6 +19,7 @@
   
 </header>
 
+<body>
 <div class="row">
     <div class="containers ">
         <img src="https://cdn.myslo.ru/Content/NewsImage/5a/c3/5ac31085-5883-44d6-ad12-5d199ae30edf_3.jpg" style="    height: 700px;
@@ -120,8 +122,9 @@
             <p class="menu">
                 <a href="@Url.Action("MainPage", "Home")"> Каталог</a> |
                 <a href="#"> О нас</a> |
-                <a href="#mya" > Контакты</a> |
-                <a href="#myModal1" id="modalOpen"> Политика конфиденциальности</a>
+                <a href="#mya"> Контакты</a> |
+                <a href="@Url.Action("Privacy", "Home")#contacts"> Согласие на обработку персональных данных</a> |
+                <a href="#myModal2" id="modalOpen"> Политика конфиденциальности</a>
             </p>
             <p class="name"> Dairy Delights Emporium; 2004</p>
         </div>
@@ -130,7 +133,7 @@
 <button id="backToTop" title="Go to top" style="display: none;">
     <i class="fa fa-angle-up"></i>
 </button>
-<div id="myModal1" class="modal1" style="overflow-x:hidden">
+<div id="myModal2" class="modal1" style="overflow-x:hidden">
     <div class="modal-content1">
         <span class="close">&times;</span>
         <h1>Политика Конфиденциальности Интернет-Магазина "Dairy Delights Emporium"</h1>
@@ -165,3 +168,22 @@
         <p>Все предложения, вопросы, запросы и иные обращения по поводу настоящей Политики и использования своих персональных данных Пользователи вправе направлять по адресу: DairyDelightsEmporium@mail.ru.</p>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#modalOpen").click(function (event) {
+            event.preventDefault();
+            $("#myModal2").fadeIn();
+        });
+
+        $(".close").click(function () {
+            $("#myModal2").fadeOut();
+        });
+
+        $(window).click(function (event) {
+            if ($(event.target).is("#myModal2")) {
+                $("#myModal2").fadeOut();
+            }
+        });
+    });
+</script>
+</body>

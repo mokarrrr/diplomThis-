@@ -206,7 +206,7 @@
                                                     <i class="fa fa-clock-o"></i> Энергетическая ценность: @product.product_fatty кДж.
                                                 </li>
                                             </ul>
-                                            @if (order.status_id != 6 && order.status_id != 1)
+                                            @if (order.status_id != 6 && order.status_id != 1 && order.status_id != 2 && order.status_id != 3 && order.status_id != 4)
                                             {
                                                 <button class="fav-button5" title="Оставить отзыв" data-idd="@product.IdProduct">
                                                     <i class="fa-regular fa-star"></i>
