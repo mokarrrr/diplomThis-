@@ -1799,6 +1799,21 @@ namespace diplom.Controllers
                 return StatusCode(500, "Ошибка: не заполнены все поля");
             }
 
+            // Проверка на существование поставщика с таким же номером телефона
+            var existingSupplierByPhone = db._Provider.FirstOrDefault(p => p.provider_phone == SupPhone);
+            if (existingSupplierByPhone != null)
+            {
+                return StatusCode(500, $"Поставщик с номером телефона '{SupPhone}' уже существует.");
+            }
+
+            // Проверка на существование поставщика с таким же наименованием
+            var existingSupplierByName = db._Provider.FirstOrDefault(p => p.provider_name == SupName);
+            if (existingSupplierByName != null)
+            {
+                return StatusCode(500, $"Поставщик с наименованием '{SupName}' уже существует.");
+            }
+
+            // Создание нового поставщика и сохранение в базе данных
             var newSupplier = new _Provider
             {
                 provider_name = SupName,
@@ -1810,25 +1825,64 @@ namespace diplom.Controllers
 
             return Json(new { success = true });
         }
-
         [HttpPost]
         public IActionResult CreatePack(string PackName)
         {
-            if (string.IsNullOrWhiteSpace(PackName) )
+            // Удаляем пробелы
+            PackName = PackName?.Trim();
+
+            if (string.IsNullOrWhiteSpace(PackName))
             {
-                return StatusCode(500, "Ошибка: не заполнены все поля");
+                return Json(new { success = false, message = "Ошибка: не заполнены все поля" });
             }
 
-            var newSupplier = new Package
+            // Нормализуем имя упаковки
+            var normalizedPackName = NormalizePackName(PackName);
+
+            // Загрузка данных из базы данных в память и выполнение сравнения на стороне клиента
+            var existingPack = db.Package
+                .AsEnumerable()  // Загрузка данных в память
+                .FirstOrDefault(p => NormalizePackName(p.Package_name) == normalizedPackName);
+
+            if (existingPack != null)
             {
-                Package_name = PackName,
-                
+                return Json(new { success = false, message = $"Упаковка с названием '{PackName}' уже существует." });
+            }
+
+            // Создаем новую упаковку для добавления в базу данных
+            var newPack = new Package
+            {
+                Package_name = PackName
             };
 
-            db.Package.Add(newSupplier);
-            db.SaveChanges();
+            try
+            {
+                // Добавляем новую упаковку в базу данных
+                db.Package.Add(newPack);
+                db.SaveChanges();
 
-            return Json(new { success = true });
+                return Json(new { success = true });
+            }
+            catch (DbUpdateException ex)
+            {
+                // Проверяем, не связано ли исключение с нарушением уникального индекса
+                if (ex.InnerException?.Message.Contains("IX_Package_Package_name") == true)
+                {
+                    return Json(new { success = false, message = $"Упаковка с названием '{PackName}' уже существует." });
+                }
+
+                // Логирование исключения для дальнейшего анализа
+                Console.Error.WriteLine($"Ошибка при добавлении упаковки: {ex.Message}");
+                return Json(new { success = false, message = "Произошла ошибка при сохранении данных" });
+            }
+        }
+
+        private string NormalizePackName(string packName)
+        {
+            return new string(packName
+                .Where(c => !char.IsWhiteSpace(c) && char.IsLetterOrDigit(c))
+                .ToArray())
+                .ToLower();
         }
 
 
@@ -1900,8 +1954,8 @@ namespace diplom.Controllers
                 var existingProduct = db.Product.FirstOrDefault(p => p.Name_product == productName);
                 if (existingProduct != null)
                 {
-                    // Если продукт с таким именем уже существует, возвращаем ошибку
-                    return BadRequest($"Продукт с именем '{productName}' уже существует.");
+                    // Возвращаем JSON-ответ с ошибкой
+                    return Json(new { success = false, message = $"Продукт с именем '{productName}' уже существует." });
                 }
 
                 // Создаем новый объект Product для добавления в базу данных
@@ -1950,6 +2004,43 @@ namespace diplom.Controllers
             {
                 // В случае ошибки возвращаем ошибку сервера с сообщением
                 return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpPost]
+        public IActionResult UpdateProvider(int IdProvider, string provider_name, string provider_phone)
+        {
+            try
+            {
+                var provider = db._Provider.FirstOrDefault(p => p.IdProvider == IdProvider);
+                if (provider == null)
+                {
+                    return Json(new { success = false, message = "Провайдер не найден" });
+                }
+
+                // Проверяем уникальность наименования
+                var existingProviderName = db._Provider.FirstOrDefault(p => p.provider_name == provider_name && p.IdProvider != IdProvider);
+                if (existingProviderName != null)
+                {
+                    return Json(new { success = false, message = $"Поставщик с наименованием '{provider_name}' уже существует. Введите другое наименование." });
+                }
+
+                // Проверяем уникальность номера телефона
+                var existingProviderPhone = db._Provider.FirstOrDefault(p => p.provider_phone == provider_phone && p.IdProvider != IdProvider);
+                if (existingProviderPhone != null)
+                {
+                    return Json(new { success = false, message = $"Номер телефона '{provider_phone}' уже используется другим поставщиком. Введите другой номер." });
+                }
+
+                provider.provider_name = provider_name;
+                provider.provider_phone = provider_phone;
+
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Ошибка сервера: {ex.Message}" });
             }
         }
 

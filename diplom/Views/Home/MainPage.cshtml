@@ -60,16 +60,23 @@
                     </h2>
 
                     @* <input type="text" placeholder="Email"> *@
-                        @Html.TextBox("Email", "", new { placeholder = "Email",style ="width: 560px !important;" })
+                        @Html.TextBox("Email", "", new { placeholder = "Email",style ="width: 526px !important;" })
                         <div id="mailExistsErrorMessage" style="display:none;">
                             <p style="z-index:1;color:red;margin-top: 1%;">Пользователь с такой почтой уже существует</p>
                         </div>
                         <div id="mailErrorMessage" style="display:none;">
                             <p style="z-index:1;color:red;margin-top: 1%;">Проверьте правильность заполнения поля</p>
                         </div>
-                        @Html.TextBox("Name", "", new { placeholder = "Ваше имя", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')",style ="width: 560px !important;" })
-                        @Html.TextBox("lastName", "", new { placeholder = "Ваша фамилия", oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '')",style ="width: 560px !important;" })
-                        <div style="display:flex">
+                        @Html.TextBox("Name", "", new {
+                    placeholder = "Ваше имя",
+                    oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ -]/g, '').replace(/ {2,}/g, ' ').replace(/-{2,}/g, '-').trimStart()",
+                    style ="width: 560px !important;"
+                    })
+                        @Html.TextBox("lastName", "", new {
+                    placeholder = "Ваша фамилия",
+                    oninput = "this.value = this.value.replace(/[^a-zA-Zа-яА-ЯёЁ -]/g, '').replace(/ {2,}/g, ' ').replace(/-{2,}/g, '-').trimStart()",
+                    style ="width: 560px !important;"
+                    })                        <div style="display:flex">
                         <input id="passwordregister" type="password" placeholder="Пароль">
                             <button id="showPasswordButton2" type="button" style="z-index: 1;background-color: transparent;color: black;margin-left: -60px;font-size: 20pt;margin-top: -3px;">
                                 &#128065;
@@ -161,8 +168,16 @@
                                     @Html.TextBox("Emailuser", "", new { placeholder = "Email",@class ="userinf" })
                                     <p id="phoneMail10" style="z-index:100;color:red;margin-top: 2.2%;;display:none;position:absolute">Пользвоатель с такой почтой уже существует</p>
                                     <p id="phoneMailMessage20" style="z-index:1;color:red;margin-top: 2.2%;display:none;position:absolute">Неверный формат почты</p>
-                                    @Html.TextBox("Nameuser", "", new { placeholder = "Ваше имя",@class ="userinf" })
-                                    @Html.TextBox("lastNameuser", "", new { placeholder = "Ваша фамилия",@class ="userinf" })
+                                    @Html.TextBox("Nameuser", "", new {
+                                    placeholder = "Ваше имя",
+                                    @class = "userinf",
+                                    oninput = "this.value = this.value.replace(/[0-9]/g, '')"
+                                    })
+                                    @Html.TextBox("lastNameuser", "", new {
+                                    placeholder = "Ваша фамилия",
+                                    @class = "userinf",
+                                    oninput = "this.value = this.value.replace(/[0-9]/g, '')"
+                                    })
 
                                     <div style="display:flex;gap:10px;margin-left:auto;margin-right:auto" class="userinf">
                                         @* <p style="margin-left:-30px">+7</p> *@
@@ -1427,15 +1442,15 @@
         });
     </script>
     <script>
-        document.getElementById('Nameuser').setAttribute('maxlength', '30');
-        document.getElementById('lastNameuser').setAttribute('maxlength', '30');
+        document.getElementById('Nameuser').setAttribute('maxlength', '50');
+        document.getElementById('lastNameuser').setAttribute('maxlength', '50');
         document.getElementById('Emailuser').setAttribute('maxlength', '50');
     </script>
     <script>
-        document.getElementById('Name').setAttribute('maxlength', '30');
-        document.getElementById('lastName').setAttribute('maxlength', '30');
-        document.getElementById('passwordregister').setAttribute('maxlength', '50');
-        document.getElementById('passwordregistersecond').setAttribute('maxlength', '50');
+        document.getElementById('Name').setAttribute('maxlength', '50');
+        document.getElementById('lastName').setAttribute('maxlength', '50');
+        document.getElementById('passwordregister').setAttribute('maxlength', '30');
+        document.getElementById('passwordregistersecond').setAttribute('maxlength', '30');
         document.getElementById('Email').setAttribute('maxlength', '50');
     </script>
     <script>
@@ -1564,6 +1579,16 @@
                 }
             };
             xhr.send();
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const nameField = document.getElementById('name');
+
+            nameField.addEventListener('input', function () {
+                // Регулярное выражение заменяет все повторяющиеся пробелы на один
+                this.value = this.value.replace(/\s{2,}/g, ' ');
+            });
         });
     </script>
     <script>

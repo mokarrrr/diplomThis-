@@ -138,10 +138,23 @@
     <script>
         $(".edit-user-btn").click(function () {
             var userId = $(this).data("user-id");
-            var userName = $(this).closest(".user-info").find("textarea[name='userName']").val();
-            var surname = $(this).closest(".user-info").find("textarea[name='surname']").val();
-            var email = $(this).closest(".user-info").find("textarea[name='email']").val();
-            var phoneNumber = $(this).closest(".user-info").find("textarea[name='phoneNumber']").val();
+            var userName = $(this).closest(".user-info").find("textarea[name='userName']").val().trim();
+            var surname = $(this).closest(".user-info").find("textarea[name='surname']").val().trim();
+            var email = $(this).closest(".user-info").find("textarea[name='email']").val().trim();
+            var phoneNumber = $(this).closest(".user-info").find("textarea[name='phoneNumber']").val().trim();
+
+            // Проверка пустых полей
+            if (!userName || !surname || !email || !phoneNumber) {
+                alert("Все поля должны быть заполнены.");
+                return;
+            }
+
+            // Проверка на цифры в имени и фамилии
+            var nameValidation = /[0-9]/;
+            if (nameValidation.test(userName) || nameValidation.test(surname)) {
+                alert("Имя и фамилия не должны содержать цифры.");
+                return;
+            }
 
             $.ajax({
                 url: "/Home/UpdateUser",

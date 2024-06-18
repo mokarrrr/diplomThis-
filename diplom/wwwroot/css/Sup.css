@@ -142,3 +142,35 @@
     .back-button:hover {
         background-color: #5a6268;
     }
+.package-item {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.edit-mode {
+    margin-top: 10px;
+}
+
+    .edit-mode label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .edit-mode input[type="text"],
+    .edit-mode button {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 5px;
+    }
+
+    .edit-mode button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+        .edit-mode button:hover {
+            background-color: #45a049;
+        }

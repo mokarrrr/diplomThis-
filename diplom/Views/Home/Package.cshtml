@@ -59,14 +59,18 @@
     </script>
 
     <script>
-        // Функция для отправки данных на сервер
         function addSupplier() {
-            var packName = $('#PackName').val();
-            
+            var packName = $('#PackName').val().trim(); // Убираем лишние пробелы
 
-            // Проверка наличия значений в обязательных полях
+            // Проверка наличия значений в обязательных полях и валидация
             if (!packName) {
-                console.error('Ошибка: не все поля заполнены');
+                alert('Ошибка: не все поля заполнены');
+                return;
+            }
+
+            // Проверка на наличие цифр в поле PackName
+            if (/\d/.test(packName)) {
+                alert('Ошибка: поле не должно содержать цифр');
                 return;
             }
 
@@ -75,20 +79,22 @@
                 PackName: packName,
             };
 
-            // Отладочный вывод данных в консоль перед отправкой
-            console.log('Отправляем на сервер следующие данные:', data);
-
             // Отправка данных на сервер с помощью AJAX запроса
             $.ajax({
                 type: 'POST',
                 url: '/Home/CreatePack', // Указываем URL вашего метода контроллера для обработки данных
-                data: data, // Отправляем объект data напрямую, jQuery сам преобразует его в формат JSON
+                data: data,
                 success: function (response) {
-                    console.log('Данные успешно отправлены');
-                    closeModal(); // Закрыть модальное окно после успешной отправки данных
+                    if (response.success) {
+                        console.log('Данные успешно отправлены');
+                        closeModal(); // Закрыть модальное окно после успешной отправки данных
+                    } else {
+                        alert(response.message); // Показываем сообщение об ошибке
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error('Ошибка при отправке данных:', error);
+                    alert('Произошла ошибка при отправке данных на сервер');
                 }
             });
         }
@@ -105,6 +111,7 @@
             });
         });
     </script>
+
     <script>
         $(document).ready(function () {
             $(".delete-user-btn").click(function () {

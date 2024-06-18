@@ -38,13 +38,38 @@
     <div class="packages-container">
         @foreach (var provider in Model)
         {
-            <div class="package-item">
-                <p class="provider-name">Наименование:@provider.provider_name</p>
-                <p class="provider-phone">Контактный телефон:@provider.provider_phone</p>
-                <button class="delete-user-btn" data-user-id="@provider.IdProvider">Удалить</button>
+            <div class="package-item" data-provider-id="@provider.IdProvider">
+                <div class="view-mode">
+                    <p class="provider-name">Наименование: <span class="name-text">@provider.provider_name</span></p>
+                    <p class="provider-phone">Контактный телефон: <span class="phone-text">@provider.provider_phone</span></p>
+                    <button class="edit-provider-btn">Редактировать</button>
+                    <button class="delete-user-btn" data-user-id="@provider.IdProvider">Удалить</button>
+                </div>
+                <div class="edit-mode" style="display:none;">
+                    <label for="editProviderName">Наименование:</label>
+                    <input type="text" class="editProviderName" value="@provider.provider_name" style="width: 300px; padding: 5px;">
+                    <br>
+                    <label for="editProviderPhone">Контактный телефон:</label>
+                    <input type="text" class="editProviderPhone" value="@provider.provider_phone" style="width: 300px; padding: 5px;margin-top: 20px;">
+                    <br>
+                    <button class="save-edit-provider-btn" style="margin-top:14px!important">Сохранить</button>
+                    <button class="cancel-edit-provider-btn" style="margin-top:14px!important">Отмена</button>
+                </div>
             </div>
         }
     </div>
+    <style>
+        .view-mode,
+        .edit-mode {
+            text-align: center; /* Центрирование контента внутри .view-mode и .edit-mode */
+            margin-top: 10px; /* Дополнительный верхний отступ между элементами */
+        }
+
+            .view-mode button,
+            .edit-mode button {
+                margin: 5px; /* Внутренние отступы между кнопками */
+            }
+    </style>
     <button onclick="window.location.href='AdminPage'" class="back-button">
         На главную
     </button>
@@ -69,15 +94,29 @@
 
     <script>
         // Функция для отправки данных на сервер
+        // Функция для отправки данных на сервер
         function addSupplier() {
-            var supName = $('#SupName').val();
-            var supPhone = $('#SupPhone').val();
+            var supName = $('#SupName').val().trim();
+            var supPhone = $('#SupPhone').val().trim();
 
             // Проверка наличия значений в обязательных полях
             if (!supName || !supPhone) {
-                console.error('Ошибка: не все поля заполнены');
+                alert('Пожалуйста, заполните все обязательные поля');
                 return;
             }
+
+            // Проверка номера телефона - только цифры и не более 11 символов
+            supPhone = supPhone.replace(/\D/g, ''); // Удаляем все не цифры
+            supPhone = supPhone.slice(0, 11); // Ограничиваем до 11 символов
+
+            // Проверка минимальной длины номера телефона
+            if (supPhone.length !== 11) {
+                alert('Номер телефона должен содержать ровно 11 цифр.');
+                return;
+            }
+
+            // Проверка наименования - только буквы, пробелы и кавычки
+            supName = supName.replace(/[^a-zA-Zа-яА-Я\s"']/g, ''); // Оставляем только буквы, пробелы и кавычки
 
             // Формирование данных для отправки на сервер
             var data = {
@@ -99,6 +138,13 @@
                 },
                 error: function (xhr, status, error) {
                     console.error('Ошибка при отправке данных:', error);
+                    // Обработка ошибок
+                    if (xhr.status === 500) {
+                        var errorMessage = xhr.responseText;
+                        alert('Ошибка при создании поставщика: ' + errorMessage);
+                    } else {
+                        alert('Произошла ошибка при отправке данных на сервер.');
+                    }
                 }
             });
         }
@@ -114,6 +160,7 @@
                 addSupplier(); // Вызываем функцию отправки данных при клике на кнопку
             });
         });
+
     </script>
     <script>
         $(document).ready(function () {
@@ -147,5 +194,109 @@
                 });
             });
         });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Переключение в режим редактирования
+            $('.edit-provider-btn').click(function () {
+                var packageItem = $(this).closest('.package-item');
+                packageItem.find('.view-mode').hide();
+                packageItem.find('.edit-mode').show();
+            });
+
+            // Отмена редактирования
+            $('.cancel-edit-provider-btn').click(function () {
+                var packageItem = $(this).closest('.package-item');
+                packageItem.find('.edit-mode').hide();
+                packageItem.find('.view-mode').show();
+            });
+
+            // Сохранение изменений
+            $('.save-edit-provider-btn').click(function () {
+                var packageItem = $(this).closest('.package-item');
+                var providerId = packageItem.data('provider-id');
+                var providerName = packageItem.find('.editProviderName').val().trim(); // Удаляем лишние пробелы
+                var providerPhone = packageItem.find('.editProviderPhone').val().trim(); // Удаляем лишние пробелы
+
+                // Проверка на пустоту полей
+                if (providerName === '' || providerPhone === '') {
+                    alert('Пожалуйста, заполните все поля.');
+                    return;
+                }
+
+                // Проверка номера телефона - только цифры и не более 11 символов
+                providerPhone = providerPhone.replace(/\D/g, ''); // Удаляем все не цифры
+                providerPhone = providerPhone.slice(0, 11); // Ограничиваем до 11 символов
+
+                // Проверка минимальной длины номера телефона
+                if (providerPhone.length !== 11) {
+                    alert('Номер телефона должен содержать ровно 11 цифр.');
+                    return;
+                }
+
+                // Проверка наименования - только буквы, пробелы и кавычки
+                providerName = providerName.replace(/[^a-zA-Zа-яА-Я\s"']/g, ''); // Оставляем только буквы, пробелы и кавычки
+
+                var updatedProviderData = {
+                    IdProvider: providerId,
+                    provider_name: providerName,
+                    provider_phone: providerPhone
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/UpdateProvider",
+                    data: updatedProviderData,
+                    success: function (response) {
+                        if (response.success) {
+                            // Обновляем текст отображения
+                            packageItem.find('.name-text').text(providerName);
+                            packageItem.find('.phone-text').text(providerPhone);
+                            packageItem.find('.edit-mode').hide();
+                            packageItem.find('.view-mode').show();
+                            alert('Данные провайдера успешно обновлены');
+                        } else {
+                            // Показываем сообщение об ошибке, полученное от сервера
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Ошибка при обновлении провайдера:', error);
+                    }
+                });
+            });
+
+            // Ограничение на ввод только цифр и ограничение длины для номера телефона
+            $('.editProviderPhone').on('input', function () {
+                this.value = this.value.replace(/\D/g, ''); // Удаляем все не цифры
+                this.value = this.value.slice(0, 11); // Ограничиваем до 11 символов
+            });
+
+            // Ограничение на ввод только букв, пробелов и кавычек для наименования
+            $('.editProviderName').on('input', function () {
+                this.value = this.value.replace(/[^a-zA-Zа-яА-Я\s"']/g, ''); // Оставляем только буквы, пробелы и кавычки
+            });
+
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#SupName').on('input', function () {
+                var text = $(this).val();
+                $(this).val(text.slice(0, 50)); // Ограничиваем до 50 символов
+            });
+        });
+    </script>
+    <script>
+        // Оставляем только цифры в textarea
+        $(document).ready(function () {
+            $('#SupPhone').on('input', function () {
+                var text = $(this).val();
+                var filteredText = text.replace(/\D/g, ''); // Удаляем все не цифры
+                $(this).val(filteredText.slice(0, 11)); // Ограничиваем до 11 символов
+            });
+        });
+
     </script>
 </body>

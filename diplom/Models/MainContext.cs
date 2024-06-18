@@ -63,9 +63,9 @@ using Microsoft.EntityFrameworkCore;
     {
         //optionsBuilder.UseSqlServer(@"Data Source=192.168.227.12;User ID=user10;Password=10;database=this;TrustServerCertificate=True");
 
-        //optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-SD2NSU5\MSSQLSERVER05;User ID=sa;Password=12345;database=this10;TrustServerCertificate=True");
+        optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-SD2NSU5\MSSQLSERVER05;User ID=sa;Password=12345;database=this10;TrustServerCertificate=True");
 
-        optionsBuilder.UseSqlServer(@"Data Source=80.78.242.110;User ID=sa;Password=<YourStrong@Passw0rd>;database=Diplom;TrustServerCertificate=True");
+        //optionsBuilder.UseSqlServer(@"Data Source=80.78.242.110;User ID=sa;Password=<YourStrong@Passw0rd>;database=Diplom;TrustServerCertificate=True");
 
         //optionsBuilder.UseNpgsql(@"Server=hnt8.ru;Port=5432;Database=sir;User ID=postgres;Password=_RasulkotV2");
 
