@@ -156,6 +156,13 @@
                 return;
             }
 
+            // Проверка длины номера телефона
+            var phoneValidation = /^[0-9]{11,}$/;
+            if (!phoneValidation.test(phoneNumber)) {
+                alert("Номер телефона должен содержать не менее 11 цифр.");
+                return;
+            }
+
             $.ajax({
                 url: "/Home/UpdateUser",
                 method: "POST",
